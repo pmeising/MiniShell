@@ -1,0 +1,24 @@
+Input_file.txt
+Makefile
+Output_file.txt
+inc
+libft
+minishell
+minishell.h
+obj
+src
+total 200
+drwxr-xr-x   14 bde-carv  2022_wolfsburg    476 Oct 27 21:28 .
+drwxr-xr-x   18 bde-carv  2022_wolfsburg    612 Oct 27 21:00 ..
+drwxr-xr-x   12 bde-carv  2022_wolfsburg    408 Oct 27 21:02 .git
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg     98 Oct 27 21:31 Input_file.txt
+-rw-r--r--    1 bde-carv  2022_wolfsburg   2112 Oct 27 21:01 Makefile
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg      0 Oct 27 21:32 Output_file.txt
+drwxr-xr-x    2 bde-carv  2022_wolfsburg     68 Oct 27 21:01 inc
+drwxr-xr-x  107 bde-carv  2022_wolfsburg   3638 Oct 27 21:28 libft
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg  80744 Oct 27 21:28 minishell
+-rw-r--r--    1 bde-carv  2022_wolfsburg   6970 Oct 27 21:01 minishell.h
+drwxr-xr-x   21 bde-carv  2022_wolfsburg    714 Oct 27 21:28 obj
+drwxr-xr-x   22 bde-carv  2022_wolfsburg    748 Oct 27 21:01 src
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg      0 Oct 27 21:31 test.txt
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg     80 Oct 27 21:28 text.txt

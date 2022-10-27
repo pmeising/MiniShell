@@ -78,7 +78,7 @@ void	ft_fork_process(t_cmd *iterator)
 		// printf("iterator->output_file: %s\n", iterator->output_file[1]);
 		if (iterator->input_file != NULL)
 		{
-			file_check = access(iterator->input_file, R_OK | F_OK | X_OK);
+			file_check = access(iterator->input_file, R_OK | F_OK);
 			if (file_check != 0)
 			{
 				printf("file_check failed.\n");
@@ -108,7 +108,7 @@ void	ft_fork_process(t_cmd *iterator)
 		dup2(iterator->fd_out, STDOUT_FILENO); // fd_out defaults to 1
 		if (iterator->fd_out != 1)
 			close(iterator->fd_out);
-		printf("input: %s\n output: %s\n", iterator->input_file, iterator->output_file[0]);
+		// printf("input: %s\n output: %s\n", iterator->input_file, iterator->output_file[0]);
 		execve(iterator->command_path, iterator->arguments, g_mini.env);
 		dup2(1, STDOUT_FILENO);
 		printf("EXECVE failure.\n");
@@ -182,11 +182,14 @@ void	ft_redirect(t_cmd *iterator)
 	while (iterator->output_file[i])
 	{
 		if (i > 0)
+		{
+			printf("iterator->output_file[%d]: %s. Flag: %d\n", i, iterator->output_file[i], iterator->open_flag[i]);
 			ft_copy_content(iterator->output_file[0], iterator->output_file[i], iterator->open_flag[i]);
+		}
 		else if (i == 0 && iterator->next && iterator->next->input_file == NULL)
 		{
-			ft_copy_content(iterator->output_file[0], "Input_file.txt", 0);
-			iterator->next->input_file = "Input_file.txt";
+			ft_copy_content(iterator->output_file[0], "mull/Input_file.txt", 0);
+			iterator->next->input_file = "mull/Input_file.txt";
 		}
 		else if (i == 0 && iterator->next && iterator->next->input_file != NULL)
 			ft_copy_content(iterator->output_file[0], iterator->next->input_file, 1);
@@ -205,7 +208,7 @@ void	ft_output_file(t_cmd *iterator)
 	t_cmd	*temp;
 
 	temp = ft_lstlast_cmds(iterator);
-	if ((ft_strncmp(temp->output_file[0], "Output_file.txt", 16) == 0) && temp->output_file[1] == NULL)
+	if ((ft_strncmp(temp->output_file[0], "mull/Output_file.txt", 21) == 0) && temp->output_file[1] == NULL)
 		temp->output_file[0] = NULL;
 }
 
@@ -226,6 +229,8 @@ void	ft_execute(void)
 		// Add file redirection logic. Output_file.txt test.txt text.txt NULL
 		ft_redirect(iterator);
 		// ft_print_cmds(iterator);
+		if (iterator->next == NULL)
+			break ;
 		iterator = iterator->next;
 	}
 }
@@ -276,12 +281,13 @@ int main (int argc, char **argv, char **env)
 {
 	int input_check;
 	(void)argv;
+	(void)argc;
 
-	if (argc != 1)
-	{
-		printf("too many commands only ./minishell\n");
-		exit_program(EXIT_FAILURE);
-	}
+	// if (argc != 1)
+	// {
+	// 	printf("too many commands only ./minishell\n");
+	// 	exit_program(EXIT_FAILURE);
+	// }
 	ft_init_minishell(&g_mini, env);
 
 	while (1)

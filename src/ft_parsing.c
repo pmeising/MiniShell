@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/27 20:43:48 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/27 21:47:24 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_get_token_pos(char *raw_input, int pos)
 		if (raw_input[pos] == 34 || raw_input[pos] == 39)
 		{
 			pos = ft_skip_quotes(raw_input, pos);
-			printf("gettok\n");
+			// printf("gettok\n");
 		}
 		else
 			pos++;
@@ -58,7 +58,7 @@ char *ft_get_token(char *raw_input, int pos)
 		if (raw_input[pos] == 34 || raw_input[pos] == 39)
 		{
 			pos = ft_skip_quotes(raw_input, pos);
-			printf("gettok\n");
+			// printf("gettok\n");
 		}
 		else
 			pos++;
@@ -102,8 +102,8 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
 		temp = ft_get_token(raw_input, pos);
 		ft_remove_quotes(temp);
 		cmd->output_file[j] = temp;
-		printf("outputfile[%d]: # %s #\n", j, cmd->output_file[j]);
-		if (raw_input[pos + 1] != '>')
+		// printf("outputfile[%d]: # %s #\n", j, cmd->output_file[j]);
+		if (raw_input[i + 1] != '>')
 			cmd->open_flag[j] = 0;
 	}
 	else if (raw_input[i] == '<' && raw_input[i + 1] == '<')
@@ -121,7 +121,7 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
 		else if (cmd->input_file != NULL)
 			ft_copy_content(temp, cmd->input_file, 1);
 	}
-	printf("%s\n", cmd->input_file);
+	// printf("%s\n", cmd->input_file);
 	pos = ft_get_token_pos(raw_input, pos);
 	return (pos);
 }
@@ -152,7 +152,7 @@ void ft_parsing(char *raw_input)
 		// printf("Created node.\n");
 		cmd_iterator->output_file = ft_calloc(1000, sizeof(char)); // Always free in loop in the end!!!
 		// cmd_iterator->open_flag = malloc(100 * sizeof(int));
-		cmd_iterator->output_file[0] = "Output_file.txt";
+		cmd_iterator->output_file[0] = "mull/Output_file.txt";
 		while(raw_input[pos] && ft_is_cmd_delim(raw_input[pos]) == 0)
 		{
 			pos = ft_skip_spaces(raw_input, pos);
@@ -170,6 +170,7 @@ void ft_parsing(char *raw_input)
 				if (raw_input[pos] == '>')
 					j++;
 				pos = ft_get_redir_tok(cmd_iterator, raw_input, pos, j);
+				pos = ft_skip_spaces(raw_input, pos);
 			}
 		}
 		ft_lstadd_back_cmds(&g_mini.cmds, cmd_iterator);

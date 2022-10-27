@@ -1,0 +1,10 @@
+Makefile
+inc
+libft
+minishell
+minishell.h
+mull
+obj
+src
+test.txt
+text.txt
