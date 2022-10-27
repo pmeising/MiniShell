@@ -1,0 +1,313 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/13 15:34:58 by bde-carv          #+#    #+#             */
+/*   Updated: 2022/10/21 17:18:579 by bde-carv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
+
+t_mini g_mini;
+
+/*
+* O_CREAT = if not existent create;
+* O_TRUNC = if there is content, overwrite;
+* O_RDWR = read write access
+*/
+// void	ft_open_files(void)
+// {
+// 	int flag;
+	
+// 	flag = open("Input_file.txt", O_CREAT | O_RDWR | O_TRUNC, 0777);
+// 	if (flag != 0)
+// 		perror("Input_file.txt: ");
+// 	g_mini.fdin = flag;
+// 	flag = open("Output_file.txt", O_CREAT | O_RDWR | O_TRUNC, 0777);
+// 	if (flag != 0)
+// 		perror("Output_file.txt: ");
+// 	g_mini.fdout = flag;
+// }
+
+/*
+*	Takes a pointer to a command node (t_cmd) and creates a child process.
+*	The command node contains information about where to read from
+*	and where to write to. These variables are initialized to NULL
+*	, 0 or their corresponding "initial state". (i.e. the fd_in variable
+*	in the t_cmd node stands for the filedescriptor of the standard
+*	input = 0; fd_out for Standard output = 1.) This initialization 
+*	happens in ft_lstnew_cmds (file "ft_lst_funcs.c").
+*	if the input_file var is not empty, that means we have an input
+*	redirect from a file. In which case we need to check, if the file
+*	exists (i.e. access -> returns 0 for success). After, we open the file
+*	with open() and store the file descriptor it returns in fd_in;
+*	(returns -1 on error).
+*	Now we use the dup2() function to make a copy of the standard input fd=0
+*	and assign it to the file we want to use as an input file. It takes the file
+*	descriptor of the dedicated input file and the FD of which to associate it 
+*	with. In this case we associate it with STDIN = 0.
+*	This happens whether the input_file string is empty or not. In case it
+*	isn't empty, we need to close that previously opened file again.
+*	The same logic applies to the output file. However, if the output file
+*	should not exist, we would simply create it (using the open(O_CREATE) flag.).
+*	Additionally, we are using the O_APPEND flag if the open_flag is 1, the O_TRUNC
+*	flag, if the open_flag is 0. Then we dup2() again and close any open file.
+*	In the last part, we call the execve() function to execute the command
+*	currently stored in the t_cmd node.
+*	The execve() function terminates a process upon successful execution, 
+*	which is why the following lines including perror etc. would only be
+*	executed in case of an execve() failure.
+*	using the dup2() STDOUT allows us to receive that error message in
+*	the standard output rather than any potential output file.
+*/
+void	ft_fork_process(t_cmd *iterator)
+{
+	pid_t	fork_check;
+	int		file_check;
+
+	fork_check = fork();
+	if (fork_check == 0)
+	{
+		printf("I am child.\n");
+		// printf("iterator->input_file: %s\n", iterator->input_file);
+		// printf("iterator->output_file: %s\n", iterator->output_file[0]);
+		// printf("iterator->output_file: %s\n", iterator->output_file[1]);
+		if (iterator->input_file != NULL)
+		{
+			file_check = access(iterator->input_file, R_OK | F_OK | X_OK);
+			if (file_check != 0)
+			{
+				printf("file_check failed.\n");
+				exit(0); // Implement an error function, which takes the string; "iterator->input_file" and outputs i.e.: bash: skdlfe.txt: No such file or directory
+			}
+			iterator->fd_in = open(iterator->input_file, O_RDWR, 0777);
+			if (iterator->fd_in == -1)
+			{
+				printf("file_input open failed.\n");
+				exit(0);
+			}
+			printf("fd_in in child: %d\n", iterator->fd_in);
+		}
+		dup2(iterator->fd_in, STDIN_FILENO);
+		if (iterator->fd_in != 0)
+			close(iterator->fd_in); // [0] -> Output_file.txt [1] 
+		if (iterator->output_file[0] != NULL)
+		{
+			// if (iterator->open_flag[] == 0) // Output_file.txt
+			iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_TRUNC, 0777);
+			// else if (iterator->open_flag == 1)
+			// 	iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_APPEND, 0777);
+			// remember to change open_flag to it's value when changing the outputfile content.
+			if (iterator->fd_out == -1)
+				exit (0); // error message for internal trouble shooting.
+		}
+		dup2(iterator->fd_out, STDOUT_FILENO); // fd_out defaults to 1
+		if (iterator->fd_out != 1)
+			close(iterator->fd_out);
+		printf("input: %s\n output: %s\n", iterator->input_file, iterator->output_file[0]);
+		execve(iterator->command_path, iterator->arguments, g_mini.env);
+		dup2(1, STDOUT_FILENO);
+		printf("EXECVE failure.\n");
+		perror("execve: ");
+	}
+	if (fork_check != 0)
+	{
+		wait(NULL);
+		printf("I am parent.\n");
+	}
+}
+
+void	ft_copy_content(char *file_1, char *file_2, int open_flag)
+{
+	int 	fd_file_1;
+	int 	fd_file_2;
+	char	*temp;
+	
+	fd_file_1 = open(file_1, O_CREAT | O_RDWR, 0777);
+	if (fd_file_1 == -1)
+	{
+		printf("error fd_file_1");
+		exit_program(EXIT_FAILURE);
+	}
+	if (open_flag == 0)
+	{
+		fd_file_2 = open(file_2, O_CREAT | O_RDWR | O_TRUNC, 0777);
+		if (fd_file_2 == -1)
+		{
+			printf("error fd_file_2");
+			close(fd_file_2);
+			exit_program(EXIT_FAILURE);
+		}
+	}
+	else if (open_flag == 1)
+	{
+		fd_file_2 = open(file_2, O_CREAT | O_RDWR | O_APPEND, 0777);
+		if (fd_file_2 == -1)
+		{
+			printf("error fd_file_2");
+			close(fd_file_2);
+			exit_program(EXIT_FAILURE);
+		}
+	}
+	while (1)
+	{
+		temp = get_next_line(fd_file_1);
+		if (temp)
+		{
+			write(fd_file_2, temp, ft_strlen(temp));
+			free (temp);
+		}
+		else
+		{
+			free (temp);
+			break ;
+		}
+	}
+	close(fd_file_1);
+	close(fd_file_2);
+}
+
+/*
+*	input_file is empty if no input redirection was found.
+*/
+void	ft_redirect(t_cmd *iterator)
+{
+	int		i;
+
+	i = 0;
+	while (iterator->output_file[i])
+	{
+		if (i > 0)
+			ft_copy_content(iterator->output_file[0], iterator->output_file[i], iterator->open_flag[i]);
+		else if (i == 0 && iterator->next && iterator->next->input_file == NULL)
+		{
+			ft_copy_content(iterator->output_file[0], "Input_file.txt", 0);
+			iterator->next->input_file = "Input_file.txt";
+		}
+		else if (i == 0 && iterator->next && iterator->next->input_file != NULL)
+			ft_copy_content(iterator->output_file[0], iterator->next->input_file, 1);
+		i++;
+	}
+	// if (iterator->output_file[0] == NULL)
+	// 	ft_copy_content(iterator->output_file[0], "Input_file.txt", 0);
+}
+
+/*
+* output_file[1] = name of file where to redirect;
+* output_file[0] = has "output_file.txt" as default;
+*/
+void	ft_output_file(t_cmd *iterator)
+{
+	t_cmd	*temp;
+
+	temp = ft_lstlast_cmds(iterator);
+	if ((ft_strncmp(temp->output_file[0], "Output_file.txt", 16) == 0) && temp->output_file[1] == NULL)
+		temp->output_file[0] = NULL;
+}
+
+/*
+*	Walks through the t_cmd list and calls the ft_fork_process function
+*	which creates a child process executing the command in the cmd_path.
+*/
+void	ft_execute(void)
+{
+	t_cmd	*iterator;
+
+	iterator = g_mini.cmds;
+	ft_print_cmds(iterator);
+	ft_output_file(iterator);
+	while (iterator)
+	{
+		ft_fork_process(iterator);
+		// Add file redirection logic. Output_file.txt test.txt text.txt NULL
+		ft_redirect(iterator);
+		// ft_print_cmds(iterator);
+		iterator = iterator->next;
+	}
+}
+
+/******************************************************************************************/
+
+/*
+* displays a prompt and reads in user input;
+* adds input to the history for later acces by user;
+* checks for open quotes, backslash and semicolon which 
+* are all not allowed in this project
+*/
+int ft_get_input(void)
+{
+	//int input_ckeck;
+	char *prompt;
+
+	prompt = "42shell > ";
+	g_mini.raw_input = readline(prompt);
+	if (ft_str_only_space(g_mini.raw_input) != 1 && g_mini.raw_input)
+		add_history(g_mini.raw_input);
+	if(ft_check_quotes(g_mini.raw_input) == 1)
+	{
+		printf("quotes not closed\n");
+		free(g_mini.raw_input); 
+		return(2);
+	}
+	if (ft_check_backslash(g_mini.raw_input) == 1)
+	{
+		printf("backslash forbidden\n");
+		free(g_mini.raw_input);
+		return(2);
+	}
+	if (ft_check_semicolon(g_mini.raw_input) == 1)
+	{
+		printf("semicolon forbidden\n");
+		free(g_mini.raw_input);
+		return (2);
+	}
+	return (0);
+}
+
+/*
+* When launching the shell, we don't launch it with any input()
+* so argv should be empty. If it isn't we need to return an error.
+*/
+int main (int argc, char **argv, char **env)
+{
+	int input_check;
+	(void)argv;
+
+	if (argc != 1)
+	{
+		printf("too many commands only ./minishell\n");
+		exit_program(EXIT_FAILURE);
+	}
+	ft_init_minishell(&g_mini, env);
+
+	while (1)
+	{	
+		ft_handle_sigs();
+		input_check = ft_get_input();
+		if (input_check == 2)
+			printf("invalid syntax\n");
+		else
+		{
+			if (ft_check_input_validity(g_mini.raw_input) == 0)
+				continue ;
+			else
+			{
+				while (ft_dollar_sign(g_mini.raw_input) != 0)
+					ft_env_vars(g_mini.raw_input);
+				ft_parsing(g_mini.raw_input);
+				ft_interpret();
+				ft_execute();
+				ft_free();
+			}
+		}
+	}
+	//ft_env(&g_mini.dup_env); jus testing if env works
+
+	///free_all(g_mini);
+	printf("\n");
+	return (0);
+}
