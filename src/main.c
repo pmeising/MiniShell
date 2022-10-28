@@ -121,12 +121,16 @@ void	ft_fork_process(t_cmd *iterator)
 	}
 }
 
+/*
+* copies content of file_1 into file_2;
+* file_1 and file_2 are outpufiles[0]/[i]
+*/
 void	ft_copy_content(char *file_1, char *file_2, int open_flag)
 {
 	int 	fd_file_1;
 	int 	fd_file_2;
 	char	*temp;
-	
+
 	fd_file_1 = open(file_1, O_CREAT | O_RDWR, 0777);
 	if (fd_file_1 == -1)
 	{
@@ -173,6 +177,7 @@ void	ft_copy_content(char *file_1, char *file_2, int open_flag)
 
 /*
 *	input_file is empty if no input redirection was found.
+*	need expl.
 */
 void	ft_redirect(t_cmd *iterator)
 {
@@ -215,6 +220,8 @@ void	ft_output_file(t_cmd *iterator)
 /*
 *	Walks through the t_cmd list and calls the ft_fork_process function
 *	which creates a child process executing the command in the cmd_path.
+*	ft_output_file; checks if there is an outputfile, if not deletes the 
+*	default "output_file.txt"
 */
 void	ft_execute(void)
 {
@@ -273,6 +280,9 @@ int ft_get_input(void)
 	return (0);
 }
 
+
+
+
 /*
 * When launching the shell, we don't launch it with any input()
 * so argv should be empty. If it isn't we need to return an error.
@@ -289,9 +299,10 @@ int main (int argc, char **argv, char **env)
 	// 	exit_program(EXIT_FAILURE);
 	// }
 	ft_init_minishell(&g_mini, env);
-
+	signal(SIGQUIT, exit_shell);
 	while (1)
 	{	
+		
 		ft_handle_sigs();
 		input_check = ft_get_input();
 		if (input_check == 2)

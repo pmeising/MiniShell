@@ -8,3 +8,17 @@ obj
 src
 test.txt
 text.txt
+total 200
+drwxr-xr-x   13 bde-carv  2022_wolfsburg    442 Oct 27 21:50 .
+drwxr-xr-x   15 bde-carv  2022_wolfsburg    510 Oct 28 15:38 ..
+drwxr-xr-x   12 bde-carv  2022_wolfsburg    408 Oct 27 21:54 .git
+-rw-r--r--    1 bde-carv  2022_wolfsburg   2112 Oct 27 21:01 Makefile
+drwxr-xr-x    2 bde-carv  2022_wolfsburg     68 Oct 27 21:01 inc
+drwxr-xr-x  107 bde-carv  2022_wolfsburg   3638 Oct 27 21:50 libft
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg  80744 Oct 27 21:50 minishell
+-rw-r--r--    1 bde-carv  2022_wolfsburg   6970 Oct 27 21:01 minishell.h
+drwxr-xr-x    4 bde-carv  2022_wolfsburg    136 Oct 27 21:43 mull
+drwxr-xr-x   21 bde-carv  2022_wolfsburg    714 Oct 27 21:50 obj
+drwxr-xr-x   22 bde-carv  2022_wolfsburg    748 Oct 27 21:01 src
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg     72 Oct 27 21:47 test.txt
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg   1052 Oct 27 21:32 text.txt

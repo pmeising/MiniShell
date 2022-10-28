@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/27 18:06:23 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/28 19:01:47 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@
 
 /*
 * struct for commands. commands are separated by pipes;
-* a command consists of individual tokens like ls
+* a command consists of individual tokens like ls, -la, cat, -e...
 * (=smaller execution unit of a command);
 */
 typedef struct	s_cmd
@@ -220,4 +220,5 @@ void	ft_remove_quotes(char *content);
 
 
 void	ft_copy_content(char *file_1, char *file_2, int open_flag);
+void	exit_shell(int sig);
 #endif

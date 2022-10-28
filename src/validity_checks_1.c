@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:38:09 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/25 19:35:30 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/28 17:57:09 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int ft_illegal_sequence(char *raw_input, char *sequence)
 * checks if there are wrong sequences of tokens and/or
 * or tokens at the wrong place;
 * quotes are already checked in ft_get_input
+* returns 1 if invalid tokens detected or 0 if not;
 */
 int	ft_wrong_tokens(char *raw_input)
 {

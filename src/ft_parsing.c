@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/27 21:47:24 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/28 19:16:15 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	ft_get_token_pos(char *raw_input, int pos)
 *	token6: up
 *	These tokens are then interpreted depending ontheir redirects 
 *	and whether or not they are commands or arguments etc.
+
+*	pos = first char in user_input thats not a space;
 */
 char *ft_get_token(char *raw_input, int pos)
 {
@@ -73,11 +75,14 @@ char *ft_get_token(char *raw_input, int pos)
 }
 
 /*
-* If we have  one ">", we need to overwrite the output file content,
+* If we have only one >, we need to overwrite the output file content,
 * else, we need to add the content to the output. APPEND additionally,
 * we skip one pos.
 * then we skip all spaces. save the stat pos of the file name,
 * and pull out the file_name of where to redirect the output to.
+* pos = the first < or >
+* open_flag[j] (which is 1) because at [0] is the open_flag for our
+* default output_file.txt
 */
 int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
 {
@@ -96,7 +101,7 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
 		pos++;
 	pos++;
 	pos = ft_skip_spaces(raw_input, pos);
-	start = pos; // << END" " cat -e  -> here we are at E
+	start = pos; // << END" " cat -e  -> here we are at E    //start nowhere being used?
 	if (raw_input[i] == '>')
 	{
 		temp = ft_get_token(raw_input, pos);

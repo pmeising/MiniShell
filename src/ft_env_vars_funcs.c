@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:42:08 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/26 20:21:09 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/28 18:47:54 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,21 @@
 char	*ft_extract_content(char *var_name)
 {
 	int 	i;
-	int		len;
-	int		len2;
+	int		var_name_len;
+	int		content_len;
 	char	*content;
-	char	*test; // better name content or content_check
+	char	*var_name_and_content;
 	t_list	*iterator;
 
 	i = 0;
 	iterator = g_mini.dup_env;
 	// printf("var_name: %s\n", var_name);
-	len = ft_strlen(var_name);
+	var_name_len = ft_strlen(var_name);
 	// printf("len: %d\n", len);
 	while (iterator != NULL)
 	{
-		test = iterator->content;
-		if (ft_strnstr(iterator->content, var_name, len) != NULL)
+		var_name_and_content = iterator->content;
+		if (ft_strnstr(iterator->content, var_name, var_name_len) != NULL)
 			break ;
 		iterator = iterator->next;
 	}
@@ -46,18 +46,20 @@ char	*ft_extract_content(char *var_name)
 		printf("Couldn't find ENV VAR.\n");
 		return (NULL);
 	}
-	if (ft_strlen(test) == (size_t)(len + 1))
+	if (ft_strlen(var_name_and_content) == (size_t)(var_name_len + 1))
 		return (NULL);
-	len2 = ft_strlen(&test[len + 1]);
+	content_len = ft_strlen(&var_name_and_content[var_name_len + 1]);
 	// printf("len2: %d\n", len2);
 	// printf("%s\n", test);
-	content = ft_substr(test, len + 1, len2);
+	content = ft_substr(var_name_and_content, var_name_len + 1, content_len);
 	// printf("%s\n", content);
 	return (content);
 }
 
 /*
 * inserts the content of the env-variable into the user-input string;
+* start = Beginn of variable name; pos = is the first char after the
+* environmentvariable name;
 */
 void	ft_insert(char *raw_input, char *dup_var_cont, int pos, int start)
 {
@@ -100,9 +102,10 @@ void	ft_insert(char *raw_input, char *dup_var_cont, int pos, int start)
 }
 
 /*
-*	Identifies the Variable name and goes on calling functions, 
+*	Identifies the Variable name and calls functions, 
 *	which verify it as well as replace the variable with its content.
 *	ft_compare_env verifies, ft_insert replaces it.
+*	pos = position of the $
 */
 void	ft_put_env_in_input(char *raw_input, int pos)
 {
@@ -124,7 +127,7 @@ void	ft_put_env_in_input(char *raw_input, int pos)
 	while (raw_input[pos] && ft_isalnum(raw_input[pos]) == 1)
 		pos++;
 	var_name = ft_substr(raw_input, start, pos - start);
-	dup_var_content = ft_extract_content(var_name); // better call exrtact_content
+	dup_var_content = ft_extract_content(var_name);
 	if (dup_var_content == NULL)
 	{
 		ft_skip_var(raw_input, var_name, start, pos);
@@ -136,15 +139,20 @@ void	ft_put_env_in_input(char *raw_input, int pos)
 }
 
 /*
-*	Walks through the input string and looks for a dollar sign ($).
+*	Walks through the input string and looks for a dollar signs ($).
 *	Once found, it checks, whether it is followed by...
 *	... a questionmark (?), in which case we show the most recently 
 *		executed foreground pipeline.
 *	... a quotationmark (" or '), in which case we replace the $ with a blankspace.
 *	... a valid environment variable, in which case we insert the content
 *		of the env into the string using ft_str_join.
+*
+*	1 would be outer quote, -1 inner quote and 0 no quote(closed quote);
+*	34 = double quotes; 39 = single quotes;
+*	all $ that are not interpreted will be deleted by shifting the string one position to the left
+*	(last else-if statement);
 *	edge case: $(PATH) should throw an error. Unable to handle it at this point
-*	not required by subject pdf.
+*	not required by subject pdf. --> SEE COMMENT IN ft_dollar_sign MIGHT FIX THIS PROBLEM (seems to be working regardless)
 */
 void ft_env_vars(char *raw_input)
 {
@@ -161,7 +169,7 @@ void ft_env_vars(char *raw_input)
 	double_quotes = 0;
 	while (raw_input[pos])
 	{
-		if (raw_input[pos] == 34) // double_quotes
+		if (raw_input[pos] == 34)
 		{
 			if (single_quotes == 0)
 				double_quotes = 1;
@@ -170,7 +178,7 @@ void ft_env_vars(char *raw_input)
 			else if (double_quotes != 0)
 				double_quotes = 0;
 		}
-		if (raw_input[pos] == 39) // single_quotes
+		if (raw_input[pos] == 39)
 		{
 			if (double_quotes == 0)
 				single_quotes = 1;
@@ -224,6 +232,9 @@ void ft_env_vars(char *raw_input)
 *	Returns 1 if a $ still has to be interpreted.
 *	Returns 0 if no $ has to be interpreted anymore.
 *
+*	34 == double quote; 39 == single quote;
+*	1 would be outer quote, -1 inner quote and 0 no quote;
+
 * 	double    single	interpret
 *	1			0		1
 *	1			-1		1
@@ -237,16 +248,16 @@ int ft_dollar_sign(char *raw_input)
 	int	single_quotes;
 	int	double_quotes;
 	int check;
-// '$PATH' "$PATH"
+// '$PATH' "$PATH"  "'$PATH'"
 	i = 0;
-	single_quotes = 0; // 1 would be outer quote, -1 inner quote and 0 no quote
-	double_quotes = 0; // 1 would be outer quote, -1 inner quote and 0 no quote
+	single_quotes = 0;
+	double_quotes = 0;
 	check = 0;
 	while (raw_input[i])
 	{
 		if (raw_input[i] == '$' && raw_input[i + 1] == ' ')
 			i++;
-		if (raw_input[i] == 34) // double_quotes
+		if (raw_input[i] == 34)
 		{
 			if (single_quotes == 0)
 				double_quotes = 1;
@@ -255,7 +266,7 @@ int ft_dollar_sign(char *raw_input)
 			else if (double_quotes != 0)
 				double_quotes = 0;
 		}
-		if (raw_input[i] == 39) // single_quotes
+		if (raw_input[i] == 39)
 		{
 			if (double_quotes == 0)
 				single_quotes = 1;
@@ -270,7 +281,7 @@ int ft_dollar_sign(char *raw_input)
 				i++;
 			single_quotes = 0;
 		}
-		else if (raw_input[i] == '$')
+		else if (raw_input[i] == '$') // && ft(is_alnum(raw_input[i + 1]) == 1 because it could be $-PATH which would indicate intepretable $ but shouldnt
 			check++;
 		i++;
 	}

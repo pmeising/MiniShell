@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 17:45:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/26 14:57:05 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/28 17:39:45 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,18 +71,38 @@ void ft_handle_sigint(void)
 	sigaction(SIGINT, &sa, NULL);
 }
 
-void ft_handle_sigquit(void)
-{
-	struct sigaction	sa;
+// void ft_sigquit(int sig)
+// {
+// 	(void)sig;
 
-	sa.sa_handler = SIG_IGN;
-	sa.sa_flags = SA_RESTART;
-	sigemptyset(&sa.sa_mask);
-	sigaction(SIGQUIT, &sa, NULL);
+// 	printf("quit\n");
+// 	exit_program(EXIT_SUCCESS);
+	
+	
+// }
+
+// void ft_handle_sigquit(void)
+// {
+// 	struct sigaction	sa;
+
+// 	sa.sa_handler = SIG_IGN;
+// 	sa.sa_flags = SA_RESTART;
+// 	sigemptyset(&sa.sa_mask);
+// 	sigaction(SIGQUIT, &sa, NULL);
+// }
+
+void exit_shell(int sig)
+{
+	printf("quit\n");
+	if (SIGQUIT == sig)
+	{
+		printf("quit\n");
+		//exit(EXIT_SUCCESS);
+	}
 }
 
 void ft_handle_sigs(void)
 {
 	ft_handle_sigint();
-	ft_handle_sigquit();
+	//ft_handle_sigquit();
 }
