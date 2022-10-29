@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:49:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/27 18:36:36 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/29 18:24:19 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,13 @@ void	ft_print_args(t_cmd *iterator)
 	int	i;
 
 	i = 0;
-	while (iterator->arguments[i])
-	{
-		printf("argument %d: %s\n", i, iterator->arguments[i]);
-		i++;
+	if (iterator->command_path != NULL)
+	{	
+		while (iterator->arguments[i])
+		{
+			printf("argument %d: %s\n", i, iterator->arguments[i]);
+			i++;
+		}
 	}
 	i = 0;
 	while (iterator->output_file[i] && (iterator->open_flag[i] == -1 || iterator->open_flag[i] == 0 || iterator->open_flag[i] == 1))

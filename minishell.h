@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/28 19:01:47 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/29 16:12:05 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,10 +111,9 @@ char *replace_env_cont(char **curr_content, char *env_name, char *new_value);
 
 // signals.c
 
-void ft_handle_sigs(void);
 void ft_handle_sigint(void);
-void ft_handle_sigquit(void);
 void ft_sigint(int sig);
+void	exit_shell_quit(int sig);
 
 // void	ft_handle_signals(int sig, siginfo_t *info, void *context);
 // void	ft_signals(void);
@@ -220,5 +219,5 @@ void	ft_remove_quotes(char *content);
 
 
 void	ft_copy_content(char *file_1, char *file_2, int open_flag);
-void	exit_shell(int sig);
+
 #endif

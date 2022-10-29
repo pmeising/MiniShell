@@ -230,7 +230,7 @@ void	ft_execute(void)
 	iterator = g_mini.cmds;
 	ft_print_cmds(iterator);
 	ft_output_file(iterator);
-	while (iterator)
+	while (iterator && iterator->command_path)
 	{
 		ft_fork_process(iterator);
 		// Add file redirection logic. Output_file.txt test.txt text.txt NULL
@@ -257,6 +257,8 @@ int ft_get_input(void)
 
 	prompt = "42shell > ";
 	g_mini.raw_input = readline(prompt);
+	if (!g_mini.raw_input)
+		exit_shell_quit(0);
 	if (ft_str_only_space(g_mini.raw_input) != 1 && g_mini.raw_input)
 		add_history(g_mini.raw_input);
 	if(ft_check_quotes(g_mini.raw_input) == 1)
@@ -280,9 +282,6 @@ int ft_get_input(void)
 	return (0);
 }
 
-
-
-
 /*
 * When launching the shell, we don't launch it with any input()
 * so argv should be empty. If it isn't we need to return an error.
@@ -299,11 +298,9 @@ int main (int argc, char **argv, char **env)
 	// 	exit_program(EXIT_FAILURE);
 	// }
 	ft_init_minishell(&g_mini, env);
-	signal(SIGQUIT, exit_shell);
 	while (1)
 	{	
-		
-		ft_handle_sigs();
+		ft_handle_sigint();
 		input_check = ft_get_input();
 		if (input_check == 2)
 			printf("invalid syntax\n");

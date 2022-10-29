@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/28 19:16:15 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/29 17:40:18 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,43 @@ char *ft_get_token(char *raw_input, int pos)
 	return (token);
 }
 
+
+void ft_read_heredoc(t_cmd *cmd)
+{
+	char	*content;
+	int		fd_input_file;
+
+	if (cmd->input_file == NULL)
+	{
+		fd_input_file = open("mull/Input_file.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
+		if (fd_input_file < 0)
+			printf("Failed to open file.\n");
+		cmd->input_file = "mull/Input_file.txt";
+	}
+	else if (cmd->input_file)
+	{
+		fd_input_file = open(cmd->input_file, O_RDWR | O_APPEND, 0777);
+		if (fd_input_file < 0)
+			printf("Failed to open file.\n");
+	}
+	while (1)
+	{
+		content = readline("heredoc: ");   /*get_next_line(0);*/
+		if (ft_strncmp(content, cmd->HEREDOC_DELIM, ft_strlen(cmd->HEREDOC_DELIM)) == 0)
+		{
+			free (content);
+			close(fd_input_file);
+			break ;
+		}
+		else
+		{
+			write(fd_input_file, content, ft_strlen(content));
+			write(fd_input_file, "\n", 1);
+		}
+		free (content);
+	}
+}
+
 /*
 * If we have only one >, we need to overwrite the output file content,
 * else, we need to add the content to the output. APPEND additionally,
@@ -116,6 +153,7 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
 		temp = ft_get_token(raw_input, pos);
 		ft_remove_quotes(temp);
 		cmd->HEREDOC_DELIM = temp;
+		ft_read_heredoc(cmd);
 	}
 	else if (raw_input[i] == '<')
 	{

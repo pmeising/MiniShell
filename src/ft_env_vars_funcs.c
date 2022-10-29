@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:42:08 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/28 18:47:54 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/29 15:46:45 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ void	ft_put_env_in_input(char *raw_input, int pos)
 *	all $ that are not interpreted will be deleted by shifting the string one position to the left
 *	(last else-if statement);
 *	edge case: $(PATH) should throw an error. Unable to handle it at this point
-*	not required by subject pdf. --> SEE COMMENT IN ft_dollar_sign MIGHT FIX THIS PROBLEM (seems to be working regardless)
+*	not required by subject pdf. --> see comment in ft_dollar_sign MIGHT FIX THIS PROBLEM (seems to be working regardless)
 */
 void ft_env_vars(char *raw_input)
 {

@@ -6,33 +6,11 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 17:45:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/28 17:39:45 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/29 16:14:16 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// void	ft_sigint(int sig)
-// {
-// 	(void)sig;
-// 	printf("\n");
-// 	rl_replace_line("", 0);
-// 	rl_on_new_line();
-// 	rl_redisplay();
-// }
-
-// void	ft_sigquit(int sig)
-// {
-// 	(void)sig;
-// 	write(1, "exit", 4);
-// 	exit_program(EXIT_SUCCESS);
-// }
-
-/* ********************************* */
-
-// andi links
-// siqquit not a signal?
-// ctrl+\ -> need us keyboard nothing happens by default already
 
 /*
 * handler function for sigint (ctrl+c);
@@ -71,38 +49,18 @@ void ft_handle_sigint(void)
 	sigaction(SIGINT, &sa, NULL);
 }
 
-// void ft_sigquit(int sig)
-// {
-// 	(void)sig;
-
-// 	printf("quit\n");
-// 	exit_program(EXIT_SUCCESS);
-	
-	
-// }
-
-// void ft_handle_sigquit(void)
-// {
-// 	struct sigaction	sa;
-
-// 	sa.sa_handler = SIG_IGN;
-// 	sa.sa_flags = SA_RESTART;
-// 	sigemptyset(&sa.sa_mask);
-// 	sigaction(SIGQUIT, &sa, NULL);
-// }
-
-void exit_shell(int sig)
+/*
+* exit programm for ctrl + d (sigquit)
+* sigquit/ctrl + d means end of file and has 0 value
+* so we check after the readline function if the line
+* that was read in is empty. if yes exit_shell_quit
+* is being called to terminate the program;
+*/
+void exit_shell_quit(int sig)
 {
-	printf("quit\n");
-	if (SIGQUIT == sig)
+	if (sig == 0)
 	{
-		printf("quit\n");
-		//exit(EXIT_SUCCESS);
+		printf("exit\n");
+		exit(EXIT_SUCCESS);
 	}
-}
-
-void ft_handle_sigs(void)
-{
-	ft_handle_sigint();
-	//ft_handle_sigquit();
 }

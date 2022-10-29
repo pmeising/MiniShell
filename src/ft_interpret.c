@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:33:38 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/28 19:23:54 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/29 18:22:47 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,11 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 		}
 		i++;
 	}
-	if (!paths[i])
+	if (paths[i] == NULL)
+	{
+		free(temp_str);
 		return (1);
+	}
 	return (0);
 }
 
@@ -125,21 +128,23 @@ void	ft_interpret(void)
 	t_cmd	*cmd_iterator;
 	t_list	*tok_iterator;
 	int 	i;
-	
+
 	cmd_iterator = g_mini.cmds;
 	i = 0;
 	while (cmd_iterator)
 	{
 		tok_iterator = cmd_iterator->toks;
-		while (tok_iterator->content)
+		if (tok_iterator)
 		{
 			if (ft_find_command(cmd_iterator, tok_iterator) == 0)
 			{
 				ft_store_arguments(cmd_iterator, tok_iterator);
 				break ;
 			}
-			tok_iterator = tok_iterator->next;
 		}
+		if (!cmd_iterator->command_path)
+			printf("minishell: %s: command not found\n", \
+					cmd_iterator->toks->content);
 		cmd_iterator = cmd_iterator->next;
 	}
 	// ft_print_cmds(g_mini.cmds);
