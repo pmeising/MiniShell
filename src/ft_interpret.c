@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:33:38 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/29 18:22:47 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/29 18:50:08 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,25 +127,27 @@ void	ft_interpret(void)
 {
 	t_cmd	*cmd_iterator;
 	t_list	*tok_iterator;
-	int 	i;
 
 	cmd_iterator = g_mini.cmds;
-	i = 0;
 	while (cmd_iterator)
 	{
-		tok_iterator = cmd_iterator->toks;
-		if (tok_iterator)
+		tok_iterator = cmd_iterator->toks; //ls -la
+		while (tok_iterator)
 		{
 			if (ft_find_command(cmd_iterator, tok_iterator) == 0)
 			{
 				ft_store_arguments(cmd_iterator, tok_iterator);
 				break ;
 			}
+			if (!cmd_iterator->command_path)
+			{
+				printf("minishell: %s: command not found\n", \
+						cmd_iterator->toks->content);
+				break ;
+			}
+			tok_iterator = tok_iterator->next;
 		}
-		if (!cmd_iterator->command_path)
-			printf("minishell: %s: command not found\n", \
-					cmd_iterator->toks->content);
 		cmd_iterator = cmd_iterator->next;
 	}
-	// ft_print_cmds(g_mini.cmds);
+	ft_print_cmds(g_mini.cmds);
 }

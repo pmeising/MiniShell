@@ -228,12 +228,11 @@ void	ft_execute(void)
 	t_cmd	*iterator;
 
 	iterator = g_mini.cmds;
-	ft_print_cmds(iterator);
 	ft_output_file(iterator);
+	ft_print_cmds(iterator);
 	while (iterator && iterator->command_path)
 	{
 		ft_fork_process(iterator);
-		// Add file redirection logic. Output_file.txt test.txt text.txt NULL
 		ft_redirect(iterator);
 		// ft_print_cmds(iterator);
 		if (iterator->next == NULL)
