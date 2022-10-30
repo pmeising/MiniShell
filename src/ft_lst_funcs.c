@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:42:27 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/27 18:06:27 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/30 17:27:49 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,6 @@ t_cmd	*ft_lstnew_cmds(void)
 	new->open_flag[0] = -1;
 	new->next = NULL;
 	new->previous = NULL;
+	new->is_built_in = 0;
 	return (new);
 }

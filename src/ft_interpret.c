@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:33:38 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/29 18:50:08 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:35:34 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ char	**ft_find_paths(char *path)
 * paths = the single paths contained in PATH splitted into individual
 * strings pointed to by a double pointer;
 * access permission modes: F_OK = the existence test; X_OK = execute/search permission;
+* *cmd is the command list, *iterator is the toks list;
 */
 int ft_find_command(t_cmd *cmd, t_list *iterator)
 {
@@ -70,6 +71,7 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 	char	**paths;
 	char	*temp_str;
 	int		i;
+	
 
 	i = 0;
 	path = ft_find_path();
@@ -82,7 +84,10 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 		if (access(temp_str, F_OK | X_OK) == 0)
 		{
 			if (ft_is_built_in(iterator->content) == 1)
-				cmd->command_path = ft_strjoin("../src/built_in/", iterator->content);
+			{
+				cmd->is_built_in = 1;
+				//cmd->command_path = ft_strjoin("../src/built_in/", iterator->content);
+			}
 			else
 				cmd->command_path = temp_str;
 			break ;
@@ -107,6 +112,8 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks)
 
 	i = 0;
 	cmd->arguments = ft_calloc(10000, sizeof(char));
+	if (!cmd->arguments)
+		printf("calloc error ft_store_args\n");
 	while (toks)
 	{
 		ft_remove_quotes(toks->content);
@@ -116,7 +123,79 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks)
 	}
 	cmd->arguments[i] = NULL;
 }
+/* *********************************/
 
+// void ft_cd_empty(void)
+// {
+// 	chdir(getenv("HOME"));
+// }
+
+// void ft_exit_exec(t_list *toks)
+// {
+// 	if (toks->next->content)
+// 	{
+// 		printf("error: no additional parameters for exit allowed");
+// 	}
+// 	printf("exit\n");
+// 	exit(EXIT_SUCCESS);
+// }
+
+// void ft_unset_exec(t_list *toks)
+// {
+// 	int len;
+
+// 	len = ft_strlen(toks->content);
+// 	if (!toks->next->content)
+// 	{
+// 		printf("nothing to unset\n");
+// 	}
+// 	if (toks->next->next->content)
+// 	{
+// 		printf("too many arguments for unset\n");
+// 	}
+// 	while (g_mini.dup_env)
+// 	{
+// 		if (ft_strncmp(g_mini.dup_env->content, toks->content, len))
+// 		{
+// 			free(g_mini.dup_env->content);
+// 		}
+// 		g_mini.dup_env = g_mini.dup_env->next;
+// 	}
+// }
+
+void ft_execute_built_in(t_cmd *cmd, t_list *toks)
+{
+	(void)cmd;
+	if (ft_is_pwd(toks->content))
+		ft_pwd_exec();
+	if (ft_is_env(toks->content))
+		ft_env_exec();
+	
+	
+	// if (ft_is_unset(toks->content)) // same problem as with exit
+	// 	ft_unset_exec(toks);
+	// if (ft_is_exit(toks->content))  // command is not being found, thus wo sucht access ?
+	// 	ft_exit_exec(toks);
+	
+	// if (ft_is_cd(toks->content) && !cmd->arguments[1]) // cant be checked because of immedeate abort after calling
+	// {
+	// 	ft_cd_empty();
+	// }
+	// else if (ft_is_echo(toks->content) && cmd->arguments[1] == '.' && !cmd->arguments[2])
+	// {
+	// 	ft_cd_dot()
+	// }
+	// else if (ft_is_echo(toks->content) && cmd->arguments[1] == '.' && !cmd->arguments[2] == '.')
+	// {
+	// 	ft_cd_two_dots();
+	// }
+	// else if (ft_is_echo(toks->content) && cmd->arguments[1])
+	// {
+	// 	ft_cd_file(cmd->arguments[1]);
+	// }
+}
+
+/* ***************************** */
 /*
 * gos through the individual tokens of each cmd and searches 
 * for a command (e.g echo, export..);
@@ -131,12 +210,16 @@ void	ft_interpret(void)
 	cmd_iterator = g_mini.cmds;
 	while (cmd_iterator)
 	{
-		tok_iterator = cmd_iterator->toks; //ls -la
+		tok_iterator = cmd_iterator->toks;
 		while (tok_iterator)
 		{
 			if (ft_find_command(cmd_iterator, tok_iterator) == 0)
 			{
 				ft_store_arguments(cmd_iterator, tok_iterator);
+				if (cmd_iterator->is_built_in == 1)
+				{
+					ft_execute_built_in(cmd_iterator, tok_iterator);
+				}
 				break ;
 			}
 			if (!cmd_iterator->command_path)

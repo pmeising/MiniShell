@@ -41,32 +41,33 @@ void ft_cd_empty(void)
 {
 	chdir(getenv("HOME"));
 }
-
+// changed the argv numbers
 void  ft_cd(char **argv)
 {
 	char	*curr_path;
 	char	*buffer;
 	int		len_curr;
-	int		error;
+	//int		error;
 	
 	buffer = malloc(sizeof(char) * 100);
 	curr_path = malloc(sizeof(char) * 100);
 	curr_path = getcwd(curr_path, 1024);
-	printf("%s\n", argv[1]);
-	if (argv[1][0] == '.' && argv[1][1] != '.')
+	// printf("%s\n", argv[1]);
+	// printf("%s\n", argv[2] );
+	if (argv[2][0] == '.' && argv[2][1] != '.')
 		write(1, "\n", 1);
-	else if (argv[1][0] == '.' && argv[1][1] == '.' && (ft_is_space(argv[1][2]) == 1 || argv[1][2] == '\0'))
+	else if (argv[2][0] == '.' && argv[2][1] == '.' && (ft_is_space(argv[1][2]) == 1 || argv[1][2] == '\0'))
 	{
 		len_curr = ft_strlen(curr_path);
-		printf("len: %d\n", len_curr);
+		//printf("len: %d\n", len_curr);
 		while (curr_path[len_curr] != '/'/* && len_curr > 0*/)
 		{
 			curr_path[len_curr] = '\0';
 			len_curr--;
 		}
 		printf("%s\n", curr_path);
-		error = chdir(curr_path);
-		printf("%d\n", error);
+		/*error = */ chdir(curr_path);
+		// printf("%d\n", error);
 	}
 	else
 	{
@@ -81,8 +82,8 @@ int	main(int argc, char **argv)
 {
 	if (argc == 1)
 		ft_cd_empty();
-	else if (argc == 2)
+	else if (argc == 3)
 		ft_cd(argv);
-	else if (argc > 2)
+	else if (argc > 3)
 		printf("minishell : cd: too many arguments\n");
 }

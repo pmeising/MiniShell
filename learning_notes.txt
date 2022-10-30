@@ -1,0 +1,64 @@
+
+noch to do:
+
+in echo builtinfunc: lösch "" von start und ende of string;
+
+Shell operators:
+
+> : output redirection e.g echo "hello" > file.txt  -> creates or overwrites
+	the file and puts hello in the first line
+
+>>: does not overwrite but appends the output of the command to the last line
+
+|: takes the result/output of one command and uses it as input for another command
+	e.g: ls | grep .c | wc -l  -> give the list with file to the grep command
+	which takes all files with .c in the name and gives them to the word count command
+	the output thus will be the number of files with .c in the name
+	another e.g: cat contacts.txt | sort  -> will print out a sorted list of the content
+	in the file contacts.txt
+
+||: tries to execute the first command and if successfull the second will not
+	be executed. e.g: ls || echo "hello"  -> will only list the files but not
+	print out hello
+
+&: executes the commands simultaneously. (can cause output mixing)
+
+&&: executes the following commands in row only when the previous were successfully
+	executed. e.g: mkdir folder && touch file.c && echo "hello" -> creates a directory
+	called folder then if successfull creates a file name file.c and then if successfull
+	prints out hello
+
+; : connects multiple commands so that they are executed in row.
+	e.g : echo "hello" ; ls  -> will print hello first and then list the files
+
+naming executable file when compiling:
+gcc filename.c -o executable.file
+./executable.file
+
+/*
+* counts number of pipes outside of quotes;
+*/
+int ft_count_pipes(char *raw_input)
+{
+	int i;
+	int count;
+	
+	i = 0;
+	count = 0;
+
+	while (raw_input[i])
+	{
+		if (raw_input[i] == 34 || raw_input[i] == 39)
+		{
+			i = ft_skip_quotes(raw_input, i);
+		}
+		else if (raw_input[i] == '|')
+		{
+			count++;
+			i++;
+		}
+		else
+			i++;
+	}
+	return (count);
+}

@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/29 16:12:05 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:36:43 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct	s_cmd
 	int			open_flag[10]; // 0 stands for overwrite, 1 for add. default = -1
 	struct s_cmd	*next;
 	struct s_cmd	*previous;
+	int			is_built_in; // flag for calling builtin function;
 }				t_cmd;
 
 /*
@@ -115,9 +116,6 @@ void ft_handle_sigint(void);
 void ft_sigint(int sig);
 void	exit_shell_quit(int sig);
 
-// void	ft_handle_signals(int sig, siginfo_t *info, void *context);
-// void	ft_signals(void);
-
 // env_utils.c
 int ft_env_exist(char *str, t_list **dup_env);
 int ft_del_env_cont(char *str, t_list **dup_env);
@@ -160,7 +158,6 @@ void	ft_lstadd_back_cmds(t_cmd **lst, t_cmd *new);
 int ft_is_tok_delim(char c);
 int	ft_is_cmd_delim(char c);
 
-
 // parsing.c
 void ft_parsing(char *raw_input);
 int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j);
@@ -191,7 +188,7 @@ void exit_program(int status);
 // ft_interpret.c
 char	*ft_find_path(void);
 char	**ft_find_paths(char *path);
-int ft_find_command(t_cmd *cmd, t_list *iterator);
+int		ft_find_command(t_cmd *cmd, t_list *iterator);
 void	ft_store_arguments(t_cmd *cmd, t_list *toks);
 void	ft_interpret(void);
 
@@ -217,7 +214,17 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks);
 void	ft_interpret(void);
 void	ft_remove_quotes(char *content);
 
+// built_in_exec.c
+void ft_pwd_exec(void);
+void ft_env_exec(void);
+
+
+
 
 void	ft_copy_content(char *file_1, char *file_2, int open_flag);
+
+void ft_execute_built_in(t_cmd *cmd, t_list *toks);
+void ft_cd_empty(void);
+int ft_is_echo(char *str);
 
 #endif

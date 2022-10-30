@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:30:36 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/26 20:26:09 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/30 17:21:41 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void ft_update_env_list(char *env_name, char *new_value, t_list *dup_env)
 	while (dup_env)
 	{
 		curr_content = (char *)dup_env->content;
-
 		if (ft_strncmp(env_name, curr_content, len) == 0)
 			dup_env->content = ft_replace_env_cont(&curr_content, env_name, new_value);
 		dup_env = dup_env->next;
