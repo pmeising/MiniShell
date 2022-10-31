@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 14:02:44 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/27 17:22:39 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:14:42 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void	ft_free_arr(void **ptr);
 
 int	find_length(char *str, char *charset);
 void	import_str(char **dest, char *src, int start, int end);
+int ft_strcmp(char *s1, char *s2);
 
 // get_next_line
 

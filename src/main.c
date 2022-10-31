@@ -230,10 +230,17 @@ void	ft_execute(void)
 	iterator = g_mini.cmds;
 	ft_output_file(iterator);
 	ft_print_cmds(iterator);
-	while (iterator && iterator->command_path)
+	while (iterator && (iterator->command_path || iterator->is_built_in == 1))
 	{
-		ft_fork_process(iterator);
-		ft_redirect(iterator);
+		if (iterator->is_built_in == 0)
+		{
+			ft_fork_process(iterator);
+			ft_redirect(iterator);
+		}
+		else if (iterator->is_built_in == 1)
+		{
+			ft_execute_built_in(iterator, iterator->toks);
+		}
 		// ft_print_cmds(iterator);
 		if (iterator->next == NULL)
 			break ;

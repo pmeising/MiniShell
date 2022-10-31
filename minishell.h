@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/30 18:36:43 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:14:35 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ typedef struct	s_cmd
 	int			fd_in; // reuse in/-output files, just need to rewrite the in/output files at end of execution.
 	int			fd_out;
 	int			open_flag[10]; // 0 stands for overwrite, 1 for add. default = -1
+	int			is_built_in; // flag for calling builtin function, default = 0;
 	struct s_cmd	*next;
 	struct s_cmd	*previous;
-	int			is_built_in; // flag for calling builtin function;
 }				t_cmd;
 
 /*
@@ -217,6 +217,9 @@ void	ft_remove_quotes(char *content);
 // built_in_exec.c
 void ft_pwd_exec(void);
 void ft_env_exec(void);
+void ft_exit_exec(t_list *toks);
+void ft_unset_exec(t_list *toks);
+void ft_delete_env(t_list *dup_env, int i); // in utils
 
 
 

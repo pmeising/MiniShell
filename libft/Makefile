@@ -6,7 +6,7 @@
 #    By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/02 15:40:59 by bde-carv          #+#    #+#              #
-#    Updated: 2022/10/27 17:22:40 by bde-carv         ###   ########.fr        #
+#    Updated: 2022/10/31 18:14:35 by bde-carv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRC = ft_isalpha.c \
 	  ft_strchr.c \
 	  ft_strrchr.c \
 	  ft_strncmp.c \
+	  ft_strcmp.c \
 	  ft_memchr.c \
 	  ft_memcmp.c \
 	  ft_strnstr.c \

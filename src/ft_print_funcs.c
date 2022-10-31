@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:49:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/30 16:32:48 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:14:33 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	ft_print_cmds(t_cmd *cmd)
 		printf("HEREDOC_DELIM: %s\n", iterator->HEREDOC_DELIM);
 		printf("fd_in: %d\n", iterator->fd_in);
 		printf("fd_out: %d\n", iterator->fd_out);
+		printf("is_built_in: %d\n", iterator->is_built_in);
 		// printf("open_flag: %d\n", iterator->open_flag);
 		iterator = iterator->next;
 	}

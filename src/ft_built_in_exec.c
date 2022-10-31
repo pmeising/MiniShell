@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 17:51:01 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/30 18:01:13 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:14:43 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,65 @@ void ft_pwd_exec(void)
 */
 void ft_env_exec(void)
 {
-	while (g_mini.dup_env)
+	t_list	*iterator;
+
+	iterator = g_mini.dup_env;
+	while (iterator)
 	{
-		printf("%s\n", g_mini.dup_env->content);
-		g_mini.dup_env = g_mini.dup_env->next;
+		printf("%s\n", iterator->content);
+		iterator = iterator->next;
 	}
 }
 
+void ft_delete_env(t_list *dup_env, int i)
+{
+	t_list	*iterator;
+	t_list	*next;
+
+	iterator = dup_env;
+	if (!iterator)
+		printf("nothing to delete\n");
+	while (i > 1 && iterator)
+	{
+		iterator = iterator->next;
+		i--;
+	}
+	printf("deleting node.\n");
+	next = iterator->next->next;
+	free (iterator->next);
+	iterator->next = next;
+}
+
+void ft_unset_exec(t_list *toks)
+{
+	int	len;
+	int		i;
+	t_list	*iterator;
+
+	i = 0;
+	iterator = g_mini.dup_env;
+	len = (int)ft_strlen(toks->next->content);
+	if (!toks->next)
+	{
+		printf("nothing to unset\n");
+	}
+	else if (toks->next->next)
+	{
+		printf("too many arguments for unset\n");
+	}
+	while (iterator)
+	{
+		if (ft_strncmp(iterator->content, toks->next->content, len) == 0)
+			ft_delete_env(g_mini.dup_env, i);
+		i++;
+		iterator = iterator->next;
+	}
+}
+
+void ft_exit_exec(t_list *toks)
+{
+	if (toks->next)
+		printf("error: no additional parameters for exit allowed");
+	printf("exit\n");
+	exit(EXIT_SUCCESS);
+}

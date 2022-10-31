@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:33:38 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/30 18:35:34 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:23:381 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 	char	**paths;
 	char	*temp_str;
 	int		i;
-	
 
 	i = 0;
 	path = ft_find_path();
@@ -81,15 +80,11 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 	while (paths[i])
 	{
 		temp_str = ft_strjoin(paths[i], iterator->content);
-		if (access(temp_str, F_OK | X_OK) == 0)
+		if (ft_is_built_in(iterator->content) == 1)
+			cmd->is_built_in = 1;
+		else if (access(temp_str, F_OK | X_OK) == 0)
 		{
-			if (ft_is_built_in(iterator->content) == 1)
-			{
-				cmd->is_built_in = 1;
-				//cmd->command_path = ft_strjoin("../src/built_in/", iterator->content);
-			}
-			else
-				cmd->command_path = temp_str;
+			cmd->command_path = temp_str;
 			break ;
 		}
 		i++;
@@ -125,71 +120,110 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks)
 }
 /* *********************************/
 
-// void ft_cd_empty(void)
-// {
-// 	chdir(getenv("HOME"));
-// }
+void ft_cd_empty(void)
+{
+	int	check;
+	
+	printf("hello\n");
+	check = chdir(getenv("HOME"));
+	printf("check; %d\n", check);
+}
 
-// void ft_exit_exec(t_list *toks)
-// {
-// 	if (toks->next->content)
-// 	{
-// 		printf("error: no additional parameters for exit allowed");
-// 	}
-// 	printf("exit\n");
-// 	exit(EXIT_SUCCESS);
-// }
 
-// void ft_unset_exec(t_list *toks)
+// t_list	*sort_list(t_list* lst, int (*cmp)(int, int))
 // {
-// 	int len;
+// 	int swap;
+// 	t_list *tmp;
 
-// 	len = ft_strlen(toks->content);
-// 	if (!toks->next->content)
+// 	tmp = lst;
+// 	while(lst->next != 0)
 // 	{
-// 		printf("nothing to unset\n");
-// 	}
-// 	if (toks->next->next->content)
-// 	{
-// 		printf("too many arguments for unset\n");
-// 	}
-// 	while (g_mini.dup_env)
-// 	{
-// 		if (ft_strncmp(g_mini.dup_env->content, toks->content, len))
+// 		if ((*cmp)(lst->data, lst->next->data) == 0)
 // 		{
-// 			free(g_mini.dup_env->content);
+// 			swap = lst->data;
+// 			lst->data = lst->next->data;
+// 			lst->next->data = swap;
+// 			lst = tmp;
 // 		}
-// 		g_mini.dup_env = g_mini.dup_env->next;
+// 		else
+// 		{
+// 			lst = lst->next;
+// 		}
 // 	}
+// 	lst = tmp;
+// 	return (lst);
 // }
+
+void	ft_print_sorted_env(t_list *dup_env)
+{  // swap content version
+
+	t_list	*iterator;
+	char	*temp_cont;
+
+	iterator = dup_env;
+	while (iterator && iterator->next)
+	{
+		if (strcmp(iterator->content, iterator->next->content) > 0 /*&& iterator == *dup_env*/)
+		{
+			temp_cont = iterator->content;
+			iterator->content = iterator->next->content;
+			iterator->next->content = temp_cont;
+			iterator = dup_env;
+		}
+		else
+			iterator = iterator->next;
+	}
+	iterator = dup_env;
+	while (iterator)
+	{
+		printf("%s\n", iterator->content);
+		iterator = iterator->next;
+	}
+}
+
+void	ft_export_exec(t_list *toks)
+{
+	if (!toks->next)
+		ft_print_sorted_env(g_mini.dup_env);
+	else
+	{
+		
+	}
+		ft_lstadd_back(&g_mini.dup_env, ft_lstnew(toks->next->content));
+}
 
 void ft_execute_built_in(t_cmd *cmd, t_list *toks)
 {
 	(void)cmd;
+
+	printf("Entered the built_in execution.\n");
 	if (ft_is_pwd(toks->content))
 		ft_pwd_exec();
 	if (ft_is_env(toks->content))
 		ft_env_exec();
+	if (ft_is_unset(toks->content))
+		ft_unset_exec(toks);
+	if (ft_is_exit(toks->content))
+		ft_exit_exec(toks);
+	if (ft_is_export(toks->content))
+		ft_export_exec(toks);
+
+
 	
-	
-	// if (ft_is_unset(toks->content)) // same problem as with exit
-	// 	ft_unset_exec(toks);
-	// if (ft_is_exit(toks->content))  // command is not being found, thus wo sucht access ?
-	// 	ft_exit_exec(toks);
-	
-	// if (ft_is_cd(toks->content) && !cmd->arguments[1]) // cant be checked because of immedeate abort after calling
-	// {
-	// 	ft_cd_empty();
-	// }
-	// else if (ft_is_echo(toks->content) && cmd->arguments[1] == '.' && !cmd->arguments[2])
+	if (ft_is_cd(toks->content)) /*&& !cmd->arguments[1]*/ // cant be checked because of immedeate abort after calling
+	{
+		printf("cd_empty.\n");
+		ft_cd_empty();
+	}
+	// else if (ft_is_cd(toks->content) && cmd->arguments[1] == '.' && !cmd->arguments[2])
 	// {
 	// 	ft_cd_dot()
 	// }
-	// else if (ft_is_echo(toks->content) && cmd->arguments[1] == '.' && !cmd->arguments[2] == '.')
+	// else if (ft_is_cd(toks->content) && cmd->arguments[1] == '.' && !cmd->arguments[2] == '.')
 	// {
 	// 	ft_cd_two_dots();
 	// }
-	// else if (ft_is_echo(toks->content) && cmd->arguments[1])
+	// else if (ft_is_cd(toks->content) && cmd->arguments[1])
 	// {
 	// 	ft_cd_file(cmd->arguments[1]);
 	// }
@@ -216,13 +250,13 @@ void	ft_interpret(void)
 			if (ft_find_command(cmd_iterator, tok_iterator) == 0)
 			{
 				ft_store_arguments(cmd_iterator, tok_iterator);
-				if (cmd_iterator->is_built_in == 1)
-				{
-					ft_execute_built_in(cmd_iterator, tok_iterator);
-				}
+				// if (cmd_iterator->is_built_in == 1)
+				// {
+				// 	ft_execute_built_in(cmd_iterator, tok_iterator);
+				// }
 				break ;
 			}
-			if (!cmd_iterator->command_path)
+			if (!cmd_iterator->command_path && cmd_iterator->is_built_in == 0)
 			{
 				printf("minishell: %s: command not found\n", \
 						cmd_iterator->toks->content);

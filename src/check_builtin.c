@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 16:27:58 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/26 18:52:02 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:14:33 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,11 @@ int ft_is_exit(char *cmd_name)
 	exit_1[4] = 't';
 	exit_1[5] = '"';
 	exit_1[6] = '\0';
-	exit[0] = 'p';
-	exit[1] = 'w';
-	exit[2] = 'd';
-	exit[3] = '\0';
+	exit[0] = 'e';
+	exit[1] = 'x';
+	exit[2] = 'i';
+	exit[3] = 't';
+	exit[4] = '\0';
 
 	if (ft_strncmp(cmd_name, exit, 4) == 0)
 		return (1);
