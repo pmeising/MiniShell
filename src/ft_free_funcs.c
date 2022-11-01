@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_funcs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 14:40:11 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/01 17:56:48 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void ft_free()
 	
 	i = 0;
 	cmd_iterator = g_mini.cmds;
-	ft_free_files();
+	// ft_free_files();
 	while (cmd_iterator)
 	{
 		ft_free_lst_cont(cmd_iterator->toks);

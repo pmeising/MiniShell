@@ -240,6 +240,7 @@ void	ft_execute(void)
 		else if (iterator->is_built_in == 1)
 		{
 			ft_execute_built_in(iterator, iterator->toks);
+			// only for echo, env, etc... ft_redirect(iterator);
 		}
 		// ft_print_cmds(iterator);
 		if (iterator->next == NULL)

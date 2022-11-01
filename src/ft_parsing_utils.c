@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:26:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 16:06:39 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/01 17:41:21 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,37 @@
 */
 void	ft_remove_quotes(char *content)
 {
-	int	i;
-	int	j;
-	char tmp;
-	
+	int		i;
+	int		j;
+	char	tmp;
+	// "'fgg'"
 	i = 0;
 	j = 1;
-	// printf("con: %s\nlen: %d\n", content, len);
-	if (content[0] == 34 || content[0] == 39)
+	if (content[0] == 34)
+	{
+		while (content[i] && content[j] != 34)
+		{
+			tmp = content[j];
+			content[i] = tmp;
+			i++;
+			j++;
+		}
+		content[i] = '\0';
+		content[j] = '\0';
+	}
+	else if (content[0] == 39)
+	{
+		while (content[i] && content[j] != 39)
+		{
+			tmp = content[j];
+			content[i] = tmp;
+			i++;
+			j++;
+		}
+		content[i] = '\0';
+		content[j] = '\0';
+	}
+	else if (content[0] == 34 || content[0] == 39)
 	{
 		while (content[i] && (content[j] != 34 && content[j] != 39))
 		{
@@ -39,6 +62,7 @@ void	ft_remove_quotes(char *content)
 		content[j] = '\0';
 	}
 }
+
 
 /*
 * skips non existent variables

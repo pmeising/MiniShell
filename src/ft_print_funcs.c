@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_print_funcs.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:49:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 14:38:23 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/01 17:40:52 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_print_list(t_cmd *cmds)
 	iterator = cmds->toks;
 	while (iterator)
 	{
-		printf("%d. node: %s\n", i, cmds->toks->content);
+		printf("%d. node: %s\n", i, iterator->content);
 		i++;
 		iterator = iterator->next;
 	}

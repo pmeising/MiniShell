@@ -120,68 +120,27 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks)
 }
 /* *********************************/
 
-void ft_cd_empty(void)
+void	ft_echo_exec(t_cmd *iterator)
 {
-	int	check;
-	
-	printf("hello\n");
-	check = chdir(getenv("HOME"));
-	printf("check; %d\n", check);
-}
+	t_list	*t_iterator;
 
-/*
-* built in execution function for "cd ..";
-*/
-void	ft_cd_two_dots(void)
-{
-	char	*cur_cwd;
-	char	*new_cwd;
-	int		len;
-	int		j;
-
-	j = 0;
-	cur_cwd = malloc(sizeof(char) * 2048);
-	if (!cur_cwd)
-		printf("cd 2 dots: malloc error\n");
-	cur_cwd = getcwd(cur_cwd, 1024);
-	len = ft_strlen(cur_cwd);
-	while (cur_cwd[len] != '/')
-		len--;
-	cur_cwd[len] = '\0';
-	new_cwd = malloc(sizeof(char) * len);
-	if (!new_cwd)
-		printf("cd 2 dots: malloc error\n");
-	while (cur_cwd[j])
+	t_iterator = iterator->toks->next;
+	printf("echo entered.\n");
+	if (iterator->output_file[0] != NULL)
 	{
-		new_cwd[j] = cur_cwd[j];
-		j++;
+		iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_TRUNC, 0777);
+		if (iterator->fd_out == -1)
+			exit (0);
 	}
-	new_cwd[j] = '\0';
-	free (cur_cwd);
-	chdir(new_cwd);
-	free (new_cwd);
-}
-
-void ft_cd_exec(t_list *toks)
-{
-	int 	p;
-	int		check;
-
-	p = 3;
-	if (!toks->next)
+	dup2(iterator->fd_out, STDOUT_FILENO);
+	if (iterator->fd_out != 1)
+		close(iterator->fd_out);
+	printf("before while\n");
+	printf("\n");
+	while(t_iterator)
 	{
-		printf("cd_empty.\n");
-		ft_cd_empty();
-	}
-	else if (toks->next->content[0] == '.' && (ft_is_space(toks->next->content[1]) == 1 || toks->next->content[1] == '\0'))
-		(void)p;
-	else if (toks->next->content[0] == '.' && toks->next->content[1] == '.')
-		ft_cd_two_dots();
-	else if (toks->next)
-	{
-		check = chdir(toks->next->content);
-		if (check == -1)
-			printf("minishell: cd: %s: No such file or directory\n", toks->next->content);
+		printf("%s ", t_iterator->content);
+		t_iterator = t_iterator->next;
 	}
 }
 
@@ -202,7 +161,8 @@ void ft_execute_built_in(t_cmd *cmd, t_list *toks)
 		ft_export_exec(toks);
 	if (ft_is_cd(toks->content))
 		ft_cd_exec(toks);
-
+	if (ft_is_echo(toks->content))
+		ft_echo_exec(cmd);
 }
 
 /* ***************************** */
@@ -226,10 +186,6 @@ void	ft_interpret(void)
 			if (ft_find_command(cmd_iterator, tok_iterator) == 0)
 			{
 				ft_store_arguments(cmd_iterator, tok_iterator);
-				// if (cmd_iterator->is_built_in == 1)
-				// {
-				// 	ft_execute_built_in(cmd_iterator, tok_iterator);
-				// }
 				break ;
 			}
 			if (!cmd_iterator->command_path && cmd_iterator->is_built_in == 0)

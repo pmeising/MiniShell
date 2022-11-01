@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 16:06:01 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/01 16:37:17 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ void	ft_env_vars(char *raw_input);
 int		ft_dollar_sign(char *raw_input);
 
 //test
-// int		ft_find_command(t_cmd *cmd, char *content);
+// ft_parsing_utils.c
 int		ft_find_command(t_cmd *cmd, t_list *iterator);
 char	**ft_find_paths(char *path);
 char	*ft_find_path(void);
@@ -226,10 +226,11 @@ void ft_delete_env(t_list *dup_env, int i); // in utils
 // ft_built_in_exec_2.c
 void	ft_export_exec(t_list *toks);
 void	ft_print_sorted_env(t_list *dup_env);
+void	ft_cd_exec(t_list *toks);
+void	ft_cd_two_dots(void);
+void	ft_cd_empty(void);
 
-
-
-
+//
 void	ft_copy_content(char *file_1, char *file_2, int open_flag);
 
 void ft_execute_built_in(t_cmd *cmd, t_list *toks);

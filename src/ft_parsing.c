@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parsing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 14:31:42 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/01 17:44:46 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,9 @@ char *ft_get_token(char *raw_input, int pos)
 	{// << END" " cat -e
 		if (raw_input[pos] == 34 || raw_input[pos] == 39)
 		{
+			printf("pos: %d\n", pos);
 			pos = ft_skip_quotes(raw_input, pos);
+			printf("pos: %d\n", pos);
 			// printf("gettok\n");
 		}
 		else
@@ -68,6 +70,7 @@ char *ft_get_token(char *raw_input, int pos)
 		perror("substring");
 		exit_program(EXIT_FAILURE);
 	}
+	printf("token; %s\n", token);
 	return (token);
 }
 
@@ -221,4 +224,5 @@ void ft_parsing(char *raw_input)
 		else if (!raw_input[pos])
 			break ;
 	}
+	// ft_print_cmds(cmd_iterator);
 }
