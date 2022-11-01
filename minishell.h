@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/31 18:14:35 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/01 14:25:44 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,13 @@
 # include <sys/ioctl.h> /*    */
 # include <termios.h> /*    */
 # include <fcntl.h> 
+#include <readline/readline.h>
+#include <readline/history.h>
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEED TO REMOVE/ADJUST THE PATH HERE.
 
-# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
-# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
+// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
+// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
 
 // macros
 

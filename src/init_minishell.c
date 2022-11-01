@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:30:36 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/30 17:21:41 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/01 14:26:50 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_oldpwd(void)
 * replaces the content of an env_var;
 * take the name of an env adds a '=' and then joins with the new_value;
 */
-char *ft_replace_env_cont(char **curr_content, char *env_name, char *new_value)
+char	*ft_replace_env_cont(char **curr_content, char *env_name, char *new_value)
 {
 	char *tmp;
 	char *res;
@@ -53,8 +53,8 @@ char *ft_replace_env_cont(char **curr_content, char *env_name, char *new_value)
 	}
 	free(tmp);
 	tmp = 0; // is needed for some reason or there will be no value in SHLVL
-	//free(curr_content); should be freed but gives compiling error ?
-	curr_content = 0; // // is needed for some reason or there will be no value in SHLVL
+	free(curr_content);// should be freed but gives compiling error ?
+	// curr_content = 0; // // is needed for some reason or there will be no value in SHLVL
 	return(res);
 }
 
