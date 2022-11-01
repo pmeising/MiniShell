@@ -129,67 +129,60 @@ void ft_cd_empty(void)
 	printf("check; %d\n", check);
 }
 
+/*
+* built in execution function for "cd ..";
+*/
+void	ft_cd_two_dots(void)
+{
+	char	*cur_cwd;
+	char	*new_cwd;
+	int		len;
+	int		j;
 
-// t_list	*sort_list(t_list* lst, int (*cmp)(int, int))
-// {
-// 	int swap;
-// 	t_list *tmp;
-
-// 	tmp = lst;
-// 	while(lst->next != 0)
-// 	{
-// 		if ((*cmp)(lst->data, lst->next->data) == 0)
-// 		{
-// 			swap = lst->data;
-// 			lst->data = lst->next->data;
-// 			lst->next->data = swap;
-// 			lst = tmp;
-// 		}
-// 		else
-// 		{
-// 			lst = lst->next;
-// 		}
-// 	}
-// 	lst = tmp;
-// 	return (lst);
-// }
-
-void	ft_print_sorted_env(t_list *dup_env)
-{  // swap content version
-
-	t_list	*iterator;
-	char	*temp_cont;
-
-	iterator = dup_env;
-	while (iterator && iterator->next)
+	j = 0;
+	cur_cwd = malloc(sizeof(char) * 2048);
+	if (!cur_cwd)
+		printf("cd 2 dots: malloc error\n");
+	cur_cwd = getcwd(cur_cwd, 1024);
+	len = ft_strlen(cur_cwd);
+	while (cur_cwd[len] != '/')
+		len--;
+	cur_cwd[len] = '\0';
+	new_cwd = malloc(sizeof(char) * len);
+	if (!new_cwd)
+		printf("cd 2 dots: malloc error\n");
+	while (cur_cwd[j])
 	{
-		if (strcmp(iterator->content, iterator->next->content) > 0 /*&& iterator == *dup_env*/)
-		{
-			temp_cont = iterator->content;
-			iterator->content = iterator->next->content;
-			iterator->next->content = temp_cont;
-			iterator = dup_env;
-		}
-		else
-			iterator = iterator->next;
+		new_cwd[j] = cur_cwd[j];
+		j++;
 	}
-	iterator = dup_env;
-	while (iterator)
-	{
-		printf("%s\n", iterator->content);
-		iterator = iterator->next;
-	}
+	new_cwd[j] = '\0';
+	free (cur_cwd);
+	chdir(new_cwd);
+	free (new_cwd);
 }
 
-void	ft_export_exec(t_list *toks)
+void ft_cd_exec(t_list *toks)
 {
+	int 	p;
+	int		check;
+
+	p = 3;
 	if (!toks->next)
-		ft_print_sorted_env(g_mini.dup_env);
-	else
 	{
-		
+		printf("cd_empty.\n");
+		ft_cd_empty();
 	}
-		ft_lstadd_back(&g_mini.dup_env, ft_lstnew(toks->next->content));
+	else if (toks->next->content[0] == '.' && (ft_is_space(toks->next->content[1]) == 1 || toks->next->content[1] == '\0'))
+		(void)p;
+	else if (toks->next->content[0] == '.' && toks->next->content[1] == '.')
+		ft_cd_two_dots();
+	else if (toks->next)
+	{
+		check = chdir(toks->next->content);
+		if (check == -1)
+			printf("minishell: cd: %s: No such file or directory\n", toks->next->content);
+	}
 }
 
 void ft_execute_built_in(t_cmd *cmd, t_list *toks)
@@ -207,26 +200,9 @@ void ft_execute_built_in(t_cmd *cmd, t_list *toks)
 		ft_exit_exec(toks);
 	if (ft_is_export(toks->content))
 		ft_export_exec(toks);
+	if (ft_is_cd(toks->content))
+		ft_cd_exec(toks);
 
-
-	
-	if (ft_is_cd(toks->content)) /*&& !cmd->arguments[1]*/ // cant be checked because of immedeate abort after calling
-	{
-		printf("cd_empty.\n");
-		ft_cd_empty();
-	}
-	// else if (ft_is_cd(toks->content) && cmd->arguments[1] == '.' && !cmd->arguments[2])
-	// {
-	// 	ft_cd_dot()
-	// }
-	// else if (ft_is_cd(toks->content) && cmd->arguments[1] == '.' && !cmd->arguments[2] == '.')
-	// {
-	// 	ft_cd_two_dots();
-	// }
-	// else if (ft_is_cd(toks->content) && cmd->arguments[1])
-	// {
-	// 	ft_cd_file(cmd->arguments[1]);
-	// }
 }
 
 /* ***************************** */

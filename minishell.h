@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 14:25:44 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/01 16:06:01 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@
 # include <sys/ioctl.h> /*    */
 # include <termios.h> /*    */
 # include <fcntl.h> 
-#include <readline/readline.h>
-#include <readline/history.h>
+// #include <readline/readline.h>
+// #include <readline/history.h>
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEED TO REMOVE/ADJUST THE PATH HERE.
 
-// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
-// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
+# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
+# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
 
 // macros
 
@@ -216,12 +216,16 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks);
 void	ft_interpret(void);
 void	ft_remove_quotes(char *content);
 
-// built_in_exec.c
+// ft_built_in_exec.c
 void ft_pwd_exec(void);
 void ft_env_exec(void);
 void ft_exit_exec(t_list *toks);
 void ft_unset_exec(t_list *toks);
 void ft_delete_env(t_list *dup_env, int i); // in utils
+
+// ft_built_in_exec_2.c
+void	ft_export_exec(t_list *toks);
+void	ft_print_sorted_env(t_list *dup_env);
 
 
 

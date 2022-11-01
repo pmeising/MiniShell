@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:30:36 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 14:26:50 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/01 16:06:01 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ void	ft_oldpwd(void)
 }
 
 /*
-* replaces the content of an env_var;
-* take the name of an env adds a '=' and then joins with the new_value;
+*	replaces the content of an env_var;
+*	take the name of an env adds a '=' and then joins with the new_value;
 */
-char	*ft_replace_env_cont(char **curr_content, char *env_name, char *new_value)
+char	*ft_replace_env_cont(char *env_name, char *new_value)
 {
-	char *tmp;
-	char *res;
+	char	*tmp;
+	char	*res;
 
 	tmp = ft_strjoin(env_name, "=");
 	if (!tmp)
@@ -52,14 +52,14 @@ char	*ft_replace_env_cont(char **curr_content, char *env_name, char *new_value)
 		exit_program(EXIT_FAILURE);
 	}
 	free(tmp);
-	tmp = 0; // is needed for some reason or there will be no value in SHLVL
-	free(curr_content);// should be freed but gives compiling error ?
-	// curr_content = 0; // // is needed for some reason or there will be no value in SHLVL
+	// tmp = 0; // is needed for some reason or there will be no value in SHLVL
+	// free(*curr_content);// should be freed but gives compiling error ?
+	// curr_content = 0; // is needed for some reason or there will be no value in SHLVL
 	return(res);
 }
 
 /*
-* updates the content of a node/env_var in our dup_env list;
+*	updates the content of a node/env_var in our dup_env list;
 */
 void ft_update_env_list(char *env_name, char *new_value, t_list *dup_env)
 {
@@ -71,7 +71,7 @@ void ft_update_env_list(char *env_name, char *new_value, t_list *dup_env)
 	{
 		curr_content = (char *)dup_env->content;
 		if (ft_strncmp(env_name, curr_content, len) == 0)
-			dup_env->content = ft_replace_env_cont(&curr_content, env_name, new_value);
+			dup_env->content = ft_replace_env_cont(env_name, new_value);
 		dup_env = dup_env->next;
 	}
 }

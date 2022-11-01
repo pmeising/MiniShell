@@ -27,6 +27,7 @@ SRC =	${SRC_DIR}main.c \
 		${SRC_DIR}ft_interpret.c \
 		${SRC_DIR}ft_env_vars_funcs.c \
 		${SRC_DIR}ft_built_in_exec.c \
+		${SRC_DIR}ft_built_in_exec_2.c \
 		
 
 # takes the src files and converts them into .o files and puts them into /obj

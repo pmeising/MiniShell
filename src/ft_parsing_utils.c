@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parsing_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:26:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 14:42:42 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/01 16:06:39 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,12 @@
 */
 void	ft_remove_quotes(char *content)
 {
-	// int	len;
 	int	i;
 	int	j;
 	char tmp;
 	
 	i = 0;
 	j = 1;
-	// len = ft_strlen(content);
 	// printf("con: %s\nlen: %d\n", content, len);
 	if (content[0] == 34 || content[0] == 39)
 	{
