@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_funcs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/30 17:26:56 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/01 14:40:11 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void ft_free()
 	free (g_mini.cmds);
 	ft_free_lst_cont(g_mini.dup_env);
 	free (g_mini.raw_input);
-	free (&g_mini);
+	// free (&g_mini);
 }
 
 void ft_free_lst_cont(t_list *cmd_iterator)
