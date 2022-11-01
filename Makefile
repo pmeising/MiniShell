@@ -62,7 +62,7 @@ $(NAME):	$(OBJ)
 clean:
 		$(MAKE) fclean -C libft
 		rm -f $(OBJ)
-		rmdir $(OBJ_DIR)
+		# rmdir $(OBJ_DIR)
 
 # same as clean but also removes the executable
 fclean: clean
