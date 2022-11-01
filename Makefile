@@ -19,12 +19,12 @@ SRC =	${SRC_DIR}main.c \
 		${SRC_DIR}ft_delim_funcs.c \
 		${SRC_DIR}ft_lst_funcs.c \
 		${SRC_DIR}ft_parsing.c \
+		${SRC_DIR}ft_parsing_utils.c \
 		${SRC_DIR}ft_print_funcs.c \
 		${SRC_DIR}check_builtin.c \
 		${SRC_DIR}check_builtin2.c \
 		${SRC_DIR}ft_free_funcs.c \
 		${SRC_DIR}ft_interpret.c \
-		${SRC_DIR}parsing_utils.c \
 		${SRC_DIR}ft_env_vars_funcs.c \
 		${SRC_DIR}ft_built_in_exec.c \
 		

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_vars_funcs.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:42:08 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/29 15:46:45 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/01 14:45:34 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,12 @@
 */
 char	*ft_extract_content(char *var_name)
 {
-	int 	i;
 	int		var_name_len;
 	int		content_len;
 	char	*content;
 	char	*var_name_and_content;
 	t_list	*iterator;
 
-	i = 0;
 	iterator = g_mini.dup_env;
 	// printf("var_name: %s\n", var_name);
 	var_name_len = ft_strlen(var_name);
@@ -158,13 +156,11 @@ void ft_env_vars(char *raw_input)
 {
 	int pos;
 	int	j;
-	int	ignore;
 	int	single_quotes;
 	int	double_quotes;
 
 	pos = 0;
 	j = 0;
-	ignore = 0;
 	single_quotes = 0;
 	double_quotes = 0;
 	while (raw_input[pos])
