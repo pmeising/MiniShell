@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 14:02:44 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/31 18:14:42 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/01 14:38:46 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 typedef struct s_list
 {
-	void			*content;
+	char			*content;
 	long			index;
 	struct s_list	*next;
 }					t_list;
