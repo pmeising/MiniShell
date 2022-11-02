@@ -138,6 +138,7 @@ void	ft_echo_exec(t_cmd *iterator)
 	fork_pid = fork();
 	if (fork_pid == 0)
 	{
+		// printf("in child.\n");
 		if (iterator->output_file[0] != NULL) // mull/Output_file.txt
 		{
 			iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_TRUNC, 0777);
@@ -151,10 +152,10 @@ void	ft_echo_exec(t_cmd *iterator)
 		dup2(iterator->fd_out, STDOUT_FILENO);
 		if (iterator->fd_out != 1)
 		{
-			printf("closing file.\n");
+			// printf("closing file.\n");
 			close(iterator->fd_out);
 		}
-		printf("before while\n");
+		// printf("before while\n");
 		// we are at 2nd node here.
 		if (ft_strncmp(toks_iterator->content, "-n", 2) == 0)
 		{
@@ -170,7 +171,10 @@ void	ft_echo_exec(t_cmd *iterator)
 			printf("\n");
 	}
 	else
+	{
+		sleep(1);
 		kill(fork_pid, SIGKILL);
+	}
 }
 
 void ft_execute_built_in(t_cmd *cmd, t_list *toks)

@@ -1,3 +1,6 @@
-closing file.
-before while
-test this ksle 
+skd 
+I am child.
+it_inputfile: mull/Input_file.txt
+it_outputfile: (null). fd_out: 1
+fd_in in child: 3
+skd $

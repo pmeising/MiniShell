@@ -106,7 +106,7 @@ void	ft_fork_process(t_cmd *iterator)
 		dup2(iterator->fd_out, STDOUT_FILENO); // fd_out defaults to 1
 		if (iterator->fd_out != 1)
 			close(iterator->fd_out);
-		printf("KDJFIAEHJLSIEHGIEHJ \n");
+		// printf("KDJFIAEHJLSIEHGIEHJ \n");
 		// printf("input: %s\n output: %s\n", iterator->input_file, iterator->output_file[0]);
 		execve(iterator->command_path, iterator->arguments, g_mini.env);
 		dup2(1, STDOUT_FILENO);
@@ -115,7 +115,7 @@ void	ft_fork_process(t_cmd *iterator)
 	}
 	if (fork_check != 0)
 	{
-		sleep(5);
+		sleep(1);
 		waitpid(0, NULL, 0);
 		printf("I am parent.\n");
 	}
