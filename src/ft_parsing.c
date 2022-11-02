@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 17:44:46 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/02 20:13:45 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,7 @@ void ft_parsing(char *raw_input)
 		// printf("Lst_new? is that you?\n");
 		cmd_iterator = ft_lstnew_cmds();
 		// printf("Created node.\n");
-		cmd_iterator->output_file = ft_calloc(1000, sizeof(char)); // Always free in loop in the end!!!
+		cmd_iterator->output_file = ft_calloc(10000, sizeof(char)); // Always free in loop in the end!!!
 		// cmd_iterator->open_flag = malloc(100 * sizeof(int));
 		cmd_iterator->output_file[0] = "mull/Output_file.txt";
 		while(raw_input[pos] && ft_is_cmd_delim(raw_input[pos]) == 0)
@@ -224,5 +224,4 @@ void ft_parsing(char *raw_input)
 		else if (!raw_input[pos])
 			break ;
 	}
-	// ft_print_cmds(cmd_iterator);
 }

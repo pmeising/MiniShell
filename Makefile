@@ -6,6 +6,13 @@ INC_DIR = inc/
 LIBFT_DIR = libft/
 LIBFT_EXEC = libft.a
 READLINE	=  -I ${HOME}/goinfre/.brew/opt/readline/include/ -L ${HOME}/goinfre/.brew/opt/readline/lib/ -lreadline
+OS = $(shell uname)
+
+ifeq ($(OS),Darwin)
+	COMPILE = $(CC) $(CFLAGS) $(LIBFT_DIR)$(LIBFT_EXEC) ${READLINE} $^ -o $@
+else
+	COMPILE = @echo "IT's linux.\n"
+endif
 
 SRC =	${SRC_DIR}main.c \
 		${SRC_DIR}ft_env.c \
@@ -28,7 +35,6 @@ SRC =	${SRC_DIR}main.c \
 		${SRC_DIR}ft_env_vars_funcs.c \
 		${SRC_DIR}ft_built_in_exec.c \
 		${SRC_DIR}ft_built_in_exec_2.c \
-		
 
 # takes the src files and converts them into .o files and puts them into /obj
 # % means "take all" (=wildcard)
@@ -57,7 +63,7 @@ $(OBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 # $^ : name of prerequisite/dependency that caused the rule/target (=whole thing) to execute
 $(NAME):	$(OBJ)
 			$(MAKE) bonus -C libft
-			$(CC) $(CFLAGS) $(LIBFT_DIR)$(LIBFT_EXEC) ${READLINE} $^ -o $@
+			$(COMPILE)
 			
 # remove all object files and also clean libft
 clean:

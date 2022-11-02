@@ -120,28 +120,57 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks)
 }
 /* *********************************/
 
+//echo hello hggjg >> brick.txt
 void	ft_echo_exec(t_cmd *iterator)
 {
-	t_list	*t_iterator;
+	t_list	*toks_iterator;
+	int		n_flag;
+	int		fork_pid;
 
-	t_iterator = iterator->toks->next;
+	n_flag = 0;
+	if (!iterator->toks->next)
+	{
+		printf("\n");
+		exit(0); // back to 42shell;
+	}
+	toks_iterator = iterator->toks->next;
 	printf("echo entered.\n");
-	if (iterator->output_file[0] != NULL)
+	fork_pid = fork();
+	if (fork_pid == 0)
 	{
-		iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_TRUNC, 0777);
-		if (iterator->fd_out == -1)
-			exit (0);
+		if (iterator->output_file[0] != NULL) // mull/Output_file.txt
+		{
+			iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_TRUNC, 0777);
+			if (iterator->fd_out == -1)
+			{
+				printf("Open outputfile failed.\n");
+				close(iterator->fd_out);
+				exit (0);
+			}
+		}
+		dup2(iterator->fd_out, STDOUT_FILENO);
+		if (iterator->fd_out != 1)
+		{
+			printf("closing file.\n");
+			close(iterator->fd_out);
+		}
+		printf("before while\n");
+		// we are at 2nd node here.
+		if (ft_strncmp(toks_iterator->content, "-n", 2) == 0)
+		{
+			n_flag = 1;
+			toks_iterator = toks_iterator->next;
+		}
+		while(toks_iterator)
+		{
+			printf("%s ", toks_iterator->content);
+			toks_iterator = toks_iterator->next;
+		}
+		if (n_flag != 1)
+			printf("\n");
 	}
-	dup2(iterator->fd_out, STDOUT_FILENO);
-	if (iterator->fd_out != 1)
-		close(iterator->fd_out);
-	printf("before while\n");
-	printf("\n");
-	while(t_iterator)
-	{
-		printf("%s ", t_iterator->content);
-		t_iterator = t_iterator->next;
-	}
+	else
+		kill(fork_pid, SIGKILL);
 }
 
 void ft_execute_built_in(t_cmd *cmd, t_list *toks)
@@ -198,5 +227,6 @@ void	ft_interpret(void)
 		}
 		cmd_iterator = cmd_iterator->next;
 	}
-	ft_print_cmds(g_mini.cmds);
+	// printf("#####	First time cmd print!	#####\n");
+	// ft_print_cmds(g_mini.cmds);
 }

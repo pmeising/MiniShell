@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:49:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 17:40:52 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/02 20:24:41 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_print_args(t_cmd *iterator)
 	i = 0;
 	while (iterator->output_file[i] && (iterator->open_flag[i] == -1 || iterator->open_flag[i] == 0 || iterator->open_flag[i] == 1))
 	{
-		printf("outputfile:%s\n", iterator->output_file[i]);
+		printf("outputfile: %s\n", iterator->output_file[i]);
 		printf("open_flag: %d\n", iterator->open_flag[i]);
 		i++;
 	}

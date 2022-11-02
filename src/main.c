@@ -73,9 +73,7 @@ void	ft_fork_process(t_cmd *iterator)
 	if (fork_check == 0)
 	{
 		printf("I am child.\n");
-		// printf("iterator->input_file: %s\n", iterator->input_file);
-		// printf("iterator->output_file: %s\n", iterator->output_file[0]);
-		// printf("iterator->output_file: %s\n", iterator->output_file[1]);
+		printf("it_inputfile: %s\nit_outputfile: %s. fd_out: %d\n", iterator->input_file, iterator->output_file[0], iterator->fd_out);
 		if (iterator->input_file != NULL)
 		{
 			file_check = access(iterator->input_file, R_OK | F_OK);
@@ -108,6 +106,7 @@ void	ft_fork_process(t_cmd *iterator)
 		dup2(iterator->fd_out, STDOUT_FILENO); // fd_out defaults to 1
 		if (iterator->fd_out != 1)
 			close(iterator->fd_out);
+		printf("KDJFIAEHJLSIEHGIEHJ \n");
 		// printf("input: %s\n output: %s\n", iterator->input_file, iterator->output_file[0]);
 		execve(iterator->command_path, iterator->arguments, g_mini.env);
 		dup2(1, STDOUT_FILENO);
@@ -116,7 +115,8 @@ void	ft_fork_process(t_cmd *iterator)
 	}
 	if (fork_check != 0)
 	{
-		wait(NULL);
+		sleep(5);
+		waitpid(0, NULL, 0);
 		printf("I am parent.\n");
 	}
 }
@@ -135,6 +135,7 @@ void	ft_copy_content(char *file_1, char *file_2, int open_flag)
 	if (fd_file_1 == -1)
 	{
 		printf("error fd_file_1");
+		close(fd_file_1);
 		exit_program(EXIT_FAILURE);
 	}
 	if (open_flag == 0)
@@ -200,6 +201,7 @@ void	ft_redirect(t_cmd *iterator)
 			ft_copy_content(iterator->output_file[0], iterator->next->input_file, 1);
 		i++;
 	}
+	// printf("it_input: %s\n", iterator->next->input_file);
 	// if (iterator->output_file[0] == NULL)
 	// 	ft_copy_content(iterator->output_file[0], "Input_file.txt", 0);
 }
@@ -214,7 +216,10 @@ void	ft_output_file(t_cmd *iterator)
 
 	temp = ft_lstlast_cmds(iterator);
 	if ((ft_strncmp(temp->output_file[0], "mull/Output_file.txt", 21) == 0) && temp->output_file[1] == NULL)
+	{
 		temp->output_file[0] = NULL;
+		temp->fd_out = 1;
+	}
 }
 
 /*
@@ -239,10 +244,11 @@ void	ft_execute(void)
 		}
 		else if (iterator->is_built_in == 1)
 		{
+			iterator->command_path = NULL;
+			printf("input: %s\noutput: %s\nfd_out: %d\n", iterator->input_file, iterator->output_file[0], iterator->fd_out);
 			ft_execute_built_in(iterator, iterator->toks);
-			// only for echo, env, etc... ft_redirect(iterator);
+			ft_redirect(iterator);
 		}
-		// ft_print_cmds(iterator);
 		if (iterator->next == NULL)
 			break ;
 		iterator = iterator->next;
