@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:34:35 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/25 19:35:37 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 19:47:19 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ int ft_check_semicolon(char *raw_input)
 
 /*
 * checks if the user-input is only white space;
+*	returns 1 if only space.
+*	returns 0 if at least one not space character.
 */
 int ft_str_only_space(char *raw_input)
 {

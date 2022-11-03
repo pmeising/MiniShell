@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:30:36 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 16:06:01 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 20:16:27 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ char	*ft_replace_env_cont(char *env_name, char *new_value)
 	tmp = ft_strjoin(env_name, "=");
 	if (!tmp)
 	{
-		printf("init_minishell:strings not joined\n");
-		exit_program(EXIT_FAILURE);
+		printf("ft_replace_env_cont:strings not joined\n");
+		exit_program(1);
 	}
 	res = ft_strjoin(tmp, new_value);
 	if (!res)
 	{
-		printf("init_minishell:strings not joined\n");
-		exit_program(EXIT_FAILURE);
+		printf("ft_replace_env_cont:strings not joined\n");
+		exit_program(1);
 	}
 	free(tmp);
 	// tmp = 0; // is needed for some reason or there will be no value in SHLVL
@@ -61,11 +61,11 @@ char	*ft_replace_env_cont(char *env_name, char *new_value)
 /*
 *	updates the content of a node/env_var in our dup_env list;
 */
-void ft_update_env_list(char *env_name, char *new_value, t_list *dup_env)
+void	ft_update_env_list(char *env_name, char *new_value, t_list *dup_env)
 {
-	char *curr_content;
-	int len;
-	
+	char	*curr_content;
+	int		len;
+
 	len = ft_strlen(env_name);
 	while (dup_env)
 	{
@@ -83,10 +83,10 @@ void ft_update_env_list(char *env_name, char *new_value, t_list *dup_env)
 * to int, increases it by 1, converts back to char* and 
 * puts it back into the env list;
 */
-void ft_raise_shlvl(void)
+void	ft_raise_shlvl(void)
 {
-	char *cur_lvl;
-	int int_cur_lvl;
+	char	*cur_lvl;
+	int		int_cur_lvl;
 
 	if (ft_env_exist("SHLVL", &g_mini.dup_env) == 0)
 		ft_create_env("SHLVL=1", &g_mini.dup_env);
@@ -99,8 +99,8 @@ void ft_raise_shlvl(void)
 		cur_lvl = ft_itoa(int_cur_lvl);
 		if (!cur_lvl)
 		{
-			printf("error: raise shlvl");
-			exit_program(EXIT_FAILURE);
+			printf("ft_raise_shlvl: raise shlvl\n");
+			exit_program(1);
 		}
 		ft_update_env_list("SHLVL", cur_lvl, g_mini.dup_env);
 		free(cur_lvl);
@@ -116,6 +116,9 @@ void ft_raise_shlvl(void)
 void	ft_init_minishell(t_mini *g_mini, char **env)
 {
 	g_mini->env = env;
+	g_mini->fdin = 0;
+	g_mini->fdout = 1;
+	g_mini->exit_status = 0;
 	ft_bzero(g_mini, sizeof(t_mini));
 	ft_copy_env(g_mini, env);
 	ft_oldpwd();

@@ -70,19 +70,20 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 	char	*path;
 	char	**paths;
 	char	*temp_str;
+	char	*temp_2;
 	int		i;
 
 	i = 0;
 	path = ft_find_path();
 	paths = ft_find_paths(path);
-
 	ft_remove_quotes(iterator->content);
 	while (paths[i])
 	{
 		temp_str = ft_strjoin(paths[i], iterator->content);
 		if (ft_is_built_in(iterator->content) == 1)
 			cmd->is_built_in = 1;
-		if (cmd->is_built_in == 1 && (access((ft_strjoin(paths[i], "test")), F_OK | X_OK) == 0))
+		temp_2 = ft_strjoin(paths[i], "test");
+		if (cmd->is_built_in == 1 && (access(temp_2, F_OK | X_OK) == 0))
 		{
 			cmd->arguments = ft_calloc(1000, sizeof(char));
 			if (!cmd->arguments)
@@ -91,15 +92,17 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 			cmd->arguments[1] = NULL;
 			cmd->command_path = ft_strjoin(paths[i], "test");
 			cmd->is_built_in = 1;
-			// if (cmd->next)
-			// 	printf("args[0]: %s\n", cmd->arguments[0]);
+			free (temp_2);
+			free (temp_str);
 			break ;
 		}
 		else if (access(temp_str, F_OK | X_OK) == 0 && cmd->is_built_in == 0)
 		{
 			cmd->command_path = temp_str;
+			free (temp_2);
 			break ;
 		}
+		free (temp_2);
 		i++;
 	}
 	if (paths[i] == NULL)
@@ -107,6 +110,13 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 		free(temp_str);
 		return (1);
 	}
+	i = 0;
+	while (paths[i])
+	{
+		free(paths[i]);
+		i++;
+	}
+	free (paths);
 	return (0);
 }
 
@@ -121,7 +131,10 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks)
 	i = 0;
 	cmd->arguments = ft_calloc(10000, sizeof(char));
 	if (!cmd->arguments)
+	{
 		printf("calloc error ft_store_args\n");
+		exit_program(1);
+	}
 	while (toks)
 	{
 		ft_remove_quotes(toks->content);
@@ -209,12 +222,10 @@ void	ft_interpret(void)
 			{
 				printf("minishell: %s: command not found\n", \
 						cmd_iterator->toks->content);
-				break ;
+				exit_program(1);
 			}
 			tok_iterator = tok_iterator->next;
 		}
 		cmd_iterator = cmd_iterator->next;
 	}
-	// printf("#####	First time cmd print!	#####\n");
-	// ft_print_cmds(g_mini.cmds);
 }

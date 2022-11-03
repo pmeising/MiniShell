@@ -72,21 +72,19 @@ void	ft_fork_process(t_cmd *iterator)
 	fork_check = fork();
 	if (fork_check == 0)
 	{
-		// printf("I am child.\n");
-		// printf("it_inputfile: %s\nit_outputfile: %s. fd_out: %d\n", iterator->input_file, iterator->output_file[0], iterator->fd_out);
 		if (iterator->input_file != NULL)
 		{
 			file_check = access(iterator->input_file, R_OK | F_OK);
 			if (file_check != 0)
 			{
-				printf("file_check failed.\n");
-				exit(0); // Implement an error function, which takes the string; "iterator->input_file" and outputs i.e.: bash: skdlfe.txt: No such file or directory
+				printf("bash: %s: No such file or directory\n", iterator->input_file);
+				exit_program(1);
 			}
 			iterator->fd_in = open(iterator->input_file, O_RDWR, 0777);
 			if (iterator->fd_in == -1)
 			{
-				printf("file_input open failed.\n");
-				exit(0);
+				printf("bash: %s: Permission denied\n", iterator->input_file);
+				exit_program(1);
 			}
 			// printf("fd_in in child: %d\n", iterator->fd_in);
 		}
@@ -101,7 +99,7 @@ void	ft_fork_process(t_cmd *iterator)
 			// 	iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_APPEND, 0777);
 			// remember to change open_flag to it's value when changing the outputfile content.
 			if (iterator->fd_out == -1)
-				exit (0); // error message for internal trouble shooting.
+				exit_program(1); // error message for internal trouble shooting.
 		}
 		dup2(iterator->fd_out, STDOUT_FILENO); // fd_out defaults to 1
 		if (iterator->fd_out != 1)
@@ -146,18 +144,18 @@ void	ft_copy_content(char *file_1, char *file_2, int open_flag)
 	fd_file_1 = open(file_1, O_CREAT | O_RDWR, 0777);
 	if (fd_file_1 == -1)
 	{
-		printf("error fd_file_1");
+		printf("ft_copy_content:error fd_file_1\n");
 		close(fd_file_1);
-		exit_program(EXIT_FAILURE);
+		exit_program(1);
 	}
 	if (open_flag == 0)
 	{
 		fd_file_2 = open(file_2, O_CREAT | O_RDWR | O_TRUNC, 0777);
 		if (fd_file_2 == -1)
 		{
-			printf("error fd_file_2");
+			printf("ft_copy_content:fd_file_2\n");
 			close(fd_file_2);
-			exit_program(EXIT_FAILURE);
+			exit_program(1);
 		}
 	}
 	else if (open_flag == 1)
@@ -165,9 +163,9 @@ void	ft_copy_content(char *file_1, char *file_2, int open_flag)
 		fd_file_2 = open(file_2, O_CREAT | O_RDWR | O_APPEND, 0777);
 		if (fd_file_2 == -1)
 		{
-			printf("error fd_file_2");
+			printf("ft_copy_content:error fd_file_2\n");
 			close(fd_file_2);
-			exit_program(EXIT_FAILURE);
+			exit_program(1);
 		}
 	}
 	while (1)
@@ -224,13 +222,13 @@ void	ft_redirect(t_cmd *iterator)
 */
 void	ft_output_file(t_cmd *iterator)
 {
-	t_cmd	*temp;
+	t_cmd	*last;
 
-	temp = ft_lstlast_cmds(iterator);
-	if ((ft_strncmp(temp->output_file[0], "mull/Output_file.txt", 21) == 0) && temp->output_file[1] == NULL)
+	last = ft_lstlast_cmds(iterator);
+	if ((ft_strncmp(last->output_file[0], "mull/Output_file.txt", 21) == 0) && last->output_file[1] == NULL)
 	{
-		temp->output_file[0] = NULL;
-		temp->fd_out = 1;
+		last->output_file[0] = NULL;
+		last->fd_out = 1;
 	}
 }
 
@@ -246,8 +244,7 @@ void	ft_execute(void)
 
 	iterator = g_mini.cmds;
 	ft_output_file(iterator);
-	// ft_print_cmds(iterator);
-	while (iterator && (iterator->command_path || iterator->is_built_in == 1))
+	while (iterator) //  && (iterator->command_path || iterator->is_built_in == 1)
 	{
 		ft_fork_process(iterator);
 		ft_redirect(iterator);
@@ -268,7 +265,7 @@ void	ft_execute(void)
 int ft_get_input(void)
 {
 	//int input_ckeck;
-	char *prompt;
+	char	*prompt;
 
 	prompt = "42shell > ";
 	g_mini.raw_input = readline(prompt);
@@ -276,23 +273,23 @@ int ft_get_input(void)
 		exit_shell_quit(0);
 	if (ft_str_only_space(g_mini.raw_input) != 1 && g_mini.raw_input)
 		add_history(g_mini.raw_input);
-	if(ft_check_quotes(g_mini.raw_input) == 1)
+	if (ft_check_quotes(g_mini.raw_input) == 1)
 	{
 		printf("quotes not closed\n");
-		free(g_mini.raw_input); 
-		return(2);
+		free(g_mini.raw_input);
+		exit_program(1);
 	}
 	if (ft_check_backslash(g_mini.raw_input) == 1)
 	{
 		printf("backslash forbidden\n");
 		free(g_mini.raw_input);
-		return(2);
+		exit_program(1);
 	}
 	if (ft_check_semicolon(g_mini.raw_input) == 1)
 	{
 		printf("semicolon forbidden\n");
 		free(g_mini.raw_input);
-		return (2);
+		exit_program(1);
 	}
 	return (0);
 }

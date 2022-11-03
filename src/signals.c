@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 17:45:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/29 16:14:16 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 19:37:58 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void ft_sigint(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
+
+	exit_program (130);
 }
 
 /*
@@ -60,7 +62,7 @@ void exit_shell_quit(int sig)
 {
 	if (sig == 0)
 	{
-		printf("exit\n");
-		exit(EXIT_SUCCESS);
+		//printf("exit\n");
+		exit(EXIT_FAILURE);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_vars_funcs.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:42:08 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 14:45:34 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/03 20:02:29 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void	ft_insert(char *raw_input, char *dup_var_cont, int pos, int start)
 		i++;
 		j++;
 	}
+	free(dup_var_cont);
 	while (raw_input[pos])
 	{
 		new_str[i] = raw_input[pos];
@@ -118,7 +119,7 @@ void	ft_put_env_in_input(char *raw_input, int pos)
 		if (raw_input[pos] == '}')
 		{
 			printf("${}: bad substitution\n");
-			exit_program(EXIT_FAILURE);
+			exit_program(1);
 		}
 	}
 	start = pos;
@@ -133,6 +134,7 @@ void	ft_put_env_in_input(char *raw_input, int pos)
 	}
 	if (raw_input[pos] == '}')
 		pos++;
+	free(var_name);
 	ft_insert(raw_input, dup_var_content, pos, start);
 }
 
@@ -189,17 +191,14 @@ void ft_env_vars(char *raw_input)
 				pos++;
 			single_quotes = 0;
 		}
-		// printf("HI there, pos is now: %d\n", pos);
 		if (raw_input[pos] == '$' && raw_input[pos + 1] == '?')
-		{// $? is a variable holding the return value of the last command you ran.
-			printf("Need to expand to the exit status of the most recently \
-					executed foreground pipeline.\n");
-			// printf("%d\n", g_mini.last_exit_status);
+		{
+			// requires the replacement of $? with the content of the variable g_mini->exit_status.
+			printf("%d\n", g_mini.exit_status);
 			break ;
 		}
 		else if (raw_input[pos] == '$' && (raw_input[pos + 1] == '{' || ft_isalnum(raw_input[pos + 1]) == 1))
 		{
-			// printf("want to replace input.\n");
 			ft_put_env_in_input(raw_input, pos);
 			break ;
 		}
@@ -244,7 +243,7 @@ int ft_dollar_sign(char *raw_input)
 	int	single_quotes;
 	int	double_quotes;
 	int check;
-// '$PATH' "$PATH"  "'$PATH'"
+
 	i = 0;
 	single_quotes = 0;
 	double_quotes = 0;

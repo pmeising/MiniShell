@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 16:03:38 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/01 16:21:44 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 19:37:48 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,27 @@ void ft_cd_exec(t_list *toks)
 {
 	int 	p;
 	int		check;
+	char	*cwd;
 
 	p = 3;
-	if (!toks->next)
+	cwd = malloc(sizeof(char) * 1024);
+	if(!cwd)
 	{
-		printf("cd_empty.\n");
-		ft_cd_empty();
+		printf("malloc error ft_cd_exec\n");
+		free (cwd);
+		exit_program(1);
 	}
+	cwd = getcwd(cwd, 1024);
+	if (!cwd)
+	{
+		printf("getcwd error ft_cd_exec\n");
+		free (cwd);
+		exit_program(1);
+	}
+	ft_update_env_list("OLDPWD", cwd, g_mini.dup_env);
+	free (cwd);
+	if (!toks->next)
+		ft_cd_empty();
 	else if (toks->next->content[0] == '.' && (ft_is_space(toks->next->content[1]) == 1 || toks->next->content[1] == '\0'))
 		(void)p;
 	else if (toks->next->content[0] == '.' && toks->next->content[1] == '.')

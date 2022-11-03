@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 18:45:27 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 20:28:27 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,9 @@
 int	ft_get_token_pos(char *raw_input, int pos)
 {
 	while(raw_input[pos] && ft_is_tok_delim(raw_input[pos]) == 0)
-	{// << END" " cat -e
+	{
 		if (raw_input[pos] == 34 || raw_input[pos] == 39)
-		{
 			pos = ft_skip_quotes(raw_input, pos);
-			// printf("gettok\n");
-		}
 		else
 			pos++;
 	}
@@ -55,20 +52,15 @@ char *ft_get_token(char *raw_input, int pos)
 	while(raw_input[pos] && ft_is_tok_delim(raw_input[pos]) == 0)
 	{
 		if (raw_input[pos] == 34 || raw_input[pos] == 39)
-		{
-			printf("pos: %d\n", pos);
 			pos = ft_skip_quotes(raw_input, pos);
-			printf("pos: %d\n", pos);
-			// printf("gettok\n");
-		}
 		else
 			pos++;
 	}
 	token = ft_substr(raw_input, begin_pos, (pos - begin_pos));
 	if (!token)
 	{
-		perror("substring");
-		exit_program(EXIT_FAILURE);
+		perror("Substring: ");
+		exit_program(1);
 	}
 	return (token);
 }
@@ -94,7 +86,7 @@ void ft_read_heredoc(t_cmd *cmd)
 	}
 	while (1)
 	{
-		content = readline("heredoc: ");   /*get_next_line(0);*/
+		content = readline("heredoc: ");
 		if (ft_strncmp(content, cmd->HEREDOC_DELIM, ft_strlen(cmd->HEREDOC_DELIM)) == 0)
 		{
 			free (content);
@@ -122,10 +114,9 @@ void ft_read_heredoc(t_cmd *cmd)
 */
 int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
 {
-	// int		start;
 	int		i;
 	char	*temp;
-	// << END" " cat -e
+
 	i = pos;
 	cmd->open_flag[j] = 0;
 	if (raw_input[pos] == '>' && raw_input[pos + 1] == '>')
@@ -137,13 +128,11 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
 		pos++;
 	pos++;
 	pos = ft_skip_spaces(raw_input, pos);
-	// start = pos; // << END" " cat -e  -> here we are at E    //start nowhere being used?
 	if (raw_input[i] == '>')
 	{
 		temp = ft_get_token(raw_input, pos);
 		ft_remove_quotes(temp);
 		cmd->output_file[j] = temp;
-		// printf("outputfile[%d]: # %s #\n", j, cmd->output_file[j]);
 		if (raw_input[i + 1] != '>')
 			cmd->open_flag[j] = 0;
 	}
@@ -161,9 +150,11 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
 		if (cmd->input_file == NULL)
 			cmd->input_file = temp;
 		else if (cmd->input_file != NULL)
+		{
 			ft_copy_content(temp, cmd->input_file, 1);
+			free (temp);
+		}
 	}
-	// printf("%s\n", cmd->input_file);
 	pos = ft_get_token_pos(raw_input, pos);
 	return (pos);
 }
@@ -182,16 +173,11 @@ void ft_parsing(char *raw_input)
 	t_cmd	*cmd_iterator;
 
 	pos = 0;
-	// echo -n "hi there" >> file.txt
-	// printf("Hello\n");
 	while (raw_input[pos])
 	{
 		j = 0;
-		// printf("Lst_new? is that you?\n");
 		cmd_iterator = ft_lstnew_cmds();
-		// printf("Created node.\n");
-		cmd_iterator->output_file = ft_calloc(10000, sizeof(char)); // Always free in loop in the end!!!
-		// cmd_iterator->open_flag = malloc(100 * sizeof(int));
+		cmd_iterator->output_file = ft_calloc(10000, sizeof(char));
 		cmd_iterator->output_file[0] = "mull/Output_file.txt";
 		while(raw_input[pos] && ft_is_cmd_delim(raw_input[pos]) == 0)
 		{
@@ -200,7 +186,7 @@ void ft_parsing(char *raw_input)
 			{
 				new_tok = ft_lstnew(ft_get_token(raw_input, pos));
 				if (!new_tok)
-					exit_program(EXIT_FAILURE);
+					exit_program(1);
 				ft_lstadd_back(&cmd_iterator->toks, new_tok);
 				pos = pos + ft_strlen((char *)new_tok->content);
 				pos = ft_skip_spaces(raw_input, pos);
@@ -223,6 +209,4 @@ void ft_parsing(char *raw_input)
 		else if (!raw_input[pos])
 			break ;
 	}
-	// printf("FIRST CMD PRINT.\n");
-	// ft_print_cmds(g_mini.cmds);
 }

@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 18:46:45 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 20:43:13 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,13 @@ void exit_program(int status)
 	g_mini.exit_status = status;
 	if (status  == 2)
 		exit (EXIT_FAILURE);
+	if (status == 0) // exit success
+	
+	if (status == 130) // crtl+c
+	
+	if (status == 1) // clear shell but continue shell running and give prompt back liek at begining
+	
+	
 	printf("exit status:%d\n", status);
 	// free everything
 	exit(0);

@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 19:38:47 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 18:46:21 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 19:51:50 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,21 @@ int	ft_del_env_cont(char *str, t_list **dup_env)
 */
 void ft_create_env(char *str, t_list **dup_env)
 {
-	t_list *new_env;
-	char *new_var_cont;
+	t_list	*new_env;
+	char	*new_var_cont;
 
 	new_var_cont = ft_strdup(str);
 	if (!new_var_cont)
 	{
-		printf("init_minishell:no new env var to create\n");
-		exit_program(EXIT_FAILURE);
+		printf("ft_create_env:init_minishell:no new env var to create\n");
+		free (new_var_cont);
+		exit_program(1);
 	}
 	new_env = ft_lstnew(new_var_cont);
 	if (!new_env)
 	{
-		printf("init_minishell:new_env not created\n");
-		exit_program(EXIT_FAILURE);
+		printf("ft_create_env:init_minishell:new_env not created\n");
+		exit_program(1);
 	}
 	ft_lstadd_front(dup_env, new_env);
 }
@@ -92,27 +93,26 @@ void ft_create_env(char *str, t_list **dup_env)
 */
 char *ft_get_env_cont(char *env_name)
 {
-	t_list *env_list;
-	char *curr_value;
-	char *value;
-	int len;
+	t_list	*env_list;
+	char	*curr_value;
+	char	*value;
+	int		len;
 
-	
 	env_list = g_mini.dup_env;
 	len = ft_strlen(env_name);
 	while (env_list)
 	{
 		curr_value = (char *)env_list->content;
-
-		if(ft_strncmp(env_name, curr_value, len) == 0)
+		if (ft_strncmp(env_name, curr_value, len) == 0)
 		{
 			value = ft_strdup(&(curr_value[len + 1]));
 			if (!value)
 			{
-				printf("init_minishell:no value copied\n");
-				exit_program(EXIT_FAILURE);
+				printf("ft_get_env_cont:init_minishell:no value copied\n");
+				free(value);
+				exit_program(1);
 			}
-			return(value);
+			return (value);
 		}
 		env_list = env_list->next;
 	}
