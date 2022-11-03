@@ -3,15 +3,19 @@ SRC_DIR = src/
 UT_DIR	= utils/
 OBJ_DIR = obj/
 INC_DIR = inc/
-LIBFT_DIR = libft/
-LIBFT_EXEC = libft.a
-READLINE	=  -I ${HOME}/goinfre/.brew/opt/readline/include/ -L ${HOME}/goinfre/.brew/opt/readline/lib/ -lreadline
+LIBFT = libft/libft.a
 OS = $(shell uname)
+# compiling flags
+# -g gives debugging information when using vaglgrind
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -g -I $(INC_DIR)
 
 ifeq ($(OS),Darwin)
-	COMPILE = $(CC) $(CFLAGS) $(LIBFT_DIR)$(LIBFT_EXEC) ${READLINE} $^ -o $@
+	READLINE = -I ${HOME}/goinfre/.brew/opt/readline/include/ -L ${HOME}/goinfre/.brew/opt/readline/lib/ -lreadline
+	COMPILE = $(CC) $(CFLAGS) $(LIBFT) ${READLINE} $^ -o $@
 else
-	COMPILE = @echo "IT's linux.\n"
+	READLINE = -I ${HOME}/goinfre/.brew/opt/readline/include/ -L ${HOME}/goinfre/.brew/opt/readline/lib/ -lreadline
+	COMPILE = $(CC) $(CFLAGS) $(OBJ) $(LIBFT) ${READLINE} -o $(NAME)
 endif
 
 SRC =	${SRC_DIR}main.c \
@@ -40,10 +44,6 @@ SRC =	${SRC_DIR}main.c \
 # % means "take all" (=wildcard)
 OBJ = $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
-# compiling flags
-# -g gives debugging information when using vaglgrind
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g -I $(INC_DIR)
 
 # makefile starts here
 all: $(NAME)
@@ -63,7 +63,9 @@ $(OBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 # $^ : name of prerequisite/dependency that caused the rule/target (=whole thing) to execute
 $(NAME):	$(OBJ)
 			$(MAKE) bonus -C libft
+			$(MAKE) clean -C libft
 			$(COMPILE)
+			$(MAKE) clean
 			
 # remove all object files and also clean libft
 clean:
