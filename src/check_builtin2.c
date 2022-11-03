@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:26:26 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/26 18:55:55 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 18:42:53 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,9 @@ int ft_is_env(char *cmd_name)
 	env[2] = 'v';
 	env[3] = '\0';
 
-	if (ft_strncmp(cmd_name, env, 3) == 0)
+	if (ft_strncmp(cmd_name, env, 4) == 0)
 		return (1);
-	else if (ft_strncmp(cmd_name, env_1, 5) == 0)
+	else if (ft_strncmp(cmd_name, env_1, 6) == 0)
 		return (1);
 	else
 		return (0);

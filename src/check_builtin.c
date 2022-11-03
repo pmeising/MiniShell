@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 16:27:58 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/31 19:27:12 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 18:43:06 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ int ft_is_built_in(char *cmd_name)
 	int check;
 	
 	check = 0;
-
 	if (ft_is_echo(cmd_name) || ft_is_env(cmd_name) || ft_is_export(cmd_name) || \
 		ft_is_exit(cmd_name) || ft_is_pwd(cmd_name) || ft_is_unset(cmd_name) || \
 		ft_is_cd(cmd_name))

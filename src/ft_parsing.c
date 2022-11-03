@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/02 20:13:45 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 18:45:27 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char *ft_get_token(char *raw_input, int pos)
 
 	begin_pos = pos;
 	while(raw_input[pos] && ft_is_tok_delim(raw_input[pos]) == 0)
-	{// << END" " cat -e
+	{
 		if (raw_input[pos] == 34 || raw_input[pos] == 39)
 		{
 			printf("pos: %d\n", pos);
@@ -70,7 +70,6 @@ char *ft_get_token(char *raw_input, int pos)
 		perror("substring");
 		exit_program(EXIT_FAILURE);
 	}
-	printf("token; %s\n", token);
 	return (token);
 }
 
@@ -224,4 +223,6 @@ void ft_parsing(char *raw_input)
 		else if (!raw_input[pos])
 			break ;
 	}
+	// printf("FIRST CMD PRINT.\n");
+	// ft_print_cmds(g_mini.cmds);
 }

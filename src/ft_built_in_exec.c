@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 17:51:01 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/31 18:14:43 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 18:43:07 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void ft_pwd_exec(void)
 		exit(EXIT_FAILURE);
 	}
 	if (getcwd(cur_path, 1024))
-			printf("%s\n", cur_path);
+		printf("%s\n", cur_path);
 	free(cur_path);
 }
 

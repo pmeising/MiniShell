@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 12:38:00 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/03 18:31:10 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@
 # include <sys/ioctl.h> /*    */
 # include <termios.h> /*    */
 # include <fcntl.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+// # include <readline/readline.h>
+// # include <readline/history.h>
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEED TO REMOVE/ADJUST THE PATH HERE.
 
-// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
-// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
+# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
+# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
 
 // macros
 
@@ -82,6 +82,7 @@ typedef struct	s_mini
 	char		*raw_input;
 	int			fdin;
 	int			fdout;
+	int			exit_status;
 	//t_cmd_table	*curr_cmd_table;
 	
 }				t_mini;

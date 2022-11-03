@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 19:38:47 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/25 19:34:19 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 18:46:21 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void	ft_copy_env(t_mini *g_mini, char **env)
 
 	i = 0;
 	if (!env)
-		exit_program(EXIT_FAILURE);
+		exit_program(2);
 	while (env[i])
 	{
 		ft_lstadd_back(&g_mini->dup_env, ft_lstnew(env[i]));

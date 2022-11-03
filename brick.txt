@@ -1,11 +1,3 @@
-Makefile
-inc
-learning_notes.txt
-libft
-minishell
-minishell.h
-mull
-obj
-src
-test.txt
-text.txt
+PATH=/Users/bde-carv/goinfre/.brew/bin:/Users/bde-carv/goinfre/.brew/bin:/Users/bde-carv/goinfre/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Users/bde-carv/goinfre/.brew/bin$
+USER=bde-carv
+__CF_USER_TEXT_ENCODING=0x18EAC:0x0:0x0

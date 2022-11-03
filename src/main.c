@@ -72,8 +72,8 @@ void	ft_fork_process(t_cmd *iterator)
 	fork_check = fork();
 	if (fork_check == 0)
 	{
-		printf("I am child.\n");
-		printf("it_inputfile: %s\nit_outputfile: %s. fd_out: %d\n", iterator->input_file, iterator->output_file[0], iterator->fd_out);
+		// printf("I am child.\n");
+		// printf("it_inputfile: %s\nit_outputfile: %s. fd_out: %d\n", iterator->input_file, iterator->output_file[0], iterator->fd_out);
 		if (iterator->input_file != NULL)
 		{
 			file_check = access(iterator->input_file, R_OK | F_OK);
@@ -88,7 +88,7 @@ void	ft_fork_process(t_cmd *iterator)
 				printf("file_input open failed.\n");
 				exit(0);
 			}
-			printf("fd_in in child: %d\n", iterator->fd_in);
+			// printf("fd_in in child: %d\n", iterator->fd_in);
 		}
 		dup2(iterator->fd_in, STDIN_FILENO);
 		if (iterator->fd_in != 0)
@@ -108,14 +108,26 @@ void	ft_fork_process(t_cmd *iterator)
 			close(iterator->fd_out);
 		// printf("KDJFIAEHJLSIEHGIEHJ \n");
 		// printf("input: %s\n output: %s\n", iterator->input_file, iterator->output_file[0]);
-		execve(iterator->command_path, iterator->arguments, g_mini.env);
-		dup2(1, STDOUT_FILENO);
-		printf("EXECVE failure.\n");
-		perror("execve: ");
+		// printf("args[0]: %s\n", iterator->arguments[0]);
+		if (iterator->is_built_in == 0)
+		{
+			execve(iterator->command_path, iterator->arguments, g_mini.env);
+			dup2(1, STDOUT_FILENO);
+			printf("EXECVE failure.\n");
+			perror("execve: ");
+		}
+		else if (iterator->is_built_in == 1)
+		{
+			ft_execute_built_in(iterator, iterator->toks);
+			execve(iterator->command_path, iterator->arguments, g_mini.env);
+			dup2(1, STDOUT_FILENO);
+			printf("EXECVE failure.\n");
+			perror("execve: ");
+		}
 	}
 	if (fork_check != 0)
 	{
-		sleep(1);
+		// sleep(1);
 		waitpid(0, NULL, 0);
 		printf("I am parent.\n");
 	}
@@ -234,21 +246,11 @@ void	ft_execute(void)
 
 	iterator = g_mini.cmds;
 	ft_output_file(iterator);
-	ft_print_cmds(iterator);
+	// ft_print_cmds(iterator);
 	while (iterator && (iterator->command_path || iterator->is_built_in == 1))
 	{
-		if (iterator->is_built_in == 0)
-		{
-			ft_fork_process(iterator);
-			ft_redirect(iterator);
-		}
-		else if (iterator->is_built_in == 1)
-		{
-			iterator->command_path = NULL;
-			printf("input: %s\noutput: %s\nfd_out: %d\n", iterator->input_file, iterator->output_file[0], iterator->fd_out);
-			ft_execute_built_in(iterator, iterator->toks);
-			ft_redirect(iterator);
-		}
+		ft_fork_process(iterator);
+		ft_redirect(iterator);
 		if (iterator->next == NULL)
 			break ;
 		iterator = iterator->next;

@@ -75,14 +75,27 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 	i = 0;
 	path = ft_find_path();
 	paths = ft_find_paths(path);
-	// DELETE QUOTES ETC. --> we'll test if execve can handle them.
+
 	ft_remove_quotes(iterator->content);
 	while (paths[i])
 	{
 		temp_str = ft_strjoin(paths[i], iterator->content);
 		if (ft_is_built_in(iterator->content) == 1)
 			cmd->is_built_in = 1;
-		else if (access(temp_str, F_OK | X_OK) == 0)
+		if (cmd->is_built_in == 1 && (access((ft_strjoin(paths[i], "test")), F_OK | X_OK) == 0))
+		{
+			cmd->arguments = ft_calloc(1000, sizeof(char));
+			if (!cmd->arguments)
+				printf("calloc error  ft_find_command\n");
+			cmd->arguments[0] = "test";
+			cmd->arguments[1] = NULL;
+			cmd->command_path = ft_strjoin(paths[i], "test");
+			cmd->is_built_in = 1;
+			// if (cmd->next)
+			// 	printf("args[0]: %s\n", cmd->arguments[0]);
+			break ;
+		}
+		else if (access(temp_str, F_OK | X_OK) == 0 && cmd->is_built_in == 0)
 		{
 			cmd->command_path = temp_str;
 			break ;
@@ -120,12 +133,11 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks)
 }
 /* *********************************/
 
-//echo hello hggjg >> brick.txt
+
 void	ft_echo_exec(t_cmd *iterator)
 {
 	t_list	*toks_iterator;
 	int		n_flag;
-	int		fork_pid;
 
 	n_flag = 0;
 	if (!iterator->toks->next)
@@ -134,47 +146,19 @@ void	ft_echo_exec(t_cmd *iterator)
 		exit(0); // back to 42shell;
 	}
 	toks_iterator = iterator->toks->next;
-	printf("echo entered.\n");
-	fork_pid = fork();
-	if (fork_pid == 0)
+	if (ft_strncmp(toks_iterator->content, "-n", 2) == 0)
 	{
-		// printf("in child.\n");
-		if (iterator->output_file[0] != NULL) // mull/Output_file.txt
-		{
-			iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_TRUNC, 0777);
-			if (iterator->fd_out == -1)
-			{
-				printf("Open outputfile failed.\n");
-				close(iterator->fd_out);
-				exit (0);
-			}
-		}
-		dup2(iterator->fd_out, STDOUT_FILENO);
-		if (iterator->fd_out != 1)
-		{
-			// printf("closing file.\n");
-			close(iterator->fd_out);
-		}
-		// printf("before while\n");
-		// we are at 2nd node here.
-		if (ft_strncmp(toks_iterator->content, "-n", 2) == 0)
-		{
-			n_flag = 1;
-			toks_iterator = toks_iterator->next;
-		}
-		while(toks_iterator)
-		{
-			printf("%s ", toks_iterator->content);
-			toks_iterator = toks_iterator->next;
-		}
-		if (n_flag != 1)
-			printf("\n");
+		n_flag = 1;
+		toks_iterator = toks_iterator->next;
 	}
-	else
+	while(toks_iterator)
 	{
-		sleep(1);
-		kill(fork_pid, SIGKILL);
+		ft_putstr_fd(toks_iterator->content, 1);
+		ft_putstr_fd(" ", 1);
+		toks_iterator = toks_iterator->next;
 	}
+	if (n_flag != 1)
+		printf("\n");
 }
 
 void ft_execute_built_in(t_cmd *cmd, t_list *toks)
@@ -216,7 +200,7 @@ void	ft_interpret(void)
 		tok_iterator = cmd_iterator->toks;
 		while (tok_iterator)
 		{
-			if (ft_find_command(cmd_iterator, tok_iterator) == 0)
+			if (ft_find_command(cmd_iterator, tok_iterator) == 0 && cmd_iterator->is_built_in == 0)
 			{
 				ft_store_arguments(cmd_iterator, tok_iterator);
 				break ;

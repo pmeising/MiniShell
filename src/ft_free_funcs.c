@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 17:56:48 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/03 18:46:45 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,11 @@ void ft_free_lst_cont(t_list *cmd_iterator)
 }
 
 void exit_program(int status)
-{
+{ 
+	// if 2 terminate minishell
+	g_mini.exit_status = status;
+	if (status  == 2)
+		exit (EXIT_FAILURE);
 	printf("exit status:%d\n", status);
 	// free everything
 	exit(0);
