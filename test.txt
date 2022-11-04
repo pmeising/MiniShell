@@ -1,0 +1,11 @@
+Makefile
+brick.txt
+learning_notes.txt
+libft
+minishell
+minishell.h
+mull
+obj
+src
+test.txt
+text.txt

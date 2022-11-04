@@ -63,9 +63,9 @@ $(OBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 # $^ : name of prerequisite/dependency that caused the rule/target (=whole thing) to execute
 $(NAME):	$(OBJ)
 			$(MAKE) bonus -C libft
-			$(MAKE) clean -C libft
+#			$(MAKE) clean -C libft
 			$(COMPILE)
-			$(MAKE) clean
+#			$(MAKE) clean
 			
 # remove all object files and also clean libft
 clean:

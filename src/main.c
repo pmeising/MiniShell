@@ -14,121 +14,166 @@
 
 t_mini g_mini;
 
-/*
-* O_CREAT = if not existent create;
-* O_TRUNC = if there is content, overwrite;
-* O_RDWR = read write access
-*/
-// void	ft_open_files(void)
-// {
-// 	int flag;
-	
-// 	flag = open("Input_file.txt", O_CREAT | O_RDWR | O_TRUNC, 0777);
-// 	if (flag != 0)
-// 		perror("Input_file.txt: ");
-// 	g_mini.fdin = flag;
-// 	flag = open("Output_file.txt", O_CREAT | O_RDWR | O_TRUNC, 0777);
-// 	if (flag != 0)
-// 		perror("Output_file.txt: ");
-// 	g_mini.fdout = flag;
-// }
-
-/*
-*	Takes a pointer to a command node (t_cmd) and creates a child process.
-*	The command node contains information about where to read from
-*	and where to write to. These variables are initialized to NULL
-*	, 0 or their corresponding "initial state". (i.e. the fd_in variable
-*	in the t_cmd node stands for the filedescriptor of the standard
-*	input = 0; fd_out for Standard output = 1.) This initialization 
-*	happens in ft_lstnew_cmds (file "ft_lst_funcs.c").
-*	if the input_file var is not empty, that means we have an input
-*	redirect from a file. In which case we need to check, if the file
-*	exists (i.e. access -> returns 0 for success). After, we open the file
-*	with open() and store the file descriptor it returns in fd_in;
-*	(returns -1 on error).
-*	Now we use the dup2() function to make a copy of the standard input fd=0
-*	and assign it to the file we want to use as an input file. It takes the file
-*	descriptor of the dedicated input file and the FD of which to associate it 
-*	with. In this case we associate it with STDIN = 0.
-*	This happens whether the input_file string is empty or not. In case it
-*	isn't empty, we need to close that previously opened file again.
-*	The same logic applies to the output file. However, if the output file
-*	should not exist, we would simply create it (using the open(O_CREATE) flag.).
-*	Additionally, we are using the O_APPEND flag if the open_flag is 1, the O_TRUNC
-*	flag, if the open_flag is 0. Then we dup2() again and close any open file.
-*	In the last part, we call the execve() function to execute the command
-*	currently stored in the t_cmd node.
-*	The execve() function terminates a process upon successful execution, 
-*	which is why the following lines including perror etc. would only be
-*	executed in case of an execve() failure.
-*	using the dup2() STDOUT allows us to receive that error message in
-*	the standard output rather than any potential output file.
-*/
-void	ft_fork_process(t_cmd *iterator)
+void	ft_init_pipefd(int nbr_of_pipes)
 {
-	pid_t	fork_check;
-	int		file_check;
+	int	i;
+	int	*fds;
 
-	fork_check = fork();
-	if (fork_check == 0)
+	i = 0;
+	g_mini.pipefd = malloc(sizeof(int *) * nbr_of_pipes + 1);
+	if (!g_mini.pipefd)
 	{
-		if (iterator->input_file != NULL)
+		printf("malloc failed.\n");
+		exit_program(1);
+	}
+	while (nbr_of_pipes > 0)
+	{
+		fds = malloc(sizeof(int) * 2);
+		if (!fds)
 		{
-			file_check = access(iterator->input_file, R_OK | F_OK);
-			if (file_check != 0)
-			{
-				printf("bash: %s: No such file or directory\n", iterator->input_file);
-				exit_program(1);
-			}
-			iterator->fd_in = open(iterator->input_file, O_RDWR, 0777);
-			if (iterator->fd_in == -1)
-			{
-				printf("bash: %s: Permission denied\n", iterator->input_file);
-				exit_program(1);
-			}
-			// printf("fd_in in child: %d\n", iterator->fd_in);
+			printf("malloc failed.\n");
+			exit_program(1);
 		}
-		dup2(iterator->fd_in, STDIN_FILENO);
-		if (iterator->fd_in != 0)
-			close(iterator->fd_in); // [0] -> Output_file.txt [1] 
-		if (iterator->output_file[0] != NULL)
+		fds[0] = 0;
+		fds[1] = 1;
+		// printf("fds[0:1]: %d, %d\n", fds[0], fds[1]);
+		g_mini.pipefd[i] = fds;
+		// printf("pipefd[%d][0]/[%d][1]: %d/%d\n", i, i, g_mini.pipefd[i][0], g_mini.pipefd[i][1]);
+		nbr_of_pipes--;
+		i++;
+	}
+}
+
+/*
+	We need to execute the commands simultaneously, so create pipes before forking.
+	pipe command stores an int[2] in the given parameter. We store it in "int *pipefd[i]";
+
+*/
+void	ft_set_pipes(void)
+{
+	int	nbr_of_pipes;
+	int	pipe_check;
+	int	i;
+
+	i = 0;
+	pipe_check = 0;
+	nbr_of_pipes = ft_lstsize_cmds(g_mini.cmds) - 1; // We need in total n_cmds - 1 pipes
+	g_mini.nbr_of_pipes = nbr_of_pipes;
+	printf("nbr of pipes: %d\n", nbr_of_pipes);
+	ft_init_pipefd(nbr_of_pipes);
+	while (nbr_of_pipes > 0)
+	{
+		pipe_check = pipe(g_mini.pipefd[i]);
+		if (pipe_check == -1)
 		{
-			// if (iterator->open_flag[] == 0) // Output_file.txt
-			iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_TRUNC, 0777);
-			// else if (iterator->open_flag == 1)
-			// 	iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_APPEND, 0777);
-			// remember to change open_flag to it's value when changing the outputfile content.
-			if (iterator->fd_out == -1)
-				exit_program(1); // error message for internal trouble shooting.
+			printf("Pipe couldn't be opened.\n");
+			perror("pipe: ");
+			exit_program(1);
 		}
-		dup2(iterator->fd_out, STDOUT_FILENO); // fd_out defaults to 1
-		if (iterator->fd_out != 1)
-			close(iterator->fd_out);
-		// printf("KDJFIAEHJLSIEHGIEHJ \n");
-		// printf("input: %s\n output: %s\n", iterator->input_file, iterator->output_file[0]);
-		// printf("args[0]: %s\n", iterator->arguments[0]);
-		if (iterator->is_built_in == 0)
+		printf("pipefd: %d\n", g_mini.pipefd[i][0]); // printing reading end of pipe.
+		printf("pipefd: %d\n", g_mini.pipefd[i][1]); // printing writing end of pipe.
+		nbr_of_pipes--;
+		i++;
+	}
+}
+
+/*
+j == 0 input
+j == 1 output
+*/
+void	ft_open_file(char *file_name, int *fd, int j, int open_flag)
+{
+	int file_check;
+
+	if (j == 0)
+	{
+		file_check = access(file_name, R_OK | F_OK);
+		if (file_check != 0)
 		{
-			execve(iterator->command_path, iterator->arguments, g_mini.env);
-			dup2(1, STDOUT_FILENO);
-			printf("EXECVE failure.\n");
-			perror("execve: ");
+			printf("bash: %s: No such file or directory\n", file_name);
+			exit_program(1);
 		}
-		else if (iterator->is_built_in == 1)
+		*fd = open(file_name, O_RDWR, 0777);
+		if (*fd == -1)
 		{
-			ft_execute_built_in(iterator, iterator->toks);
-			execve(iterator->command_path, iterator->arguments, g_mini.env);
-			dup2(1, STDOUT_FILENO);
-			printf("EXECVE failure.\n");
-			perror("execve: ");
+			printf("bash: %s: Permission denied\n", file_name);
+			exit_program(1);
 		}
 	}
-	if (fork_check != 0)
+	else if (j == 1 && open_flag == 0)
 	{
-		// sleep(1);
-		waitpid(0, NULL, 0);
-		printf("I am parent.\n");
+		*fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
+		if (*fd == -1)
+		{
+			printf("bash: %s: Permission denied\n", file_name);
+			exit_program(1);
+		}
 	}
+	else if (j == 1 && open_flag == 1)
+	{
+		*fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
+		if (*fd == -1)
+		{
+			printf("bash: %s: Permission denied\n", file_name);
+			exit_program(1);
+		}
+	}
+}
+
+void	ft_set_files(void)
+{
+	t_cmd	*cmd_iterator;
+	int		i;
+
+	i = 0;
+	cmd_iterator = g_mini.cmds;
+	while (cmd_iterator)
+	{
+		if (cmd_iterator->input_file != NULL)
+			ft_open_file(cmd_iterator->input_file, &cmd_iterator->fd_in, 0, -1);
+		else if (cmd_iterator->output_file != NULL)
+			ft_open_file(cmd_iterator->output_file, &cmd_iterator->fd_out, 1, cmd_iterator->open_flag);
+		i++;
+	}
+}
+
+/*
+* creates individual processes for each command;
+*/
+void	ft_test(void)
+{
+	int		i;
+	int		pid;
+	t_cmd	*cmd_iterator;
+
+	i = 0;
+	cmd_iterator = g_mini.cmds;
+	while (cmd_iterator)
+	{
+		pid = fork();
+		if (pid == -1)
+		{
+			printf("Forking failed.\n");
+			perror("Forking: ");
+			exit_program(1);
+		}
+		if (pid == 0)
+			ft_execute_process(cmd_iterator, i);
+		else
+		{
+			i++;
+			cmd_iterator = cmd_iterator->next;
+		}
+	}
+	waitpid(0, NULL, 0);
+	// ft_close_all_fds();
+}
+
+void	ft_execute(void)
+{
+	ft_set_pipes();
+	ft_set_files();
+
 }
 
 /*
@@ -184,74 +229,6 @@ void	ft_copy_content(char *file_1, char *file_2, int open_flag)
 	}
 	close(fd_file_1);
 	close(fd_file_2);
-}
-
-/*
-*	input_file is empty if no input redirection was found.
-*	need expl.
-*/
-void	ft_redirect(t_cmd *iterator)
-{
-	int		i;
-
-	i = 0;
-	while (iterator->output_file[i])
-	{
-		if (i > 0)
-		{
-			printf("iterator->output_file[%d]: %s. Flag: %d\n", i, iterator->output_file[i], iterator->open_flag[i]);
-			ft_copy_content(iterator->output_file[0], iterator->output_file[i], iterator->open_flag[i]);
-		}
-		else if (i == 0 && iterator->next && iterator->next->input_file == NULL)
-		{
-			ft_copy_content(iterator->output_file[0], "mull/Input_file.txt", 0);
-			iterator->next->input_file = "mull/Input_file.txt";
-		}
-		else if (i == 0 && iterator->next && iterator->next->input_file != NULL)
-			ft_copy_content(iterator->output_file[0], iterator->next->input_file, 1);
-		i++;
-	}
-	// printf("it_input: %s\n", iterator->next->input_file);
-	// if (iterator->output_file[0] == NULL)
-	// 	ft_copy_content(iterator->output_file[0], "Input_file.txt", 0);
-}
-
-/*
-* output_file[1] = name of file where to redirect;
-* output_file[0] = has "output_file.txt" as default;
-*/
-void	ft_output_file(t_cmd *iterator)
-{
-	t_cmd	*last;
-
-	last = ft_lstlast_cmds(iterator);
-	if ((ft_strncmp(last->output_file[0], "mull/Output_file.txt", 21) == 0) && last->output_file[1] == NULL)
-	{
-		last->output_file[0] = NULL;
-		last->fd_out = 1;
-	}
-}
-
-/*
-*	Walks through the t_cmd list and calls the ft_fork_process function
-*	which creates a child process executing the command in the cmd_path.
-*	ft_output_file; checks if there is an outputfile, if not deletes the 
-*	default "output_file.txt"
-*/
-void	ft_execute(void)
-{
-	t_cmd	*iterator;
-
-	iterator = g_mini.cmds;
-	ft_output_file(iterator);
-	while (iterator) //  && (iterator->command_path || iterator->is_built_in == 1)
-	{
-		ft_fork_process(iterator);
-		ft_redirect(iterator);
-		if (iterator->next == NULL)
-			break ;
-		iterator = iterator->next;
-	}
 }
 
 /******************************************************************************************/

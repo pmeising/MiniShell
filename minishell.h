@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 18:31:10 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/04 13:29:23 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@
 # include <sys/ioctl.h> /*    */
 # include <termios.h> /*    */
 # include <fcntl.h>
-// # include <readline/readline.h>
-// # include <readline/history.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEED TO REMOVE/ADJUST THE PATH HERE.
 
-# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
-# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
+// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
+// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
 
 // macros
 
@@ -82,6 +82,8 @@ typedef struct	s_mini
 	char		*raw_input;
 	int			fdin;
 	int			fdout;
+	int			**pipefd;
+	int			nbr_of_pipes;
 	int			exit_status;
 	//t_cmd_table	*curr_cmd_table;
 	
@@ -156,6 +158,7 @@ int ft_check_quotes(char *raw_input);
 t_cmd	*ft_lstnew_cmds(void);
 t_cmd	*ft_lstlast_cmds(t_cmd *lst);
 void	ft_lstadd_back_cmds(t_cmd **lst, t_cmd *new);
+int		ft_lstsize_cmds(t_cmd *lst);
 
 // ft_delim_funcs.c
 int ft_is_tok_delim(char c);

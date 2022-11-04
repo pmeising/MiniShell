@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lst_funcs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:42:27 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/30 17:27:49 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/04 11:58:36 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,19 @@ t_cmd	*ft_lstlast_cmds(t_cmd *lst)
 		lst = lst->next;
 	}
 	return (lst);
+}
+
+int	ft_lstsize_cmds(t_cmd *lst)
+{
+	int	i;
+
+	i = 0;
+	while (lst)
+	{
+		i++;
+		lst = lst->next;
+	}
+	return (i);
 }
 
 /*
