@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 17:45:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 19:37:58 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/04 17:54:02 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 void ft_sigint(int sig)
 {
 	(void)sig;
-	write(1, "\n", 1);
+	//write(1, "\n", 1);
+	ft_putstr_fd("\b\b\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();

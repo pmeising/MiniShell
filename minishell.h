@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/04 13:29:23 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/04 19:53:10 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@
 # include <sys/ioctl.h> /*    */
 # include <termios.h> /*    */
 # include <fcntl.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+// # include <readline/readline.h>
+// # include <readline/history.h>
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEED TO REMOVE/ADJUST THE PATH HERE.
 
-// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
-// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
+ # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
+ # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
 
 // macros
 
@@ -54,11 +54,11 @@ typedef struct	s_cmd
 	char		*command_path; // "/bin/usr/echo" executable file to cmds like echo
 	char		**arguments; // contains cmd name and its options and args;
 	char		*input_file; // default NULL
-	char		**output_file; // default NULL
+	char		*output_file; // default NULL
 	char		*HEREDOC_DELIM;
 	int			fd_in; // reuse in/-output files, just need to rewrite the in/output files at end of execution.
 	int			fd_out;
-	int			open_flag[10]; // 0 stands for overwrite, 1 for add. default = -1
+	int			open_flag; // 0 stands for overwrite, 1 for add. default = -1
 	int			is_built_in; // flag for calling builtin function, default = 0;
 	struct s_cmd	*next;
 	struct s_cmd	*previous;
@@ -166,7 +166,7 @@ int	ft_is_cmd_delim(char c);
 
 // parsing.c
 void ft_parsing(char *raw_input);
-int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j);
+int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos);
 char *ft_get_token(char *raw_input, int pos);
 int	ft_get_token_pos(char *raw_input, int pos);
 
@@ -234,11 +234,24 @@ void	ft_cd_exec(t_list *toks);
 void	ft_cd_two_dots(void);
 void	ft_cd_empty(void);
 
-//
+// pipe_funcs.c
+void	ft_set_pipes(void);
+void	ft_init_pipefd(int nbr_of_pipes);
+
+
+// file_funcs.c
+void	ft_set_files(void);
+void	ft_open_file(char *file_name, int *fd, int j, int open_flag);
+
+
+
+
 void	ft_copy_content(char *file_1, char *file_2, int open_flag);
 
 void ft_execute_built_in(t_cmd *cmd, t_list *toks);
 void ft_cd_empty(void);
 int ft_is_echo(char *str);
+void	ft_execute_process(t_cmd *cmd_iterator, int i);
+void	ft_close_fds(int in, int out, int nbr);
 
 #endif

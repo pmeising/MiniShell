@@ -199,8 +199,9 @@ void ft_execute_built_in(t_cmd *cmd, t_list *toks)
 /*
 * gos through the individual tokens of each cmd and searches 
 * for a command (e.g echo, export..);
-* if command was found it stores the arguments of the command
-* (= the tokens following) in the cmd structs char** arguments;
+* if command was found it stores the command name itself and
+* the arguments of the command (= the tokens following) in
+* thecmd structs char** arguments;
 */
 void	ft_interpret(void)
 {

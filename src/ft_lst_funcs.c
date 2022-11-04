@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lst_funcs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:42:27 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/04 11:58:36 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/04 19:38:59 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ t_cmd	*ft_lstnew_cmds(void)
 	new->HEREDOC_DELIM = NULL;
 	new->fd_in = 0;
 	new->fd_out = 1;
-	new->open_flag[0] = -1;
+	new->open_flag = -1;
 	new->next = NULL;
 	new->previous = NULL;
 	new->is_built_in = 0;

@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 20:28:27 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/04 19:59:14 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,16 +112,16 @@ void ft_read_heredoc(t_cmd *cmd)
 *	open_flag[j] (which is 1) because at [0] is the open_flag for our
 *	default output_file.txt
 */
-int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
+int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos)
 {
 	int		i;
 	char	*temp;
 
 	i = pos;
-	cmd->open_flag[j] = 0;
+	cmd->open_flag = 0;
 	if (raw_input[pos] == '>' && raw_input[pos + 1] == '>')
 	{
-		cmd->open_flag[j] = 1;
+		cmd->open_flag = 1;
 		pos++;
 	}
 	else if (raw_input[pos] == '<' && raw_input[pos + 1] == '<')
@@ -132,9 +132,9 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
 	{
 		temp = ft_get_token(raw_input, pos);
 		ft_remove_quotes(temp);
-		cmd->output_file[j] = temp;
+		cmd->output_file = temp;
 		if (raw_input[i + 1] != '>')
-			cmd->open_flag[j] = 0;
+			cmd->open_flag = 0;
 	}
 	else if (raw_input[i] == '<' && raw_input[i + 1] == '<')
 	{
@@ -168,17 +168,14 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos, int j)
 void ft_parsing(char *raw_input)
 {
 	int		pos;
-	int		j;
 	t_list	*new_tok;
 	t_cmd	*cmd_iterator;
 
 	pos = 0;
 	while (raw_input[pos])
 	{
-		j = 0;
 		cmd_iterator = ft_lstnew_cmds();
-		cmd_iterator->output_file = ft_calloc(10000, sizeof(char));
-		cmd_iterator->output_file[0] = "mull/Output_file.txt";
+		// cmd_iterator->output_file = ft_calloc(10000, sizeof(char));
 		while(raw_input[pos] && ft_is_cmd_delim(raw_input[pos]) == 0)
 		{
 			pos = ft_skip_spaces(raw_input, pos);
@@ -193,9 +190,9 @@ void ft_parsing(char *raw_input)
 			}
 			else if (raw_input[pos] == '>' || raw_input[pos] == '<')
 			{
-				if (raw_input[pos] == '>')
-					j++;
-				pos = ft_get_redir_tok(cmd_iterator, raw_input, pos, j);
+				// if (raw_input[pos] == '>')
+				// 	j++;
+				pos = ft_get_redir_tok(cmd_iterator, raw_input, pos);
 				pos = ft_skip_spaces(raw_input, pos);
 			}
 		}
@@ -203,8 +200,8 @@ void ft_parsing(char *raw_input)
 		if (raw_input[pos] == '|')
 		{
 			pos ++;
-			if (j == 0 && cmd_iterator->open_flag[0] == -1)
-				cmd_iterator->open_flag[0] = 0;
+			if (cmd_iterator->open_flag == -1) // j == 0 && 
+				cmd_iterator->open_flag = 0;
 		}
 		else if (!raw_input[pos])
 			break ;

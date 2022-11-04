@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:49:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/02 20:24:41 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/04 19:44:22 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_print_list(t_cmd *cmds)
 {
 	t_list	*iterator;
 	int		i;
-	
+
 	i = 1;
 	iterator = cmds->toks;
 	while (iterator)
@@ -40,13 +40,13 @@ void	ft_print_args(t_cmd *iterator)
 			i++;
 		}
 	}
-	i = 0;
-	while (iterator->output_file[i] && (iterator->open_flag[i] == -1 || iterator->open_flag[i] == 0 || iterator->open_flag[i] == 1))
-	{
-		printf("outputfile: %s\n", iterator->output_file[i]);
-		printf("open_flag: %d\n", iterator->open_flag[i]);
-		i++;
-	}
+	// i = 0;
+	// while (iterator->output_file[i] && (iterator->open_flag == -1 || iterator->open_flag[i] == 0 || iterator->open_flag[i] == 1))
+	// {
+	// 	printf("outputfile: %s\n", iterator->output_file[i]);
+	// 	printf("open_flag: %d\n", iterator->open_flag[i]);
+	// 	i++;
+	// }
 	// i = 0;
 	// while (iterator->open_flag[i] == -1 || iterator->open_flag[i] == 0 || iterator->open_flag[i] == 1)
 	// {
@@ -69,7 +69,8 @@ void	ft_print_cmds(t_cmd *cmd)
 		printf("command_path: %s\n", iterator->command_path);
 		ft_print_args(iterator);
 		printf("input_file: %s\n", iterator->input_file);
-		// printf("output_file: %s\n", iterator->output_file[]);
+		printf("output_file: %s\n", iterator->output_file);
+		printf("open_flag: %d\n", iterator->open_flag);
 		printf("HEREDOC_DELIM: %s\n", iterator->HEREDOC_DELIM);
 		printf("fd_in: %d\n", iterator->fd_in);
 		printf("fd_out: %d\n", iterator->fd_out);
