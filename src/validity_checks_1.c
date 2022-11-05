@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validity_checks_1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:38:09 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/28 17:57:09 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/05 19:17:30 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,25 +46,19 @@ int ft_is_char_front(char *raw_input, char c)
 */
 int	ft_is_char_end(char *raw_input, char c)
 {
-	int check;
-	char *trim_input;
-	int len;
+	int 	check;
+	int		len;
 
-	trim_input = ft_strtrim(raw_input, &c);
-	if (!trim_input)
-	{
-		printf("no input after trimming in is_char_front\n");
-		exit_program(EXIT_FAILURE);
-	}
-	len = ft_strlen(trim_input);
-	if (trim_input[len - 1] == c)
+	len = ft_strlen(raw_input);
+	while (raw_input[len - 1] && ft_is_space(raw_input[len - 1]) == 1)
+		len--;
+	if (raw_input[len] == c)
 	{
 		printf("error:last char illegal\n");
 		check = 1;
 	}
 	else
 		check = 0;
-	free(trim_input);
 	return(check);
 }
 

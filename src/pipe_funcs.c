@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_funcs.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:39:14 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/05 17:41:48 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/05 19:21:16 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,22 @@ void	ft_close_fds(int in, int out, int nbr) //in = 0, out = 1, nbr = 0
 		iterator = iterator->next;
 	}
 	printf("After opened files.\n");
-	while (g_mini.pipefd[i] && i < g_mini.nbr_of_pipes) // close open pipe fds.
+	if (g_mini.nbr_of_pipes > 0)
 	{
-		if (g_mini.pipefd[i][0] != in)
+		while (g_mini.pipefd[i] && i < g_mini.nbr_of_pipes) // close open pipe fds.
 		{
-			printf("Closing fd: %d\n", g_mini.pipefd[i][0]);
-			close(g_mini.pipefd[i][0]);
+			if (g_mini.pipefd[i][0] != in)
+			{
+				printf("Closing fd: %d\n", g_mini.pipefd[i][0]);
+				close(g_mini.pipefd[i][0]);
+			}
+			if (g_mini.pipefd[i][1] != out)
+			{
+				printf("Closing fd: %d\n", g_mini.pipefd[i][1]);
+				close(g_mini.pipefd[i][1]);
+			}
+			i++;
 		}
-		if (g_mini.pipefd[i][1] != out)
-		{
-			printf("Closing fd: %d\n", g_mini.pipefd[i][1]);
-			close(g_mini.pipefd[i][1]);
-		}
-		i++;
 	}
 	printf("After pipe fds closed.\n");
 	// if (nbr == 0 && iterator->input_file != NULL)

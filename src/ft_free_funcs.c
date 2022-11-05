@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_funcs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/05 18:08:26 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/05 19:02:37 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,41 @@
 // 	close(file_fd_out);
 // }
 
+void	ft_free_env_vars(void)
+{
+	t_list	*iterator;
+	int		i;
+	size_t		len;
+	char	**env;
+
+	i = 0;
+	env = g_mini.env;
+	iterator = g_mini.dup_env;
+	while(iterator)
+	{
+		printf("g_mini. %s\n", g_mini.env[i]);
+		len = ft_strlen(g_mini.env[i]) - ft_strlen(ft_strchr((const char *)g_mini.env[i], '='));
+		while (env[i] && ft_strncmp(iterator->content, env[i], len) != 0)
+			i++;
+		if (ft_strncmp(iterator->content, env[i], len) == 0)
+		{
+			i = 0;
+			iterator = iterator->next;
+		}
+		else
+		{
+			free(iterator->content);
+			i = 0;
+			iterator = iterator->next;
+		}
+	}
+}
+
+// HOME						PATH
+// PATH 						USER
+// USER						HOME
+// testhihgsdklfje				NULL
+							
 void ft_free()
 {
 	t_cmd	*cmd_iterator;
@@ -46,6 +81,8 @@ void ft_free()
 	i = 0;
 	cmd_iterator = g_mini.cmds;
 	// ft_free_files();
+	ft_free_env_vars();
+	ft_free_lst_cont(g_mini.dup_env);
 	while (cmd_iterator)
 	{
 		ft_free_lst_cont(cmd_iterator->toks);
@@ -64,22 +101,21 @@ void ft_free()
 		cmd_iterator = temp;
 	}
 	free (g_mini.cmds);
-	ft_free_lst_cont(g_mini.dup_env);
 	free (g_mini.raw_input);
-	free (&g_mini);
+	// free (g_mini);
 }
 
-void ft_free_lst_cont(t_list *cmd_iterator)
+void ft_free_lst_cont(t_list *iterator)
 {
 	t_list	*temp;
 
-	while (cmd_iterator)
+	while (iterator)
 	{
-		free (cmd_iterator->content);
-		temp = cmd_iterator->next;
-		free (cmd_iterator->next);
-		free (cmd_iterator);
-		cmd_iterator = temp;
+		// free (iterator->content);
+		temp = iterator->next;
+		// free (iterator->next);
+		free (iterator);
+		iterator = temp;
 	}
 }
 
@@ -88,13 +124,18 @@ void exit_program(int status)
 	// if 2 terminate minishell
 	g_mini.exit_status = status;
 	if (status  == 2)
+	{
+		ft_free();
 		exit (EXIT_FAILURE);
+	}
 	if (status == 0) // exit success
 	
 	if (status == 130) // crtl+c
 	
 	if (status == 1) // clear shell but continue shell running and give prompt back liek at begining
-	
+	{
+		ft_free();
+	}
 	
 	printf("exit status:%d\n", status);
 	// free everything

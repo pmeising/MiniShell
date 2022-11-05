@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 17:45:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/04 17:54:02 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/05 18:21:22 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void exit_shell_quit(int sig)
 {
 	if (sig == 0)
 	{
-		//printf("exit\n");
-		exit(EXIT_FAILURE);
+		printf("exit\n");
+		exit_program(2);
 	}
 }

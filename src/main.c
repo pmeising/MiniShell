@@ -126,9 +126,12 @@ int ft_get_input(void)
 {
 	//int input_ckeck;
 	char	*prompt;
+	char	*temp;
 
 	prompt = "42shell > ";
-	g_mini.raw_input = readline(prompt);
+	temp = readline(prompt);
+	g_mini.raw_input = ft_strdup(temp);
+	free (temp);
 	if (!g_mini.raw_input)
 		exit_shell_quit(0);
 	if (ft_str_only_space(g_mini.raw_input) != 1 && g_mini.raw_input)
