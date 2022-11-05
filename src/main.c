@@ -35,22 +35,27 @@ void	ft_test(void)
 			exit_program(1);
 		}
 		if (pid == 0)
+		{
+			printf("Hello from child process.\n");
 			ft_execute_process(cmd_iterator, i);
+		}
 		else
 		{
 			i++;
 			cmd_iterator = cmd_iterator->next;
 		}
 	}
+	sleep(1);
 	waitpid(-1, NULL, 0);
+	printf("Main.\n");
 	ft_close_fds(-1, -1, -1);
 }
 
 void	ft_execute(void)
 {
 	ft_set_pipes();
-	ft_print_cmds(g_mini.cmds);
 	ft_set_files();
+	ft_print_cmds(g_mini.cmds);
 	ft_test();
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 11:37:51 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/04 11:38:56 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/05 17:34:40 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,72 +44,72 @@
 *	using the dup2() STDOUT allows us to receive that error message in
 *	the standard output rather than any potential output file.
 */
-void	ft_fork_process(t_cmd *iterator)
-{
-	pid_t	fork_check;
-	int		file_check;
+// void	ft_fork_process(t_cmd *iterator)
+// {
+// 	pid_t	fork_check;
+// 	int		file_check;
 
-	fork_check = fork();
-	if (fork_check == 0)
-	{
-		if (iterator->input_file != NULL)
-		{
-			file_check = access(iterator->input_file, R_OK | F_OK);
-			if (file_check != 0)
-			{
-				printf("bash: %s: No such file or directory\n", iterator->input_file);
-				exit_program(1);
-			}
-			iterator->fd_in = open(iterator->input_file, O_RDWR, 0777);
-			if (iterator->fd_in == -1)
-			{
-				printf("bash: %s: Permission denied\n", iterator->input_file);
-				exit_program(1);
-			}
-			// printf("fd_in in child: %d\n", iterator->fd_in);
-		}
-		dup2(iterator->fd_in, STDIN_FILENO);
-		if (iterator->fd_in != 0)
-			close(iterator->fd_in); // [0] -> Output_file.txt [1] 
-		if (iterator->output_file[0] != NULL)
-		{
-			// if (iterator->open_flag[] == 0) // Output_file.txt
-			iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_TRUNC, 0777);
-			// else if (iterator->open_flag == 1)
-			// 	iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_APPEND, 0777);
-			// remember to change open_flag to it's value when changing the outputfile content.
-			if (iterator->fd_out == -1)
-				exit_program(1); // error message for internal trouble shooting.
-		}
-		dup2(iterator->fd_out, STDOUT_FILENO); // fd_out defaults to 1
-		if (iterator->fd_out != 1)
-			close(iterator->fd_out);
-		// printf("KDJFIAEHJLSIEHGIEHJ \n");
-		// printf("input: %s\n output: %s\n", iterator->input_file, iterator->output_file[0]);
-		// printf("args[0]: %s\n", iterator->arguments[0]);
-		if (iterator->is_built_in == 0)
-		{
-			execve(iterator->command_path, iterator->arguments, g_mini.env);
-			dup2(1, STDOUT_FILENO);
-			printf("EXECVE failure.\n");
-			perror("execve: ");
-		}
-		else if (iterator->is_built_in == 1)
-		{
-			ft_execute_built_in(iterator, iterator->toks);
-			execve(iterator->command_path, iterator->arguments, g_mini.env);
-			dup2(1, STDOUT_FILENO);
-			printf("EXECVE failure.\n");
-			perror("execve: ");
-		}
-	}
-	if (fork_check != 0)
-	{
-		// sleep(1);
-		waitpid(0, NULL, 0);
-		printf("I am parent.\n");
-	}
-}
+// 	fork_check = fork();
+// 	if (fork_check == 0)
+// 	{
+// 		if (iterator->input_file != NULL)
+// 		{
+// 			file_check = access(iterator->input_file, R_OK | F_OK);
+// 			if (file_check != 0)
+// 			{
+// 				printf("bash: %s: No such file or directory\n", iterator->input_file);
+// 				exit_program(1);
+// 			}
+// 			iterator->fd_in = open(iterator->input_file, O_RDWR, 0777);
+// 			if (iterator->fd_in == -1)
+// 			{
+// 				printf("bash: %s: Permission denied\n", iterator->input_file);
+// 				exit_program(1);
+// 			}
+// 			// printf("fd_in in child: %d\n", iterator->fd_in);
+// 		}
+// 		dup2(iterator->fd_in, STDIN_FILENO);
+// 		if (iterator->fd_in != 0)
+// 			close(iterator->fd_in); // [0] -> Output_file.txt [1] 
+// 		if (iterator->output_file[0] != NULL)
+// 		{
+// 			// if (iterator->open_flag[] == 0) // Output_file.txt
+// 			iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_TRUNC, 0777);
+// 			// else if (iterator->open_flag == 1)
+// 			// 	iterator->fd_out = open(iterator->output_file[0], O_CREAT | O_RDWR | O_APPEND, 0777);
+// 			// remember to change open_flag to it's value when changing the outputfile content.
+// 			if (iterator->fd_out == -1)
+// 				exit_program(1); // error message for internal trouble shooting.
+// 		}
+// 		dup2(iterator->fd_out, STDOUT_FILENO); // fd_out defaults to 1
+// 		if (iterator->fd_out != 1)
+// 			close(iterator->fd_out);
+// 		// printf("KDJFIAEHJLSIEHGIEHJ \n");
+// 		// printf("input: %s\n output: %s\n", iterator->input_file, iterator->output_file[0]);
+// 		// printf("args[0]: %s\n", iterator->arguments[0]);
+// 		if (iterator->is_built_in == 0)
+// 		{
+// 			execve(iterator->command_path, iterator->arguments, g_mini.env);
+// 			dup2(1, STDOUT_FILENO);
+// 			printf("EXECVE failure.\n");
+// 			perror("execve: ");
+// 		}
+// 		else if (iterator->is_built_in == 1)
+// 		{
+// 			ft_execute_built_in(iterator, iterator->toks);
+// 			execve(iterator->command_path, iterator->arguments, g_mini.env);
+// 			dup2(1, STDOUT_FILENO);
+// 			printf("EXECVE failure.\n");
+// 			perror("execve: ");
+// 		}
+// 	}
+// 	if (fork_check != 0)
+// 	{
+// 		// sleep(1);
+// 		waitpid(0, NULL, 0);
+// 		printf("I am parent.\n");
+// 	}
+// }
 
 /*
 * copies content of file_1 into file_2;

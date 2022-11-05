@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 20:43:13 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/05 18:08:26 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,23 @@
 * enabled;
 * EOF = End of File
 */
-void ft_free_files(void)
-{
-	int file_fd_in;
-	int file_fd_out;
+// void ft_free_files(void)
+// {
+// 	int file_fd_in;
+// 	int file_fd_out;
 
-	file_fd_in = open("mull/Input_file.txt", O_RDWR | O_TRUNC, 0777);
-	if (file_fd_in < 0)
-		printf("couldnt open inputfile. ft_free_files.\n");
-	write(file_fd_in, (int *)EOF, 1);
-	close(file_fd_in);
+// 	file_fd_in = open("mull/Input_file.txt", O_RDWR | O_TRUNC, 0777);
+// 	if (file_fd_in < 0)
+// 		printf("couldnt open inputfile. ft_free_files.\n");
+// 	write(file_fd_in, (int *)EOF, 1);
+// 	close(file_fd_in);
 
-	file_fd_out = open("mull/Output_file.txt", O_RDWR | O_TRUNC, 0777);
-	if (file_fd_out < 0)
-		printf("couldnt open outputfile. ft_free_files.\n");
-	write(file_fd_out, (int *)EOF, 1);
-	close(file_fd_out);
-}
+// 	file_fd_out = open("mull/Output_file.txt", O_RDWR | O_TRUNC, 0777);
+// 	if (file_fd_out < 0)
+// 		printf("couldnt open outputfile. ft_free_files.\n");
+// 	write(file_fd_out, (int *)EOF, 1);
+// 	close(file_fd_out);
+// }
 
 void ft_free()
 {
@@ -66,7 +66,7 @@ void ft_free()
 	free (g_mini.cmds);
 	ft_free_lst_cont(g_mini.dup_env);
 	free (g_mini.raw_input);
-	// free (&g_mini);
+	free (&g_mini);
 }
 
 void ft_free_lst_cont(t_list *cmd_iterator)

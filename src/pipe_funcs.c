@@ -6,40 +6,62 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:39:14 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/04 19:55:24 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/05 17:41:48 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_close_fds(int in, int out, int nbr)
+void	ft_close_fds(int in, int out, int nbr) //in = 0, out = 1, nbr = 0
 {
 	int 	i;
 	t_cmd	*iterator;
 
+	(void)nbr;
 	i = 0;
 	iterator = g_mini.cmds;
+	printf("hi there. :) ");
 	while (iterator) // close open files that are not used.
 	{
 		if (iterator->input_file && iterator->fd_in != in)
+		{
+			printf("Closing fd: %d\n", iterator->fd_in);
 			close(iterator->fd_in);
+		}
 		if (iterator->output_file && iterator->fd_out != out)
+		{
+			printf("Closing fd: %d\n", iterator->fd_out);
 			close(iterator->fd_out);
+		}
 		iterator = iterator->next;
 	}
-	while (g_mini.pipefd[i]) // close open pipe fds.
+	printf("After opened files.\n");
+	while (g_mini.pipefd[i] && i < g_mini.nbr_of_pipes) // close open pipe fds.
 	{
 		if (g_mini.pipefd[i][0] != in)
+		{
+			printf("Closing fd: %d\n", g_mini.pipefd[i][0]);
 			close(g_mini.pipefd[i][0]);
+		}
 		if (g_mini.pipefd[i][1] != out)
+		{
+			printf("Closing fd: %d\n", g_mini.pipefd[i][1]);
 			close(g_mini.pipefd[i][1]);
+		}
 		i++;
 	}
-	if (nbr == 0 && iterator->input_file != NULL)
-		close(STDIN_FILENO);
-	if (nbr == g_mini.nbr_of_pipes && iterator->output_file != NULL)
-		close(STDOUT_FILENO);
-	
+	printf("After pipe fds closed.\n");
+	// if (nbr == 0 && iterator->input_file != NULL)
+	// {
+	// 	printf("Closing fd: %d\n", STDIN_FILENO);
+	// 	close(STDIN_FILENO);
+	// }
+	// if (nbr == g_mini.nbr_of_pipes && iterator->output_file != NULL)
+	// {
+	// 	printf("Closing fd: %d\n", STDOUT_FILENO);
+	// 	close(STDOUT_FILENO);
+	// }
+	printf("leaving ft_close_fds.\n");
 }
 
 /*
@@ -47,30 +69,32 @@ void	ft_close_fds(int in, int out, int nbr)
 */
 void	ft_execute_process(t_cmd *cmd_iterator, int i)
 {
+	printf("Before input redirection.\n");
 	// INPUT FILES REDIRECT
 	if (cmd_iterator->input_file != NULL) // 3 scenarios for input reads. if file read from file.
 		dup2(cmd_iterator->fd_in, STDIN_FILENO);
 	else if (cmd_iterator->input_file == NULL && i > 0) // if NULL && second+ command take from pipe.
 		dup2(g_mini.pipefd[i - 1][0], STDIN_FILENO);
-	else if (cmd_iterator->input_file == NULL && i == 0) // else read from STDIN
-		dup2(cmd_iterator->fd_in, STDIN_FILENO);
-
+	// else if (cmd_iterator->input_file == NULL && i == 0) // else read from STDIN
+	// 	dup2(cmd_iterator->fd_in, STDIN_FILENO);
+	printf("before output redir\n");
 	// OUTPUT FILES REDIRECT
+	printf("it_out:%s output fd: %d\n", cmd_iterator->output_file, cmd_iterator->fd_out);
 	if (cmd_iterator->output_file != NULL)
 		dup2(cmd_iterator->fd_out, STDOUT_FILENO);
 	else if (cmd_iterator->output_file == NULL && i < g_mini.nbr_of_pipes)
-	{
 		dup2(g_mini.pipefd[i][1], STDOUT_FILENO);
-		cmd_iterator->fd_out = g_mini.pipefd[i][1];
-	}
-	else if (cmd_iterator->output_file == NULL && i == g_mini.nbr_of_pipes)
-		dup2(cmd_iterator->fd_out, STDOUT_FILENO);
+	// else if (cmd_iterator->output_file == NULL && i == g_mini.nbr_of_pipes)
+	// 	dup2(cmd_iterator->fd_out, STDOUT_FILENO);
+	printf("i == %d. before close fds.\n", i);
 	ft_close_fds(cmd_iterator->fd_in, cmd_iterator->fd_out, i);
+	printf("before execve is built in.\n");
 	if (cmd_iterator->is_built_in == 1)
 	{
 		ft_execute_built_in(cmd_iterator, cmd_iterator->toks);
 		exit(0);
 	}
+	printf("before execve\n");
 	execve(cmd_iterator->command_path, cmd_iterator->arguments, g_mini.env);
 	dup2(1, STDOUT_FILENO);
 	printf("EXECVE failure.\n");

@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 16:03:38 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/03 19:37:48 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/05 17:47:15 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,10 @@ void	ft_export_exec(t_list *toks)
 		if (ft_isalpha(toks->next->content[0]) == 0)
 			printf("bash: export: `%s´: not a valid identifier\n", toks->next->content);
 		else
+		{
+			printf("Adding variable.\n");
 			ft_lstadd_back(&g_mini.dup_env, ft_lstnew(toks->next->content));
+		}
 	}
 }
 

@@ -1,11 +1,8 @@
-Makefile
-brick.txt
-learning_notes.txt
-libft
-minishell
-minishell.h
-mull
-obj
-src
-test.txt
-text.txt
+i == 0. before close fds.
+hi there. :) After opened files.
+Closing fd: 3
+Closing fd: 4
+After pipe fds closed.
+leaving ft_close_fds.
+before execve is built in.
+Entered the built_in execution.
