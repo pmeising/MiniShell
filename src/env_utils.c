@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 19:38:47 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 19:51:50 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/07 12:10:07 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,25 @@ int	ft_env_exist(char *str, t_list **dup_env)
 * checks the list on env.vars for matching name and then
 * replaces the whole string (=name+content) with just the name
 */
-int	ft_del_env_cont(char *str, t_list **dup_env)
+int	ft_del_env_cont(char *name, t_list **dup_env)
 {
-	t_list	*tmp;
+	t_list	*iterator;
 	int		len;
 
-	tmp = *dup_env;
-	len = ft_strlen(str);
-	if (!str || !dup_env)
+	iterator = *dup_env;
+	len = ft_strlen(name);
+	if (!name || !dup_env)
 	{
 		exit_program(EXIT_FAILURE);
 	}
-	while (tmp)
+	while (iterator)
 	{
-		if (ft_strncmp(str, tmp->content, len) == 0)
+		if (ft_strncmp(name, iterator->content, len) == 0)
 		{
-			tmp->content = str;
+			iterator->content = name;
+			break ;
 		}
-		tmp = tmp->next;
+		iterator = iterator->next;
 	}
 	return (1);
 }
@@ -70,16 +71,16 @@ int	ft_del_env_cont(char *str, t_list **dup_env)
 void ft_create_env(char *str, t_list **dup_env)
 {
 	t_list	*new_env;
-	char	*new_var_cont;
+	// char	*new_var_cont;
 
-	new_var_cont = ft_strdup(str);
-	if (!new_var_cont)
-	{
-		printf("ft_create_env:init_minishell:no new env var to create\n");
-		free (new_var_cont);
-		exit_program(1);
-	}
-	new_env = ft_lstnew(new_var_cont);
+	// new_var_cont = ft_strdup(str);
+	// if (!new_var_cont)
+	// {
+	// 	printf("ft_create_env:init_minishell:no new env var to create\n");
+	// 	free (new_var_cont);
+	// 	exit_program(1);
+	// }
+	new_env = ft_lstnew(str);
 	if (!new_env)
 	{
 		printf("ft_create_env:init_minishell:new_env not created\n");
@@ -125,6 +126,7 @@ char *ft_get_env_cont(char *env_name)
 void	ft_copy_env(t_mini *g_mini, char **env)
 {
 	int	i;
+	// t_list	*iter;
 
 	i = 0;
 	if (!env)
@@ -134,4 +136,10 @@ void	ft_copy_env(t_mini *g_mini, char **env)
 		ft_lstadd_back(&g_mini->dup_env, ft_lstnew(env[i]));
 		i++;
 	}
+	// iter = g_mini->dup_env;
+	// while (iter)
+	// {
+	// 	printf("content of t_list node: %s\n", iter->content);
+	// 	iter = iter->next;
+	// }
 }

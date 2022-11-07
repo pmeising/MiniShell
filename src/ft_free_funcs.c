@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/05 19:02:37 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/07 12:23:37 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,35 +37,33 @@
 // 	close(file_fd_out);
 // }
 
-void	ft_free_env_vars(void)
-{
-	t_list	*iterator;
-	int		i;
-	size_t		len;
-	char	**env;
 
-	i = 0;
-	env = g_mini.env;
-	iterator = g_mini.dup_env;
-	while(iterator)
-	{
-		printf("g_mini. %s\n", g_mini.env[i]);
-		len = ft_strlen(g_mini.env[i]) - ft_strlen(ft_strchr((const char *)g_mini.env[i], '='));
-		while (env[i] && ft_strncmp(iterator->content, env[i], len) != 0)
-			i++;
-		if (ft_strncmp(iterator->content, env[i], len) == 0)
-		{
-			i = 0;
-			iterator = iterator->next;
-		}
-		else
-		{
-			free(iterator->content);
-			i = 0;
-			iterator = iterator->next;
-		}
-	}
-}
+/*
+*/
+// void	ft_free_env_vars(void)
+// {
+// 	t_list	*iterator;
+// 	int		i;
+// 	size_t	len;
+// 	char	**env;
+
+	
+// 	env = g_mini.env;
+// 	iterator = g_mini.dup_env;
+// 	while(iterator)
+// 	{
+// 		i = 0;
+// 		len = ft_strlen(g_mini.env[i]) - ft_strlen(ft_strchr((const char *)g_mini.env[i], '='));
+// 		while (env[i] && ft_strncmp(iterator->content, env[i], len) != 0)
+// 			i++;
+// 		if (env[i] == NULL)
+// 		{
+// 			printf("malloced content: %s\n", iterator->content);
+// 			free (iterator->content);
+// 		}
+// 		iterator = iterator->next;
+// 	}
+// }
 
 // HOME						PATH
 // PATH 						USER
@@ -81,7 +79,7 @@ void ft_free()
 	i = 0;
 	cmd_iterator = g_mini.cmds;
 	// ft_free_files();
-	ft_free_env_vars();
+	// ft_free_lst_cont();
 	ft_free_lst_cont(g_mini.dup_env);
 	while (cmd_iterator)
 	{
@@ -100,9 +98,7 @@ void ft_free()
 		free (cmd_iterator);
 		cmd_iterator = temp;
 	}
-	free (g_mini.cmds);
 	free (g_mini.raw_input);
-	// free (g_mini);
 }
 
 void ft_free_lst_cont(t_list *iterator)

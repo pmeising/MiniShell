@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validity_checks_2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:53:12 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/28 18:00:49 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/07 12:27:34 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,13 @@ int ft_check_input_validity(char *raw_input)
 	int check;
 
 	if (!raw_input || ft_str_only_space(raw_input) == 1)
-	{
-		check = 0;
-	}
+		return(0);
 	else if (ft_wrong_tokens(raw_input) == 1 || ft_not_supported(raw_input) == 1)
 	{
 		check = 0;
-		// set g_mini exit status
 		printf("invalid or not supported input detected\n");
 	}
 	else
-	{
 		check = 1;
-	}
 	return (check);
 }

@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:30:36 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/04 11:54:28 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/07 11:47:09 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,20 @@ char	*ft_replace_env_cont(char *env_name, char *new_value)
 	tmp = ft_strjoin(env_name, "=");
 	if (!tmp)
 	{
-		printf("ft_replace_env_cont:strings not joined\n");
+		printf("ft_replace_env_cont: strings not joined\n");
 		exit_program(1);
 	}
 	res = ft_strjoin(tmp, new_value);
 	if (!res)
 	{
-		printf("ft_replace_env_cont:strings not joined\n");
+		printf("ft_replace_env_cont: strings not joined\n");
 		exit_program(1);
 	}
 	free(tmp);
 	// tmp = 0; // is needed for some reason or there will be no value in SHLVL
 	// free(*curr_content);// should be freed but gives compiling error ?
 	// curr_content = 0; // is needed for some reason or there will be no value in SHLVL
+	printf("replace env content, malloced, not freed: %s\n", res);
 	return(res);
 }
 
@@ -119,7 +120,7 @@ void	ft_init_minishell(t_mini *g_mini, char **env)
 	g_mini->fdin = 0;
 	g_mini->fdout = 1;
 	g_mini->exit_status = 0;
-	ft_bzero(g_mini, sizeof(t_mini));
+	// ft_bzero(g_mini, sizeof(t_mini));
 	ft_copy_env(g_mini, env);
 	ft_oldpwd();
 	ft_raise_shlvl();

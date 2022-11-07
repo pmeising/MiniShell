@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validity_checks.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:34:35 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 19:47:19 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/07 12:28:42 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ int ft_space_between_char(char *raw_input, char c)
 	int i;
 
 	i = 0;
+	if (!raw_input)
+		return (0);
 	while (raw_input[i])
 	{
 		if (raw_input[i] == 34 || raw_input[i] == 39)

@@ -130,7 +130,8 @@ int ft_get_input(void)
 
 	prompt = "42shell > ";
 	temp = readline(prompt);
-	g_mini.raw_input = ft_strdup(temp);
+	if (temp)
+		g_mini.raw_input = ft_strdup(temp);
 	free (temp);
 	if (!g_mini.raw_input)
 		exit_shell_quit(0);
