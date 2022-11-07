@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:34:35 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/07 12:28:42 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/07 12:43:32 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int ft_space_between_char(char *raw_input, char c)
 	i = 0;
 	if (!raw_input)
 		return (0);
-	while (raw_input[i])
+	while (raw_input[i] != '\0')
 	{
 		if (raw_input[i] == 34 || raw_input[i] == 39)
 		{
@@ -113,7 +113,6 @@ int ft_space_between_char(char *raw_input, char c)
 		}
 		if (raw_input[i])
 			i++;
-		i++;
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 19:38:47 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/07 12:10:07 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/07 15:42:01 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,7 @@ int	ft_del_env_cont(char *name, t_list **dup_env)
 void ft_create_env(char *str, t_list **dup_env)
 {
 	t_list	*new_env;
-	// char	*new_var_cont;
 
-	// new_var_cont = ft_strdup(str);
-	// if (!new_var_cont)
-	// {
-	// 	printf("ft_create_env:init_minishell:no new env var to create\n");
-	// 	free (new_var_cont);
-	// 	exit_program(1);
-	// }
 	new_env = ft_lstnew(str);
 	if (!new_env)
 	{

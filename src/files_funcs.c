@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   files_funcs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:40:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/05 18:09:59 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/07 16:00:30 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,10 @@ void	ft_set_files(void)
 	cmd_iterator = g_mini.cmds;
 	while (cmd_iterator)
 	{
+		printf("i: %d\n", i);
 		if (cmd_iterator->input_file == NULL && i != 0)
 			cmd_iterator->fd_in = (i * 2) + 1;
-		else if (cmd_iterator->output_file == NULL && i < g_mini.nbr_of_pipes)
+		if (cmd_iterator->output_file == NULL && i < g_mini.nbr_of_pipes)
 			cmd_iterator->fd_out = (i * 2) + 4;
 		i++;
 		cmd_iterator = cmd_iterator->next;

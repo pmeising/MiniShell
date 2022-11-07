@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:30:36 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/07 11:47:09 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/07 13:09:57 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ char	*ft_replace_env_cont(char *env_name, char *new_value)
 	// tmp = 0; // is needed for some reason or there will be no value in SHLVL
 	// free(*curr_content);// should be freed but gives compiling error ?
 	// curr_content = 0; // is needed for some reason or there will be no value in SHLVL
-	printf("replace env content, malloced, not freed: %s\n", res);
 	return(res);
 }
 

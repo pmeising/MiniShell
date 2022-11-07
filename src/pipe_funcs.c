@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:39:14 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/05 19:21:16 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/07 15:43:41 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_close_fds(int in, int out, int nbr) //in = 0, out = 1, nbr = 0
 	(void)nbr;
 	i = 0;
 	iterator = g_mini.cmds;
-	printf("hi there. :) ");
+	printf("hi there. :) \n");
 	while (iterator) // close open files that are not used.
 	{
 		if (iterator->input_file && iterator->fd_in != in)
@@ -38,7 +38,7 @@ void	ft_close_fds(int in, int out, int nbr) //in = 0, out = 1, nbr = 0
 	printf("After opened files.\n");
 	if (g_mini.nbr_of_pipes > 0)
 	{
-		while (g_mini.pipefd[i] && i < g_mini.nbr_of_pipes) // close open pipe fds.
+		while (i < g_mini.nbr_of_pipes && g_mini.pipefd[i])
 		{
 			if (g_mini.pipefd[i][0] != in)
 			{

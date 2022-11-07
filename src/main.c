@@ -20,21 +20,29 @@ t_mini g_mini;
 void	ft_test(void)
 {
 	int		i;
-	int		pid;
+	int		j;
+	int		status;
+	int		*pid;
 	t_cmd	*cmd_iterator;
 
 	i = 0;
+	pid = malloc(sizeof(int) * g_mini.nbr_of_pipes + 1);
+	if (!pid)
+	{
+		printf("ft_test: malloc error\n");
+		exit_program(2);
+	}
 	cmd_iterator = g_mini.cmds;
 	while (cmd_iterator)
 	{
-		pid = fork();
-		if (pid == -1)
+		pid[i] = fork();
+		if (pid[i] == -1)
 		{
 			printf("Forking failed.\n");
 			perror("Forking: ");
 			exit_program(1);
 		}
-		if (pid == 0)
+		if (pid[i] == 0)
 		{
 			printf("Hello from child process.\n");
 			ft_execute_process(cmd_iterator, i);
@@ -45,8 +53,15 @@ void	ft_test(void)
 			cmd_iterator = cmd_iterator->next;
 		}
 	}
-	sleep(1);
-	waitpid(-1, NULL, 0);
+	j = 0;
+	while ((waitpid(pid[j], &status, 1) || waitpid(pid[j], &status, 0)) && i > 0)
+	{
+		// if (WIFSIGNALED(status))
+		i--;
+		j++;
+	}
+	// sleep(1);
+	// waitpid(-1, NULL, 0);
 	printf("Main.\n");
 	ft_close_fds(-1, -1, -1);
 }
