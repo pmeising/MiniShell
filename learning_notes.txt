@@ -35,6 +35,11 @@ naming executable file when compiling:
 gcc filename.c -o executable.file
 ./executable.file
 
+
+valgrind --tool=memcheck --track-fds=yes --show-leak-kinds=all --suppressions=.ignore_readline -q ./minishell
+valgrind --log-file="filename"
+
+open filedescriptor: not from us, occurr in other programs as well;
 /*
 * counts number of pipes outside of quotes;
 */

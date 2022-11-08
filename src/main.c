@@ -20,18 +20,12 @@ t_mini g_mini;
 void	ft_test(void)
 {
 	int		i;
-	int		j;
-	int		status;
 	int		*pid;
+	int		status;
 	t_cmd	*cmd_iterator;
 
 	i = 0;
-	pid = malloc(sizeof(int) * g_mini.nbr_of_pipes + 1);
-	if (!pid)
-	{
-		printf("ft_test: malloc error\n");
-		exit_program(2);
-	}
+	pid = ft_calloc(sizeof(int), g_mini.nbr_of_pipes + 1);
 	cmd_iterator = g_mini.cmds;
 	while (cmd_iterator)
 	{
@@ -47,23 +41,19 @@ void	ft_test(void)
 			printf("Hello from child process.\n");
 			ft_execute_process(cmd_iterator, i);
 		}
-		else
-		{
-			i++;
-			cmd_iterator = cmd_iterator->next;
-		}
+		i++;
+		cmd_iterator = cmd_iterator->next;
 	}
-	j = 0;
-	while ((waitpid(pid[j], &status, 1) || waitpid(pid[j], &status, 0)) && i > 0)
-	{
-		// if (WIFSIGNALED(status))
-		i--;
-		j++;
-	}
-	// sleep(1);
-	// waitpid(-1, NULL, 0);
-	printf("Main.\n");
+	i = 0;
 	ft_close_fds(-1, -1, -1);
+	while (i < g_mini.nbr_of_pipes + 1)
+	{
+		(waitpid(pid[i], &status, 0));
+		// if (WIFSIGNALED(status))
+		i++;
+	}
+	free (pid);
+	printf("Main.\n");
 }
 
 void	ft_execute(void)
@@ -206,13 +196,13 @@ int main (int argc, char **argv, char **env)
 				ft_parsing(g_mini.raw_input);
 				ft_interpret();
 				ft_execute();
-				ft_free();
+				ft_free_input();
 			}
 		}
 	}
 	//ft_env(&g_mini.dup_env); jus testing if env works
 
 	///free_all(g_mini);
-	printf("\n");
+	//ft_free();
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:30:36 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/07 13:09:57 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/07 17:40:00 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,8 @@ void	ft_raise_shlvl(void)
 */
 void	ft_init_minishell(t_mini *g_mini, char **env)
 {
+	close(19);
+	close(20);
 	g_mini->env = env;
 	g_mini->fdin = 0;
 	g_mini->fdout = 1;

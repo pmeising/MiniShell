@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/05 18:12:13 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/08 15:31:42 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,10 +248,11 @@ void	ft_open_file(char *file_name, int *fd, int j, int open_flag);
 
 void	ft_copy_content(char *file_1, char *file_2, int open_flag);
 
-void ft_execute_built_in(t_cmd *cmd, t_list *toks);
-void ft_cd_empty(void);
-int ft_is_echo(char *str);
+void	ft_execute_built_in(t_cmd *cmd, t_list *toks);
+void	ft_cd_empty(void);
+int		ft_is_echo(char *str);
 void	ft_execute_process(t_cmd *cmd_iterator, int i);
 void	ft_close_fds(int in, int out, int nbr);
+void	ft_free_input(void);
 
 #endif

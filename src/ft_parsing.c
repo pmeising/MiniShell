@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parsing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/04 19:59:14 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/08 15:47:40 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char *ft_get_token(char *raw_input, int pos)
 }
 
 
-void ft_read_heredoc(t_cmd *cmd)
+void	ft_read_heredoc(t_cmd *cmd)
 {
 	char	*content;
 	int		fd_input_file;
@@ -175,7 +175,6 @@ void ft_parsing(char *raw_input)
 	while (raw_input[pos])
 	{
 		cmd_iterator = ft_lstnew_cmds();
-		// cmd_iterator->output_file = ft_calloc(10000, sizeof(char));
 		while(raw_input[pos] && ft_is_cmd_delim(raw_input[pos]) == 0)
 		{
 			pos = ft_skip_spaces(raw_input, pos);
