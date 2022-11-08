@@ -48,11 +48,25 @@ void	ft_test(void)
 	ft_close_fds(-1, -1, -1);
 	while (i < g_mini.nbr_of_pipes + 1)
 	{
+		// (waitpid(pid[i], &status, 0));
+		// printf("status is:%d\n", status);
+		// if (WIFSTOPPED(status) != NULL)
+		// 	if (WSTOPSIG(status))
+		// 	{
+		// 		g_mini.exit_status = status;
+		// 	}
 		(waitpid(pid[i], &status, 0));
 		// if (WIFSIGNALED(status))
+		// {
+		// 	printf("in wifsignal\n");
+		// 	g_mini.exit_status = 130;
+		// }
 		i++;
 	}
 	free (pid);
+	printf("exit stat: %d\n", g_mini.exit_status);
+	if (g_mini.exit_status != 0)
+		exit(g_mini.exit_status);
 	printf("Main.\n");
 }
 

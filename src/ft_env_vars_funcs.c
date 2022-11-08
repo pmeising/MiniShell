@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_vars_funcs.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:42:08 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 20:02:29 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/08 17:52:57 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ void ft_env_vars(char *raw_input)
 		}
 		if (raw_input[pos] == '$' && raw_input[pos + 1] == '?')
 		{
+			printf("Entered this function.\n");
 			// requires the replacement of $? with the content of the variable g_mini->exit_status.
 			printf("%d\n", g_mini.exit_status);
 			break ;
@@ -276,7 +277,7 @@ int ft_dollar_sign(char *raw_input)
 				i++;
 			single_quotes = 0;
 		}
-		else if (raw_input[i] == '$') // && ft(is_alnum(raw_input[i + 1]) == 1 because it could be $-PATH which would indicate intepretable $ but shouldnt
+		else if (raw_input[i] == '$' && raw_input[i + 1] != '?')
 			check++;
 		i++;
 	}

@@ -1,20 +1,40 @@
-==527== FILE DESCRIPTORS: 6 open at exit.
-==527== Open file descriptor 22: /dev/ptmx
-==527==    <inherited from parent>
-==527== 
-==527== Open file descriptor 21: /dev/ptmx
-==527==    <inherited from parent>
-==527== 
-==527== Open file descriptor 3: /home/pmeising/42Wolfsburg_Core_Curriculum/MiniShell/MiniShellV5/trace.txt
-==527==    <inherited from parent>
-==527== 
-==527== Open file descriptor 2: /dev/pts/1
-==527==    <inherited from parent>
-==527== 
-==527== Open file descriptor 1: /dev/pts/1
-==527==    <inherited from parent>
-==527== 
-==527== Open file descriptor 0: /dev/pts/1
-==527==    <inherited from parent>
-==527== 
-==527== 
+==32611== FILE DESCRIPTORS: 5 open at exit.
+==32611== Open file descriptor 21: /dev/ptmx
+==32611==    <inherited from parent>
+==32611== 
+==32611== Open file descriptor 3: /home/pmeising/42Wolfsburg_Core_Curriculum/MiniShell/MiniShellV5/trace.txt
+==32611==    <inherited from parent>
+==32611== 
+==32611== Open file descriptor 2: /dev/pts/3
+==32611==    <inherited from parent>
+==32611== 
+==32611== Open file descriptor 1: /dev/pts/3
+==32611==    <inherited from parent>
+==32611== 
+==32611== Open file descriptor 0: /dev/pts/3
+==32611==    <inherited from parent>
+==32611== 
+==32611== 
+==32581== Invalid free() / delete / delete[] / realloc()
+==32581==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==32581==    by 0x10BEF4: ft_free_input (ft_free_funcs.c:71)
+==32581==    by 0x1099E0: main (main.c:213)
+==32581==  Address 0x110458 is in a r-- mapped file /home/pmeising/42Wolfsburg_Core_Curriculum/MiniShell/MiniShellV5/minishell segment
+==32581== 
+==32581== FILE DESCRIPTORS: 5 open at exit.
+==32581== Open file descriptor 21: /dev/ptmx
+==32581==    <inherited from parent>
+==32581== 
+==32581== Open file descriptor 3: /home/pmeising/42Wolfsburg_Core_Curriculum/MiniShell/MiniShellV5/trace.txt
+==32581==    <inherited from parent>
+==32581== 
+==32581== Open file descriptor 2: /dev/pts/3
+==32581==    <inherited from parent>
+==32581== 
+==32581== Open file descriptor 1: /dev/pts/3
+==32581==    <inherited from parent>
+==32581== 
+==32581== Open file descriptor 0: /dev/pts/3
+==32581==    <inherited from parent>
+==32581== 
+==32581== 

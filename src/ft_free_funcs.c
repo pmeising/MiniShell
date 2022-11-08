@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/08 15:56:15 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/08 17:37:04 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ void	ft_free_input(void)
 	int		i;
 	t_cmd	*temp;
 
-	i = 0;
 	cmd_iterator = g_mini.cmds;
+	i = 0;
 	while (cmd_iterator)
 	{
 		ft_free_lst_cont(cmd_iterator->toks);
@@ -65,6 +65,7 @@ void	ft_free_input(void)
 		free(cmd_iterator->input_file);
 		free(cmd_iterator->output_file);
 		free(cmd_iterator->HEREDOC_DELIM);
+		
 		while (cmd_iterator->arguments[i])
 		{
 			free(cmd_iterator->arguments[i]);
@@ -78,6 +79,11 @@ void	ft_free_input(void)
 	free (g_mini.raw_input);
 	g_mini.cmds = NULL;
 	ft_free_fds();
+	if (g_mini.exit_status == 2 || g_mini.exit == 1)
+	{
+		ft_free_lst_cont(g_mini.dup_env);
+		exit(g_mini.exit_status);	
+	}
 }
 							
 void ft_free()
@@ -88,7 +94,6 @@ void ft_free()
 	
 	i = 0;
 	cmd_iterator = g_mini.cmds;
-	ft_free_lst_cont(g_mini.dup_env);
 	while (cmd_iterator)
 	{
 		ft_free_lst_cont(cmd_iterator->toks);
@@ -130,6 +135,7 @@ void exit_program(int status)
 	if (status  == 2)
 	{
 		ft_free();
+		printf("before exit\n");
 		exit (EXIT_FAILURE);
 	}
 	if (status == 0) // exit success

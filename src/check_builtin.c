@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_builtin.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 16:27:58 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 18:43:06 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/08 17:36:24 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,21 @@ int ft_is_exit(char *cmd_name)
 	exit[2] = 'i';
 	exit[3] = 't';
 	exit[4] = '\0';
-
 	if (ft_strncmp(cmd_name, exit, 4) == 0)
+	{
+		g_mini.exit = 1;
 		return (1);
+	}
 	else if (ft_strncmp(cmd_name, exit_1, 6) == 0)
+	{
+		g_mini.exit = 1;
 		return (1);
+	}
 	else
+	{
+		g_mini.exit = 0;
 		return (0);
-
+	}
 }
 
 int ft_is_cd(char *str)

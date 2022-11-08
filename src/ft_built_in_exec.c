@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_built_in_exec.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 17:51:01 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 18:43:07 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/08 17:20:30 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,5 @@ void ft_exit_exec(t_list *toks)
 {
 	if (toks->next)
 		printf("error: no additional parameters for exit allowed");
-	printf("exit\n");
-	exit(EXIT_SUCCESS);
+	printf("exit from ft_exit_exec\n");
 }

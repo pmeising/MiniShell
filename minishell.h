@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/08 15:31:42 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/08 17:32:45 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct	s_mini
 	char		*raw_input;
 	int			fdin;
 	int			fdout;
+	int			exit;
 	int			**pipefd;
 	int			nbr_of_pipes;
 	int			exit_status;

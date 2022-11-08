@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:39:14 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/07 15:43:41 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/08 17:21:58 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,12 @@ void	ft_execute_process(t_cmd *cmd_iterator, int i)
 	if (cmd_iterator->is_built_in == 1)
 	{
 		ft_execute_built_in(cmd_iterator, cmd_iterator->toks);
+		if (ft_is_exit(cmd_iterator->toks->content) == 1)
+		{
+			printf("exit found.\n");
+			exit(130);
+			printf("SHouldn't be here.\n");
+		}
 		exit(0);
 	}
 	printf("before execve\n");

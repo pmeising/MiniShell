@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lst_funcs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:42:27 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/04 19:38:59 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/08 17:24:10 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,11 @@ void	ft_lstadd_back_cmds(t_cmd **lst, t_cmd *new)
 t_cmd	*ft_lstlast_cmds(t_cmd *lst)
 {
 	if (lst == NULL)
-	{
 		return (0);
-	}
 	while (lst != NULL)
 	{
 		if (lst->next == NULL)
-		{
 			return (lst);
-		}
 		lst = lst->next;
 	}
 	return (lst);
