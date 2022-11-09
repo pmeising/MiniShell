@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 17:45:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/05 18:21:22 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/09 19:16:26 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void ft_sigint(int sig)
 	rl_on_new_line();
 	rl_redisplay();
 
-	exit_program (130);
+	//exit_program (130);
 }
 
 /*

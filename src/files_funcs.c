@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:40:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/07 16:00:30 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/09 19:58:13 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,17 @@ void	ft_open_file(char *file_name, int *fd, int j, int open_flag)
 
 	if (j == 0)
 	{
-		file_check = access(file_name, R_OK | F_OK);
+		file_check = access(file_name, F_OK);
 		if (file_check != 0)
 		{
 			printf("minishell: %s: No such file or directory\n", file_name);
-			perror("file_check: ");
-			exit_program(1);
+			g_mini.exit_status = 1;
 		}
 		*fd = open(file_name, O_RDWR, 0777);
 		if (*fd == -1)
 		{
 			printf("minishell: %s: Permission denied\n", file_name);
-			perror("file_open: ");
-			exit_program(1);
+			g_mini.exit_status = 1;
 		}
 	}
 	else if (j == 1 && open_flag == 0)
@@ -46,8 +44,7 @@ void	ft_open_file(char *file_name, int *fd, int j, int open_flag)
 		if (*fd == -1)
 		{
 			printf("minishell: %s: Permission denied\n", file_name); // could be fused together ?
-			perror("file_open: ");
-			exit_program(1);
+			g_mini.exit_status = 1;
 		}
 	}
 	else if (j == 1 && open_flag == 1)
@@ -56,10 +53,11 @@ void	ft_open_file(char *file_name, int *fd, int j, int open_flag)
 		if (*fd == -1)
 		{
 			printf("minishell: %s: Permission denied\n", file_name);
-			perror("file_open: ");
-			exit_program(1);
+			g_mini.exit_status = 1;
 		}
 	}
+	if (g_mini.exit_status != 0)
+		g_mini.exit = 1;
 }
 
 /*

@@ -14,8 +14,16 @@
 
 t_mini g_mini;
 
+int	ft_is_special_built(char *arguments)
+{
+	if (ft_is_export(arguments) == 1 || ft_is_cd(arguments) == 1 || ft_is_unset(arguments) == 1)
+		return (1);
+	return (0);
+}
+
+
 /*
-* creates individual processes for each command;
+*	creates individual processes for each command;
 */
 void	ft_test(void)
 {
@@ -29,17 +37,25 @@ void	ft_test(void)
 	cmd_iterator = g_mini.cmds;
 	while (cmd_iterator)
 	{
-		pid[i] = fork();
-		if (pid[i] == -1)
+		if ((ft_is_export(cmd_iterator->toks->content) == 1 || ft_is_cd(cmd_iterator->toks->content) == 1 || ft_is_unset(cmd_iterator->toks->content) == 1) && g_mini.nbr_of_pipes == 0) // 1 == true //  || ft_is_cd(cmd_iterator->arguments[0]) == 1 || ft_is_unset(cmd_iterator->arguments[0]) == 1)
 		{
-			printf("Forking failed.\n");
-			perror("Forking: ");
-			exit_program(1);
+			printf("\n\n\nentered ft_is_special_built\n\n\n");
+			ft_execute_built_in(cmd_iterator, cmd_iterator->toks);
 		}
-		if (pid[i] == 0)
+		else
 		{
-			printf("Hello from child process.\n");
-			ft_execute_process(cmd_iterator, i);
+			pid[i] = fork();
+			if (pid[i] == -1)
+			{
+				printf("Forking failed.\n");
+				perror("Forking: ");
+				exit_program(1);
+			}
+			if (pid[i] == 0)
+			{
+				printf("Hello from child process.\n");
+				ft_execute_process(cmd_iterator, i);
+			}
 		}
 		i++;
 		cmd_iterator = cmd_iterator->next;
@@ -74,8 +90,14 @@ void	ft_execute(void)
 {
 	ft_set_pipes();
 	ft_set_files();
-	ft_print_cmds(g_mini.cmds);
+	// ft_print_cmds(g_mini.cmds);
+	// if (g_mini.exit != 1)
 	ft_test();
+	// else
+	// {
+	// 	ft_close_fds(-1, -1, -1);
+	// 	exit_program(g_mini.exit_status);
+	// }
 }
 
 /*
@@ -209,6 +231,7 @@ int main (int argc, char **argv, char **env)
 					ft_env_vars(g_mini.raw_input);
 				ft_parsing(g_mini.raw_input);
 				ft_interpret();
+				// if (g_mini.exit != 1)
 				ft_execute();
 				ft_free_input();
 			}

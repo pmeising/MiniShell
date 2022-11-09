@@ -1,40 +1,58 @@
-==32611== FILE DESCRIPTORS: 5 open at exit.
-==32611== Open file descriptor 21: /dev/ptmx
-==32611==    <inherited from parent>
-==32611== 
-==32611== Open file descriptor 3: /home/pmeising/42Wolfsburg_Core_Curriculum/MiniShell/MiniShellV5/trace.txt
-==32611==    <inherited from parent>
-==32611== 
-==32611== Open file descriptor 2: /dev/pts/3
-==32611==    <inherited from parent>
-==32611== 
-==32611== Open file descriptor 1: /dev/pts/3
-==32611==    <inherited from parent>
-==32611== 
-==32611== Open file descriptor 0: /dev/pts/3
-==32611==    <inherited from parent>
-==32611== 
-==32611== 
-==32581== Invalid free() / delete / delete[] / realloc()
-==32581==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==32581==    by 0x10BEF4: ft_free_input (ft_free_funcs.c:71)
-==32581==    by 0x1099E0: main (main.c:213)
-==32581==  Address 0x110458 is in a r-- mapped file /home/pmeising/42Wolfsburg_Core_Curriculum/MiniShell/MiniShellV5/minishell segment
-==32581== 
-==32581== FILE DESCRIPTORS: 5 open at exit.
-==32581== Open file descriptor 21: /dev/ptmx
-==32581==    <inherited from parent>
-==32581== 
-==32581== Open file descriptor 3: /home/pmeising/42Wolfsburg_Core_Curriculum/MiniShell/MiniShellV5/trace.txt
-==32581==    <inherited from parent>
-==32581== 
-==32581== Open file descriptor 2: /dev/pts/3
-==32581==    <inherited from parent>
-==32581== 
-==32581== Open file descriptor 1: /dev/pts/3
-==32581==    <inherited from parent>
-==32581== 
-==32581== Open file descriptor 0: /dev/pts/3
-==32581==    <inherited from parent>
-==32581== 
-==32581== 
+==6157== Invalid read of size 8
+==6157==    at 0x109570: ft_test (main.c:40)
+==6157==    by 0x109759: ft_execute (main.c:95)
+==6157==    by 0x109A93: main (main.c:235)
+==6157==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==6157== 
+==6157== 
+==6157== Process terminating with default action of signal 11 (SIGSEGV)
+==6157==  Access not within mapped region at address 0x0
+==6157==    at 0x109570: ft_test (main.c:40)
+==6157==    by 0x109759: ft_execute (main.c:95)
+==6157==    by 0x109A93: main (main.c:235)
+==6157==  If you believe this happened as a result of a stack
+==6157==  overflow in your program's main thread (unlikely but
+==6157==  possible), you can try to increase the size of the
+==6157==  main thread stack using the --main-stacksize= flag.
+==6157==  The main thread stack size used in this run was 8388608.
+==6157== FILE DESCRIPTORS: 9 open at exit.
+==6157== Open file descriptor 7:
+==6157==    at 0x49BA92B: pipe (syscall-template.S:78)
+==6157==    by 0x10DE62: ft_set_pipes (pipe_funcs.c:197)
+==6157==    by 0x10974F: ft_execute (main.c:91)
+==6157==    by 0x109A93: main (main.c:235)
+==6157== 
+==6157== Open file descriptor 6:
+==6157==    at 0x49BA92B: pipe (syscall-template.S:78)
+==6157==    by 0x10DE62: ft_set_pipes (pipe_funcs.c:197)
+==6157==    by 0x10974F: ft_execute (main.c:91)
+==6157==    by 0x109A93: main (main.c:235)
+==6157== 
+==6157== Open file descriptor 5:
+==6157==    at 0x49BA92B: pipe (syscall-template.S:78)
+==6157==    by 0x10DE62: ft_set_pipes (pipe_funcs.c:197)
+==6157==    by 0x10974F: ft_execute (main.c:91)
+==6157==    by 0x109A93: main (main.c:235)
+==6157== 
+==6157== Open file descriptor 4:
+==6157==    at 0x49BA92B: pipe (syscall-template.S:78)
+==6157==    by 0x10DE62: ft_set_pipes (pipe_funcs.c:197)
+==6157==    by 0x10974F: ft_execute (main.c:91)
+==6157==    by 0x109A93: main (main.c:235)
+==6157== 
+==6157== Open file descriptor 21: /dev/ptmx
+==6157==    <inherited from parent>
+==6157== 
+==6157== Open file descriptor 3: /home/pmeising/42Wolfsburg_Core_Curriculum/MiniShell/MiniShellV6/trace.txt
+==6157==    <inherited from parent>
+==6157== 
+==6157== Open file descriptor 2: /dev/pts/4
+==6157==    <inherited from parent>
+==6157== 
+==6157== Open file descriptor 1: /dev/pts/4
+==6157==    <inherited from parent>
+==6157== 
+==6157== Open file descriptor 0: /dev/pts/4
+==6157==    <inherited from parent>
+==6157== 
+==6157== 

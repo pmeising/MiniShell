@@ -54,6 +54,41 @@ char	**ft_find_paths(char *path)
 	return (paths);
 }
 
+int ft_is_program(char *prog_name)
+{
+	if (prog_name[0] == '.' && prog_name[1] == '/')
+	{
+		if (access(prog_name, F_OK | X_OK) == 0)
+		{
+			return (1);
+		}
+	}
+	return (0);
+}
+
+/*
+* cuts out . and / from program name
+*/
+char	*ft_cut_prgrm(char *content)
+{
+	int		len;
+	char	*new;
+	int		i;
+	int		j;
+
+	i = 1;
+	j = 0;
+	len = ft_strlen(content);
+	new = malloc(sizeof(char) * len);
+	while (content[i])
+	{
+		new[j] = content[i];
+		i++;
+		j++;
+	}
+	return (new);
+}
+
 /*
 * compares each token of a cmd with the paths for linux commands or 
 * our own builtins;
@@ -96,6 +131,12 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 			free (temp_str);
 			break ;
 		}
+		else if (ft_is_program(iterator->content) == 1)
+		{
+			cmd->command_path = iterator->content;
+			free (temp_2);
+			break ;
+		} 
 		else if (access(temp_str, F_OK | X_OK) == 0 && cmd->is_built_in == 0)
 		{
 			cmd->command_path = temp_str;
@@ -223,10 +264,12 @@ void	ft_interpret(void)
 			{
 				printf("minishell: %s: command not found\n", \
 						cmd_iterator->toks->content);
-				exit_program(1);
+				g_mini.exit = 1;
 			}
 			tok_iterator = tok_iterator->next;
 		}
 		cmd_iterator = cmd_iterator->next;
 	}
+	// if (g_mini.exit == 1)
+	// 	exit_program(1);
 }

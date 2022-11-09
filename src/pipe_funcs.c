@@ -6,11 +6,33 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:39:14 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/08 17:21:58 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/09 18:33:32 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	ft_overwrite_env(void)
+{
+	t_list	*iterator;
+	int		i;
+	
+	i = 0;
+	iterator = g_mini.dup_env;
+	while (g_mini.env[i])
+	{
+		free(g_mini.env[i]);
+		i++;
+	}
+	free (g_mini.env);
+	g_mini.env = malloc(sizeof(char) * 10000 * ft_lstsize(iterator));
+	while (iterator)
+	{
+		g_mini.env[i] = iterator->content;
+		iterator = iterator->next;
+		i++;
+	}
+}
 
 void	ft_close_fds(int in, int out, int nbr) //in = 0, out = 1, nbr = 0
 {
@@ -103,6 +125,8 @@ void	ft_execute_process(t_cmd *cmd_iterator, int i)
 		}
 		exit(0);
 	}
+	if (cmd_iterator->is_built_in == 1)
+		ft_overwrite_env();
 	printf("before execve\n");
 	execve(cmd_iterator->command_path, cmd_iterator->arguments, g_mini.env);
 	dup2(1, STDOUT_FILENO);

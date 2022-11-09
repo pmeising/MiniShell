@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/08 17:37:04 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/09 19:46:56 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,25 +53,23 @@ void	ft_free_fds(void)
 void	ft_free_input(void)
 {
 	t_cmd	*cmd_iterator;
-	int		i;
+	// int		i;
 	t_cmd	*temp;
 
 	cmd_iterator = g_mini.cmds;
-	i = 0;
 	while (cmd_iterator)
 	{
 		ft_free_lst_cont(cmd_iterator->toks);
-		free(cmd_iterator->command_path);
-		free(cmd_iterator->input_file);
-		free(cmd_iterator->output_file);
-		free(cmd_iterator->HEREDOC_DELIM);
-		
-		while (cmd_iterator->arguments[i])
-		{
-			free(cmd_iterator->arguments[i]);
-			i++;
-		}
-		free (cmd_iterator->arguments);
+		if (cmd_iterator->command_path) 
+			free(cmd_iterator->command_path);
+		if (cmd_iterator->input_file)
+			free(cmd_iterator->input_file);
+		if (cmd_iterator->output_file)
+			free(cmd_iterator->output_file);
+		if (cmd_iterator->HEREDOC_DELIM)
+			free(cmd_iterator->HEREDOC_DELIM);
+		if (cmd_iterator->arguments)
+			free (cmd_iterator->arguments);
 		temp = cmd_iterator->next;
 		free (cmd_iterator);
 		cmd_iterator = temp;
@@ -85,34 +83,7 @@ void	ft_free_input(void)
 		exit(g_mini.exit_status);	
 	}
 }
-							
-void ft_free()
-{
-	t_cmd	*cmd_iterator;
-	t_cmd	*temp;
-	int		i;
-	
-	i = 0;
-	cmd_iterator = g_mini.cmds;
-	while (cmd_iterator)
-	{
-		ft_free_lst_cont(cmd_iterator->toks);
-		free(cmd_iterator->command_path);
-		free(cmd_iterator->input_file);
-		free(cmd_iterator->output_file);
-		free(cmd_iterator->HEREDOC_DELIM);
-		while (cmd_iterator->arguments[i])
-		{
-			free(cmd_iterator->arguments[i]);
-			i++;
-		}
-		free (cmd_iterator->arguments);
-		temp = cmd_iterator->next;
-		free (cmd_iterator);
-		cmd_iterator = temp;
-	}
-	free (g_mini.raw_input);
-}
+						
 
 void ft_free_lst_cont(t_list *iterator)
 {
@@ -131,23 +102,30 @@ void ft_free_lst_cont(t_list *iterator)
 void exit_program(int status)
 { 
 	// if 2 terminate minishell
+	g_mini.exit = 1;
 	g_mini.exit_status = status;
 	if (status  == 2)
 	{
-		ft_free();
+		ft_free_input();
 		printf("before exit\n");
 		exit (EXIT_FAILURE);
 	}
 	if (status == 0) // exit success
+	{
+		printf("exit staus 0\n");
+	}
 	
 	if (status == 130) // crtl+c
+	{
+		ft_sigint(status);
+	}
 	
 	if (status == 1) // clear shell but continue shell running and give prompt back liek at begining
 	{
-		ft_free();
+		ft_free_input();
 	}
 	
 	printf("exit status:%d\n", status);
 	// free everything
-	exit(0);
+	//exit(0);
 }

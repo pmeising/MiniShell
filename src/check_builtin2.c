@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_builtin2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:26:26 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/03 18:42:53 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/09 17:07:46 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,15 @@ int ft_is_export(char *str)
 	export[5] = 't';
 	export[6] = '\0';
 	if (ft_strncmp(str, export, 6) == 0)
+	{
+		printf("found export.\n");
 		return (1);
+	}
 	else if (ft_strncmp(str, export_1, 8) == 0)
+	{
+		printf("found export.\n");
 		return (1);
+	}
 	else
 		return (0);
 }

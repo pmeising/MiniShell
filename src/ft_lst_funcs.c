@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:42:27 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/08 17:24:10 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/09 18:23:08 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,5 +94,6 @@ t_cmd	*ft_lstnew_cmds(void)
 	new->next = NULL;
 	new->previous = NULL;
 	new->is_built_in = 0;
+	new->is_prgrm = 0;
 	return (new);
 }

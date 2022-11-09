@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 17:51:01 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/08 17:20:30 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/09 17:21:32 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,25 +72,27 @@ void ft_unset_exec(t_list *toks)
 {
 	int	len;
 	int		i;
-	t_list	*iterator;
+	t_list	*env_iterator;
 
 	i = 0;
-	iterator = g_mini.dup_env;
-	len = (int)ft_strlen(toks->next->content);
+	env_iterator = g_mini.dup_env;
 	if (!toks->next)
-	{
-		printf("nothing to unset\n");
-	}
+		return ;
 	else if (toks->next->next)
 	{
 		printf("too many arguments for unset\n");
 	}
-	while (iterator)
+	len = (int)ft_strlen(toks->next->content);
+	while (env_iterator)
 	{
-		if (ft_strncmp(iterator->content, toks->next->content, len) == 0)
+		if (ft_strncmp(env_iterator->content, toks->next->content, len) == 0)
+		{
 			ft_delete_env(g_mini.dup_env, i);
+			break ;
+		}
 		i++;
-		iterator = iterator->next;
+		if (env_iterator->next)
+			env_iterator = env_iterator->next;
 	}
 }
 

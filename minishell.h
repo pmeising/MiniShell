@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/08 17:32:45 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/09 18:24:35 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct	s_cmd
 	int			fd_out;
 	int			open_flag; // 0 stands for overwrite, 1 for add. default = -1
 	int			is_built_in; // flag for calling builtin function, default = 0;
+	int			is_prgrm; // 0 default
 	struct s_cmd	*next;
 	struct s_cmd	*previous;
 }				t_cmd;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_built_in_exec_2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 16:03:38 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/05 17:47:15 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/09 17:24:05 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	ft_cd_two_dots(void)
 	while (cur_cwd[len] != '/')
 		len--;
 	cur_cwd[len] = '\0';
-	new_cwd = malloc(sizeof(char) * len);
+	new_cwd = malloc(sizeof(char) * len + 1);
 	if (!new_cwd)
 		printf("cd 2 dots: malloc error\n");
 	while (cur_cwd[j])
