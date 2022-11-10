@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/09 18:24:35 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/10 16:14:14:09 by pmeising         ###   ########.fr      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@
 # include <sys/ioctl.h> /*    */
 # include <termios.h> /*    */
 # include <fcntl.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+// # include <readline/readline.h>
+// # include <readline/history.h>
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEED TO REMOVE/ADJUST THE PATH HERE.
 
-//  # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
-//  # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
+# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
+# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
 
 // macros
 
@@ -56,11 +56,13 @@ typedef struct	s_cmd
 	char		*input_file; // default NULL
 	char		*output_file; // default NULL
 	char		*HEREDOC_DELIM;
+	char		*heredoc_temp;
 	int			fd_in; // reuse in/-output files, just need to rewrite the in/output files at end of execution.
 	int			fd_out;
 	int			open_flag; // 0 stands for overwrite, 1 for add. default = -1
 	int			is_built_in; // flag for calling builtin function, default = 0;
 	int			is_prgrm; // 0 default
+	int			is_heredoc; // initialized to 0.
 	struct s_cmd	*next;
 	struct s_cmd	*previous;
 }				t_cmd;
@@ -81,6 +83,7 @@ typedef struct	s_mini
 	t_cmd		*cmds;
 	char		**env;
 	char		*raw_input;
+	int			nbr_heredocs;
 	int			fdin;
 	int			fdout;
 	int			exit;
@@ -198,7 +201,6 @@ char	*ft_find_path(void);
 char	**ft_find_paths(char *path);
 int		ft_find_command(t_cmd *cmd, t_list *iterator);
 void	ft_store_arguments(t_cmd *cmd, t_list *toks);
-void	ft_interpret(void);
 
 // parsing_utils.c
 int		ft_get_token_pos(char *raw_input, int pos);
@@ -211,7 +213,7 @@ char	*ft_extract_content(char *var_name);
 void	ft_insert(char *raw_input, char *dup_var_cont, int pos, int start);
 void	ft_put_env_in_input(char *raw_input, int pos);
 void	ft_env_vars(char *raw_input);
-int		ft_dollar_sign(char *raw_input);
+int		ft_dollar_sign(void);
 
 //test
 // ft_parsing_utils.c
@@ -219,7 +221,7 @@ int		ft_find_command(t_cmd *cmd, t_list *iterator);
 char	**ft_find_paths(char *path);
 char	*ft_find_path(void);
 void	ft_store_arguments(t_cmd *cmd, t_list *toks);
-void	ft_interpret(void);
+void	ft_interpret(t_cmd *cmd_iterator);
 void	ft_remove_quotes(char *content);
 
 // ft_built_in_exec.c
@@ -239,7 +241,6 @@ void	ft_cd_empty(void);
 // pipe_funcs.c
 void	ft_set_pipes(void);
 void	ft_init_pipefd(int nbr_of_pipes);
-
 
 // file_funcs.c
 void	ft_set_files(void);

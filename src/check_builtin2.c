@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_builtin2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:26:26 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/09 17:07:46 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/10 18:15:51 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ int ft_is_export(char *str)
 	char	export[7];
 	char	export_1[9];
 
+	if (!str)
+		return (0);
+		
 	export_1[0] = '"';
 	export_1[1] = 'e';
 	export_1[2] = 'x';
@@ -52,6 +55,8 @@ int ft_is_echo(char *str)
 	char	echo[5];
 	char	echo_1[7];
 
+	if (!str)
+		return (0);
 	echo_1[0] = '"';
 	echo_1[1] = 'e';
 	echo_1[2] = 'c';
@@ -76,7 +81,8 @@ int ft_is_env(char *cmd_name)
 {
 	char	env[4];
 	char	env_1[6];
-
+	if (!cmd_name)
+		return (0);
 	env_1[0] = '"';
 	env_1[1] = 'e';
 	env_1[2] = 'n';

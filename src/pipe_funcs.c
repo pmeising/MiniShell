@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_funcs.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:39:14 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/09 18:33:32 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/10 20:00:22 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ void	ft_close_fds(int in, int out, int nbr) //in = 0, out = 1, nbr = 0
 			printf("Closing fd: %d\n", iterator->fd_out);
 			close(iterator->fd_out);
 		}
+		if (iterator->heredoc_temp)
+			unlink(iterator->heredoc_temp);
 		iterator = iterator->next;
 	}
 	printf("After opened files.\n");
@@ -91,9 +93,25 @@ void	ft_close_fds(int in, int out, int nbr) //in = 0, out = 1, nbr = 0
 
 /*
 * i = cmd counter;
+* unink: deletes a file if no process has it open
 */
 void	ft_execute_process(t_cmd *cmd_iterator, int i)
 {
+	printf("ft_execute_process.\n");
+	ft_interpret(cmd_iterator);
+	printf("Hi there....\n");
+	printf("exit: %d\n", g_mini.exit);
+	if (g_mini.exit == 1)
+	{
+		if (g_mini.nbr_heredocs > 0)
+		{
+			ft_close_fds(-1, -1, -1);
+			printf("g_miniexit=1:unlink: %d\n", unlink(cmd_iterator->heredoc_temp));
+		}
+		exit(1);
+	}
+	if (cmd_iterator->heredoc_temp && ft_strcmp(cmd_iterator->input_file, cmd_iterator->heredoc_temp) != 0)
+		printf("from if:unlink: %d\n", unlink(cmd_iterator->heredoc_temp));
 	printf("Before input redirection.\n");
 	// INPUT FILES REDIRECT
 	if (cmd_iterator->input_file != NULL) // 3 scenarios for input reads. if file read from file.
@@ -116,17 +134,16 @@ void	ft_execute_process(t_cmd *cmd_iterator, int i)
 	printf("before execve is built in.\n");
 	if (cmd_iterator->is_built_in == 1)
 	{
-		ft_execute_built_in(cmd_iterator, cmd_iterator->toks);
+		ft_execute_built_in(cmd_iterator, cmd_iterator->toks);	
 		if (ft_is_exit(cmd_iterator->toks->content) == 1)
 		{
 			printf("exit found.\n");
 			exit(130);
-			printf("SHouldn't be here.\n");
+		// 	printf("Shouldn't be here.\n");
 		}
+		ft_overwrite_env();
 		exit(0);
 	}
-	if (cmd_iterator->is_built_in == 1)
-		ft_overwrite_env();
 	printf("before execve\n");
 	execve(cmd_iterator->command_path, cmd_iterator->arguments, g_mini.env);
 	dup2(1, STDOUT_FILENO);

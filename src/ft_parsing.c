@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parsing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/08 17:23:01 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/10 19:53:12 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,25 +65,26 @@ char *ft_get_token(char *raw_input, int pos)
 	return (token);
 }
 
-
 void	ft_read_heredoc(t_cmd *cmd)
 {
 	char	*content;
 	int		fd_input_file;
+	char	*temp_name;
+	char	*nbr;
 
-	if (cmd->input_file == NULL)
+	nbr = ft_itoa(g_mini.nbr_heredocs);
+	temp_name = ft_strjoin(nbr, "temp.txt");
+	if (!temp_name)
 	{
-		fd_input_file = open("mull/Input_file.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
-		if (fd_input_file < 0)
-			printf("Failed to open file.\n");
-		cmd->input_file = "mull/Input_file.txt";
+		printf("strjoin failed\n");
+		exit_program(1);
 	}
-	else if (cmd->input_file)
-	{
-		fd_input_file = open(cmd->input_file, O_RDWR | O_APPEND, 0777);
-		if (fd_input_file < 0)
-			printf("Failed to open file.\n");
-	}
+	free (nbr);
+	cmd->input_file = temp_name;
+	cmd->heredoc_temp = temp_name;
+	fd_input_file = open(temp_name, O_RDWR | O_CREAT, 0777);
+	if (fd_input_file < 0)
+		printf("Failed to open file.\n");
 	while (1)
 	{
 		content = readline("heredoc: ");
@@ -138,6 +139,7 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos)
 	}
 	else if (raw_input[i] == '<' && raw_input[i + 1] == '<')
 	{
+		g_mini.nbr_heredocs++;
 		temp = ft_get_token(raw_input, pos);
 		ft_remove_quotes(temp);
 		cmd->HEREDOC_DELIM = temp;
@@ -149,14 +151,25 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos)
 		ft_remove_quotes(temp);
 		if (cmd->input_file == NULL)
 			cmd->input_file = temp;
-		else if (cmd->input_file != NULL)
-		{
-			ft_copy_content(temp, cmd->input_file, 1);
-			free (temp);
-		}
 	}
 	pos = ft_get_token_pos(raw_input, pos);
 	return (pos);
+}
+
+void	ft_find_exit(void)
+{
+	t_cmd	*cmd_iterator;
+
+	cmd_iterator = g_mini.cmds;
+	while (cmd_iterator)
+	{
+		if (ft_is_exit(cmd_iterator->toks->content))
+		{
+			g_mini.exit = 1;
+			break;
+		}
+		cmd_iterator = cmd_iterator->next;
+	}
 }
 
 /*
@@ -205,4 +218,5 @@ void ft_parsing(char *raw_input)
 		else if (!raw_input[pos])
 			break ;
 	}
+	ft_find_exit();
 }

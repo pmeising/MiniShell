@@ -21,7 +21,6 @@ int	ft_is_special_built(char *arguments)
 	return (0);
 }
 
-
 /*
 *	creates individual processes for each command;
 */
@@ -34,16 +33,25 @@ void	ft_test(void)
 
 	i = 0;
 	pid = ft_calloc(sizeof(int), g_mini.nbr_of_pipes + 1);
+	if (!pid)
+	{
+		printf("ft_test:calloc error\n");
+		exit_program(1);
+	}
 	cmd_iterator = g_mini.cmds;
 	while (cmd_iterator)
 	{
-		if ((ft_is_export(cmd_iterator->toks->content) == 1 || ft_is_cd(cmd_iterator->toks->content) == 1 || ft_is_unset(cmd_iterator->toks->content) == 1) && g_mini.nbr_of_pipes == 0) // 1 == true //  || ft_is_cd(cmd_iterator->arguments[0]) == 1 || ft_is_unset(cmd_iterator->arguments[0]) == 1)
+		printf("in while.\n");
+		if (cmd_iterator->toks && cmd_iterator->toks->content && (ft_is_export(cmd_iterator->toks->content) == 1 || ft_is_cd(cmd_iterator->toks->content) == 1 || \
+			ft_is_unset(cmd_iterator->toks->content) == 1) && g_mini.nbr_of_pipes == 0) // 1 == true //  || ft_is_cd(cmd_iterator->arguments[0]) == 1 || ft_is_unset(cmd_iterator->arguments[0]) == 1)
 		{
 			printf("\n\n\nentered ft_is_special_built\n\n\n");
 			ft_execute_built_in(cmd_iterator, cmd_iterator->toks);
 		}
 		else
 		{
+			printf("before fork.\n");
+			ft_print_cmds(cmd_iterator);
 			pid[i] = fork();
 			if (pid[i] == -1)
 			{
@@ -60,30 +68,18 @@ void	ft_test(void)
 		i++;
 		cmd_iterator = cmd_iterator->next;
 	}
+	printf("Main.\n");
 	i = 0;
 	ft_close_fds(-1, -1, -1);
 	while (i < g_mini.nbr_of_pipes + 1)
 	{
-		// (waitpid(pid[i], &status, 0));
-		// printf("status is:%d\n", status);
-		// if (WIFSTOPPED(status) != NULL)
-		// 	if (WSTOPSIG(status))
-		// 	{
-		// 		g_mini.exit_status = status;
-		// 	}
 		(waitpid(pid[i], &status, 0));
-		// if (WIFSIGNALED(status))
-		// {
-		// 	printf("in wifsignal\n");
-		// 	g_mini.exit_status = 130;
-		// }
 		i++;
 	}
 	free (pid);
 	printf("exit stat: %d\n", g_mini.exit_status);
 	if (g_mini.exit_status != 0)
 		exit(g_mini.exit_status);
-	printf("Main.\n");
 }
 
 void	ft_execute(void)
@@ -98,61 +94,6 @@ void	ft_execute(void)
 	// 	ft_close_fds(-1, -1, -1);
 	// 	exit_program(g_mini.exit_status);
 	// }
-}
-
-/*
-* copies content of file_1 into file_2;
-* file_1 and file_2 are outpufiles[0]/[i]
-*/
-void	ft_copy_content(char *file_1, char *file_2, int open_flag)
-{
-	int 	fd_file_1;
-	int 	fd_file_2;
-	char	*temp;
-
-	fd_file_1 = open(file_1, O_CREAT | O_RDWR, 0777);
-	if (fd_file_1 == -1)
-	{
-		printf("ft_copy_content:error fd_file_1\n");
-		close(fd_file_1);
-		exit_program(1);
-	}
-	if (open_flag == 0)
-	{
-		fd_file_2 = open(file_2, O_CREAT | O_RDWR | O_TRUNC, 0777);
-		if (fd_file_2 == -1)
-		{
-			printf("ft_copy_content:fd_file_2\n");
-			close(fd_file_2);
-			exit_program(1);
-		}
-	}
-	else if (open_flag == 1)
-	{
-		fd_file_2 = open(file_2, O_CREAT | O_RDWR | O_APPEND, 0777);
-		if (fd_file_2 == -1)
-		{
-			printf("ft_copy_content:error fd_file_2\n");
-			close(fd_file_2);
-			exit_program(1);
-		}
-	}
-	while (1)
-	{
-		temp = get_next_line(fd_file_1);
-		if (temp)
-		{
-			write(fd_file_2, temp, ft_strlen(temp));
-			free (temp);
-		}
-		else
-		{
-			free (temp);
-			break ;
-		}
-	}
-	close(fd_file_1);
-	close(fd_file_2);
 }
 
 /******************************************************************************************/
@@ -227,11 +168,13 @@ int main (int argc, char **argv, char **env)
 				continue ;
 			else
 			{
-				while (ft_dollar_sign(g_mini.raw_input) != 0)
-					ft_env_vars(g_mini.raw_input);
+				ft_dollar_sign();
+				// while (ft_dollar_sign(g_mini.raw_input) != 0)
+				// {
+				// 	printf("RAW INPUT.................................: %s\n", g_mini.raw_input);
+				// 	ft_env_vars(g_mini.raw_input);
+				// }
 				ft_parsing(g_mini.raw_input);
-				ft_interpret();
-				// if (g_mini.exit != 1)
 				ft_execute();
 				ft_free_input();
 			}

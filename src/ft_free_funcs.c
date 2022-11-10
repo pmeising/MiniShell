@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_funcs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/09 19:46:56 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/10 20:00:16 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,16 @@ void	ft_free_input(void)
 	while (cmd_iterator)
 	{
 		ft_free_lst_cont(cmd_iterator->toks);
+		printf("here: %s, input: %s\n", cmd_iterator->heredoc_temp, cmd_iterator->input_file);
+		if (cmd_iterator->heredoc_temp && cmd_iterator->input_file)
+		{
+			printf("entered if1\n");
+			if (ft_strncmp(cmd_iterator->heredoc_temp, cmd_iterator->input_file, ft_strlen(cmd_iterator->heredoc_temp)) == 0)
+			{
+				printf("entered if2\n");
+				printf("unlink: %d\n", unlink(cmd_iterator->heredoc_temp));
+			}
+		}
 		if (cmd_iterator->command_path) 
 			free(cmd_iterator->command_path);
 		if (cmd_iterator->input_file)
@@ -76,15 +86,16 @@ void	ft_free_input(void)
 	}
 	free (g_mini.raw_input);
 	g_mini.cmds = NULL;
+	g_mini.nbr_heredocs = 0;
 	ft_free_fds();
 	if (g_mini.exit_status == 2 || g_mini.exit == 1)
 	{
 		ft_free_lst_cont(g_mini.dup_env);
 		exit(g_mini.exit_status);	
 	}
+	// unlink?
 }
 						
-
 void ft_free_lst_cont(t_list *iterator)
 {
 	t_list	*temp;

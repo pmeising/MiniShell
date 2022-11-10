@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   files_funcs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:40:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/09 19:58:13 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/10 19:31:03 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 /*
-* j == 0 inputfile
-* j == 1 outputfile
+* j == 0 inputfile/write
+* j == 1 outputfile/read
 * checks with access() if the file_name exist;
 * if yes, opens and connects it to the fd_in/fd_out
 * filedescriptor in the cmd-struct;
@@ -25,18 +25,21 @@ void	ft_open_file(char *file_name, int *fd, int j, int open_flag)
 
 	if (j == 0)
 	{
+		printf("Entered, j == 0\n");
 		file_check = access(file_name, F_OK);
 		if (file_check != 0)
 		{
 			printf("minishell: %s: No such file or directory\n", file_name);
 			g_mini.exit_status = 1;
 		}
+		printf("Access estabilished.\n");
 		*fd = open(file_name, O_RDWR, 0777);
 		if (*fd == -1)
 		{
 			printf("minishell: %s: Permission denied\n", file_name);
 			g_mini.exit_status = 1;
 		}
+		printf("opened heredoc file.\n");
 	}
 	else if (j == 1 && open_flag == 0)
 	{
@@ -82,15 +85,17 @@ void	ft_set_files(void)
 		i++;
 		cmd_iterator = cmd_iterator->next;
 	}
-	i = 0;
 	cmd_iterator = g_mini.cmds;
 	while (cmd_iterator)
 	{
+		printf("last whileloop\n");
 		if (cmd_iterator->input_file != NULL)
+		{
+			printf("first if\n");
 			ft_open_file(cmd_iterator->input_file, &cmd_iterator->fd_in, 0, -1);
+		}
 		if (cmd_iterator->output_file != NULL)
 			ft_open_file(cmd_iterator->output_file, &cmd_iterator->fd_out, 1, cmd_iterator->open_flag);
-		i++;
 		cmd_iterator = cmd_iterator->next;
 	}
 }

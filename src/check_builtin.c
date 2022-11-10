@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_builtin.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 16:27:58 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/08 17:36:24 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/10 18:08:06 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ int ft_is_pwd(char *str)
 {
 	char	pwd[4];
 	char	pwd_1[6];
-
+	if (!str)
+		return (0);
 	pwd_1[0] = '"';
 	pwd_1[1] = 'p';
 	pwd_1[2] = 'w';
@@ -38,7 +39,8 @@ int ft_is_unset(char *str)
 {
 	char	unset[6];
 	char	unset_1[8];
-
+	if (!str)
+		return (0);
 	unset_1[0] = '"';
 	unset_1[1] = 'u';
 	unset_1[2] = 'n';
@@ -65,7 +67,9 @@ int ft_is_exit(char *cmd_name)
 {
 	char	exit[5];
 	char	exit_1[7];
-
+	
+	if (!cmd_name)
+		return (0);
 	exit_1[0] = '"';
 	exit_1[1] = 'e';
 	exit_1[2] = 'x';
@@ -99,7 +103,9 @@ int ft_is_cd(char *str)
 {
 	char	cd[3];
 	char	cd_1[5];
-
+	
+	if (!str)
+		return (0);
 	cd_1[0] = '"';
 	cd_1[1] = 'c';
 	cd_1[2] = 'd';
@@ -121,6 +127,9 @@ int ft_is_built_in(char *cmd_name)
 	int check;
 	
 	check = 0;
+	
+	if (!cmd_name)
+		return (check);
 	if (ft_is_echo(cmd_name) || ft_is_env(cmd_name) || ft_is_export(cmd_name) || \
 		ft_is_exit(cmd_name) || ft_is_pwd(cmd_name) || ft_is_unset(cmd_name) || \
 		ft_is_cd(cmd_name))

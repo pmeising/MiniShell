@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_vars_funcs.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:42:08 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/08 17:52:57 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/10 20:53:40 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ void	ft_insert(char *raw_input, char *dup_var_cont, int pos, int start)
 	g_mini.raw_input = new_str;
 }
 
+
+
 /*
 *	Identifies the Variable name and calls functions, 
 *	which verify it as well as replace the variable with its content.
@@ -138,6 +140,35 @@ void	ft_put_env_in_input(char *raw_input, int pos)
 	ft_insert(raw_input, dup_var_content, pos, start);
 }
 
+void	ft_replace_exit_status(char *raw_input, int pos)
+{
+	char	*exit_status_str;
+	char	*before;
+	char	*after;
+	char	*half_str;
+	int 	i;
+	
+	i = 0;
+	before = malloc(sizeof(char) * ft_strlen(raw_input));  // 
+	while (raw_input[i] && i < pos)
+	{
+		before[i] = raw_input[i];
+		i++;
+	}
+	before[i] = '\0';
+	printf("before: %s\n", before);
+	after = strdup(&raw_input[pos + 2]);
+	printf("after: %s\n", after);
+	exit_status_str = ft_itoa(g_mini.exit_status);
+	half_str = ft_strjoin(before, exit_status_str);
+	free (before);
+	free (exit_status_str);
+	free (g_mini.raw_input);
+	g_mini.raw_input = ft_strjoin(half_str, after);
+	free (half_str);
+	free (after);
+}
+
 /*
 *	Walks through the input string and looks for a dollar signs ($).
 *	Once found, it checks, whether it is followed by...
@@ -165,6 +196,7 @@ void ft_env_vars(char *raw_input)
 	j = 0;
 	single_quotes = 0;
 	double_quotes = 0;
+	printf("in env-vars-funcs.c\n");
 	while (raw_input[pos])
 	{
 		if (raw_input[pos] == 34)
@@ -194,8 +226,9 @@ void ft_env_vars(char *raw_input)
 		if (raw_input[pos] == '$' && raw_input[pos + 1] == '?')
 		{
 			printf("Entered this function.\n");
+			ft_replace_exit_status(raw_input, pos);
 			// requires the replacement of $? with the content of the variable g_mini->exit_status.
-			printf("%d\n", g_mini.exit_status);
+			printf("%s\n", g_mini.raw_input);
 			break ;
 		}
 		else if (raw_input[pos] == '$' && (raw_input[pos + 1] == '{' || ft_isalnum(raw_input[pos + 1]) == 1))
@@ -238,19 +271,21 @@ void ft_env_vars(char *raw_input)
 *	-1			1		0
 *	0			1		0
 */
-int ft_dollar_sign(char *raw_input)
+int ft_dollar_sign(void)
 {
 	int i;
 	int	single_quotes;
 	int	double_quotes;
 	int check;
-
+	char	*raw_input;
+// '$PATH' "$PATH"  "'$PATH'"
 	i = 0;
 	single_quotes = 0;
 	double_quotes = 0;
 	check = 0;
-	while (raw_input[i])
+	while (g_mini.raw_input[i])
 	{
+		raw_input = g_mini.raw_input;
 		if (raw_input[i] == '$' && raw_input[i + 1] == ' ')
 			i++;
 		if (raw_input[i] == 34)
@@ -277,8 +312,8 @@ int ft_dollar_sign(char *raw_input)
 				i++;
 			single_quotes = 0;
 		}
-		else if (raw_input[i] == '$' && raw_input[i + 1] != '?')
-			check++;
+		else if (raw_input[i] == '$') // && ft(is_alnum(raw_input[i + 1]) == 1 because it could be $-PATH which would indicate intepretable $ but shouldnt
+			ft_env_vars(g_mini.raw_input);
 		i++;
 	}
 	// printf("check: %d\n", check);

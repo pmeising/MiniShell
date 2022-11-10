@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 11:37:51 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/05 17:34:40 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/10 19:00:18 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,18 +218,18 @@
 *	ft_output_file; checks if there is an outputfile, if not deletes the 
 *	default "output_file.txt"
 */
-void	ft_execute(void)
-{
-	t_cmd	*iterator;
+// void	ft_execute(void)
+// {
+// 	t_cmd	*iterator;
 
-	iterator = g_mini.cmds;
-	ft_output_file(iterator);
-	while (iterator) //  && (iterator->command_path || iterator->is_built_in == 1)
-	{
-		ft_fork_process(iterator);
-		ft_redirect(iterator);
-		if (iterator->next == NULL)
-			break ;
-		iterator = iterator->next;
-	}
-}
+// 	iterator = g_mini.cmds;
+// 	ft_output_file(iterator);
+// 	while (iterator) //  && (iterator->command_path || iterator->is_built_in == 1)
+// 	{
+// 		ft_fork_process(iterator);
+// 		ft_redirect(iterator);
+// 		if (iterator->next == NULL)
+// 			break ;
+// 		iterator = iterator->next;
+// 	}
+// }

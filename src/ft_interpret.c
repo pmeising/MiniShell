@@ -197,7 +197,7 @@ void	ft_echo_exec(t_cmd *iterator)
 	if (!iterator->toks->next)
 	{
 		printf("\n");
-		exit(0); // back to 42shell;
+		exit_program(1); // back to 42shell;
 	}
 	toks_iterator = iterator->toks->next;
 	if (ft_strncmp(toks_iterator->content, "-n", 2) == 0)
@@ -244,31 +244,26 @@ void ft_execute_built_in(t_cmd *cmd, t_list *toks)
 * the arguments of the command (= the tokens following) in
 * thecmd structs char** arguments;
 */
-void	ft_interpret(void)
+void	ft_interpret(t_cmd *cmd_iterator)
 {
-	t_cmd	*cmd_iterator;
 	t_list	*tok_iterator;
 
-	cmd_iterator = g_mini.cmds;
-	while (cmd_iterator)
+	tok_iterator = cmd_iterator->toks;
+	while (tok_iterator)
 	{
-		tok_iterator = cmd_iterator->toks;
-		while (tok_iterator)
+		if (ft_find_command(cmd_iterator, tok_iterator) == 0 && cmd_iterator->is_built_in == 0)
 		{
-			if (ft_find_command(cmd_iterator, tok_iterator) == 0 && cmd_iterator->is_built_in == 0)
-			{
-				ft_store_arguments(cmd_iterator, tok_iterator);
-				break ;
-			}
-			if (!cmd_iterator->command_path && cmd_iterator->is_built_in == 0)
-			{
-				printf("minishell: %s: command not found\n", \
-						cmd_iterator->toks->content);
-				g_mini.exit = 1;
-			}
-			tok_iterator = tok_iterator->next;
+			ft_store_arguments(cmd_iterator, tok_iterator);
+			break ;
 		}
-		cmd_iterator = cmd_iterator->next;
+		if (!cmd_iterator->command_path && cmd_iterator->is_built_in == 0)
+		{
+			printf("minishell: %s: command not found\n", \
+					cmd_iterator->toks->content);
+			g_mini.exit_status = 127;
+			g_mini.exit = 1;
+		}
+		tok_iterator = tok_iterator->next;
 	}
 	// if (g_mini.exit == 1)
 	// 	exit_program(1);
