@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:42:08 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/10 20:53:40 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/11 18:38:58 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ void	ft_replace_exit_status(char *raw_input, int pos)
 	int 	i;
 	
 	i = 0;
-	before = malloc(sizeof(char) * ft_strlen(raw_input));  // 
+	before = malloc(sizeof(char) * ft_strlen(raw_input)); 
 	while (raw_input[i] && i < pos)
 	{
 		before[i] = raw_input[i];
@@ -159,12 +159,15 @@ void	ft_replace_exit_status(char *raw_input, int pos)
 	printf("before: %s\n", before);
 	after = strdup(&raw_input[pos + 2]);
 	printf("after: %s\n", after);
-	exit_status_str = ft_itoa(g_mini.exit_status);
+	printf("exit_staus BEFORE itoa: %d\n", g_mini.exit_status);
+	exit_status_str = ft_itoa(g_mini.exit_status); // needs malloc
+	printf("exit_staus_str: %s\n", exit_status_str);
 	half_str = ft_strjoin(before, exit_status_str);
 	free (before);
 	free (exit_status_str);
 	free (g_mini.raw_input);
 	g_mini.raw_input = ft_strjoin(half_str, after);
+	printf("last g_mini.rawinput: %s\n", g_mini.raw_input);
 	free (half_str);
 	free (after);
 }
@@ -228,7 +231,7 @@ void ft_env_vars(char *raw_input)
 			printf("Entered this function.\n");
 			ft_replace_exit_status(raw_input, pos);
 			// requires the replacement of $? with the content of the variable g_mini->exit_status.
-			printf("%s\n", g_mini.raw_input);
+			printf("inENVVARS:%s\n", g_mini.raw_input);
 			break ;
 		}
 		else if (raw_input[pos] == '$' && (raw_input[pos + 1] == '{' || ft_isalnum(raw_input[pos + 1]) == 1))

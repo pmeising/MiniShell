@@ -35,23 +35,23 @@ void	ft_test(void)
 	pid = ft_calloc(sizeof(int), g_mini.nbr_of_pipes + 1);
 	if (!pid)
 	{
-		printf("ft_test:calloc error\n");
+		printf("ft_test: calloc error\n");
 		exit_program(1);
 	}
 	cmd_iterator = g_mini.cmds;
 	while (cmd_iterator)
 	{
-		printf("in while.\n");
+		// printf("in while.\n");
 		if (cmd_iterator->toks && cmd_iterator->toks->content && (ft_is_export(cmd_iterator->toks->content) == 1 || ft_is_cd(cmd_iterator->toks->content) == 1 || \
 			ft_is_unset(cmd_iterator->toks->content) == 1) && g_mini.nbr_of_pipes == 0) // 1 == true //  || ft_is_cd(cmd_iterator->arguments[0]) == 1 || ft_is_unset(cmd_iterator->arguments[0]) == 1)
 		{
-			printf("\n\n\nentered ft_is_special_built\n\n\n");
+			// printf("\n\n\nentered ft_is_special_built\n\n\n");
 			ft_execute_built_in(cmd_iterator, cmd_iterator->toks);
 		}
 		else
 		{
-			printf("before fork.\n");
-			ft_print_cmds(cmd_iterator);
+			// printf("before fork.\n");
+			// ft_print_cmds(cmd_iterator);
 			pid[i] = fork();
 			if (pid[i] == -1)
 			{
@@ -61,24 +61,34 @@ void	ft_test(void)
 			}
 			if (pid[i] == 0)
 			{
-				printf("Hello from child process.\n");
+				// printf("Hello from child process.\n");
 				ft_execute_process(cmd_iterator, i);
 			}
 		}
 		i++;
 		cmd_iterator = cmd_iterator->next;
 	}
-	printf("Main.\n");
+	// printf("Main.\n");
 	i = 0;
 	ft_close_fds(-1, -1, -1);
 	while (i < g_mini.nbr_of_pipes + 1)
 	{
 		(waitpid(pid[i], &status, 0));
+		// printf("status: %d\n", status);
+		if (status == 6)
+			g_mini.exit_status = 0;
+		else
+		{
+			if (WIFSIGNALED(status))
+				g_mini.exit_status = 130;
+			else
+				g_mini.exit_status = status / 256;
+		}
 		i++;
 	}
 	free (pid);
-	printf("exit stat: %d\n", g_mini.exit_status);
-	if (g_mini.exit_status != 0)
+	// printf("ft_test: exit stat: %d\n", g_mini.exit_status);
+	if (g_mini.exit_status != 0 && g_mini.exit == 1)
 		exit(g_mini.exit_status);
 }
 

@@ -54,14 +54,51 @@ char	**ft_find_paths(char *path)
 	return (paths);
 }
 
-int ft_is_program(char *prog_name)
+/*
+* X_OK = is executable rights granted;
+* F_OK = zugriffsrights granted;
+*/
+int ft_is_program(t_cmd *cmd, char *prog_name)
 {
+	char	*cwd;
+	char	*name;
+	int		len;
+	int		i;
+
+	cwd = malloc(sizeof(char) * 1024);
+	i = 2;
 	if (prog_name[0] == '.' && prog_name[1] == '/')
 	{
-		if (access(prog_name, F_OK | X_OK) == 0)
-		{
+		name = ft_strdup(&prog_name[1]); // free in the end.
+		cmd->command_path = ft_strjoin(getcwd(cwd, 1024), name);
+		free (name);
+		free (cwd);
+		if (access(cmd->command_path, F_OK | X_OK) == 0)
 			return (1);
+		else
+			cmd->command_path = NULL;
+	}
+	else if (prog_name[0] == '.' && prog_name[1] == '.' && prog_name[2] == '/')
+	{ // /Users/bde-carv/Core/ shelltest/src
+		name = ft_strdup(prog_name); // .. /../ bin/ls
+		while (name[0] == '.')
+		{
+			getcwd(cwd, 1024);
+			len = ft_strlen(cwd);
+			while (cwd[len] != '/')
+				len--;
+			cwd[len] = '\0';
+			chdir(cwd);
+			free (cwd);
+			free (name);
+			name = ft_strdup(&prog_name[i]);
+			i = i + 3;
 		}
+		cmd->command_path = ft_strjoin(getcwd(cwd, 1024), name);
+		if (access(cmd->command_path, F_OK | X_OK) == 0)
+			return (1);
+		else
+			cmd->command_path = NULL;
 	}
 	return (0);
 }
@@ -69,25 +106,25 @@ int ft_is_program(char *prog_name)
 /*
 * cuts out . and / from program name
 */
-char	*ft_cut_prgrm(char *content)
-{
-	int		len;
-	char	*new;
-	int		i;
-	int		j;
+// char	*ft_cut_prgrm(char *content)
+// {
+// 	int		len;
+// 	char	*new;
+// 	int		i;
+// 	int		j;
 
-	i = 1;
-	j = 0;
-	len = ft_strlen(content);
-	new = malloc(sizeof(char) * len);
-	while (content[i])
-	{
-		new[j] = content[i];
-		i++;
-		j++;
-	}
-	return (new);
-}
+// 	i = 1;
+// 	j = 0;
+// 	len = ft_strlen(content);
+// 	new = malloc(sizeof(char) * len);
+// 	while (content[i])
+// 	{
+// 		new[j] = content[i];
+// 		i++;
+// 		j++;
+// 	}
+// 	return (new);
+// }
 
 /*
 * compares each token of a cmd with the paths for linux commands or 
@@ -131,9 +168,8 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 			free (temp_str);
 			break ;
 		}
-		else if (ft_is_program(iterator->content) == 1)
+		else if (ft_is_program(cmd, iterator->content) == 1)
 		{
-			cmd->command_path = iterator->content;
 			free (temp_2);
 			break ;
 		} 
@@ -158,6 +194,8 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 		i++;
 	}
 	free (paths);
+	if (!cmd->command_path)
+		g_mini.exit_status = 127;
 	return (0);
 }
 
@@ -213,13 +251,14 @@ void	ft_echo_exec(t_cmd *iterator)
 	}
 	if (n_flag != 1)
 		printf("\n");
+	
 }
 
 void ft_execute_built_in(t_cmd *cmd, t_list *toks)
 {
 	(void)cmd;
 
-	printf("Entered the built_in execution.\n");
+	// printf("Entered the built_in execution.\n");
 	if (ft_is_pwd(toks->content))
 		ft_pwd_exec();
 	if (ft_is_env(toks->content))
@@ -242,7 +281,7 @@ void ft_execute_built_in(t_cmd *cmd, t_list *toks)
 * for a command (e.g echo, export..);
 * if command was found it stores the command name itself and
 * the arguments of the command (= the tokens following) in
-* thecmd structs char** arguments;
+* the cmd structs char** arguments;
 */
 void	ft_interpret(t_cmd *cmd_iterator)
 {
@@ -258,10 +297,17 @@ void	ft_interpret(t_cmd *cmd_iterator)
 		}
 		if (!cmd_iterator->command_path && cmd_iterator->is_built_in == 0)
 		{
-			printf("minishell: %s: command not found\n", \
-					cmd_iterator->toks->content);
 			g_mini.exit_status = 127;
 			g_mini.exit = 1;
+			printf("42_minishell: %s: command not found\n", cmd_iterator->toks->content);
+			//printf("42_minishell: %s: command not found\n", g_mini.raw_input);
+			// printf("42_minishell: %d: command not found\n", g_mini.exit_status);
+
+
+			// if (g_mini.exit_status == 127 && ft_strlen(g_mini.raw_input) < 2)
+			// 	dprintf(2, "42_minishell: %d: command not found\n", g_mini.exit_status);
+			// else
+			// 	printf("42_minishell: %s: command not found\n", cmd_iterator->toks->content);
 		}
 		tok_iterator = tok_iterator->next;
 	}

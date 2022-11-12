@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:40:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/10 19:31:03 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/11 17:03:24 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ void	ft_open_file(char *file_name, int *fd, int j, int open_flag)
 		file_check = access(file_name, F_OK);
 		if (file_check != 0)
 		{
-			printf("minishell: %s: No such file or directory\n", file_name);
+			printf("42_minishell: %s: No such file or directory\n", file_name);
 			g_mini.exit_status = 1;
 		}
 		printf("Access estabilished.\n");
 		*fd = open(file_name, O_RDWR, 0777);
 		if (*fd == -1)
 		{
-			printf("minishell: %s: Permission denied\n", file_name);
+			printf("42_minishell: %s: Permission denied\n", file_name);
 			g_mini.exit_status = 1;
 		}
 		printf("opened heredoc file.\n");
@@ -46,7 +46,7 @@ void	ft_open_file(char *file_name, int *fd, int j, int open_flag)
 		*fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
 		if (*fd == -1)
 		{
-			printf("minishell: %s: Permission denied\n", file_name); // could be fused together ?
+			printf("42_shell: %s: Permission denied\n", file_name); // could be fused together ?
 			g_mini.exit_status = 1;
 		}
 	}
@@ -55,7 +55,7 @@ void	ft_open_file(char *file_name, int *fd, int j, int open_flag)
 		*fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
 		if (*fd == -1)
 		{
-			printf("minishell: %s: Permission denied\n", file_name);
+			printf("42_shell: %s: Permission denied\n", file_name);
 			g_mini.exit_status = 1;
 		}
 	}

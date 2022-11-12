@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_built_in_exec_2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 16:03:38 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/09 17:24:05 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/11 17:03:43 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,6 @@ void ft_cd_exec(t_list *toks)
 	{
 		check = chdir(toks->next->content);
 		if (check == -1)
-			printf("minishell: cd: %s: No such file or directory\n", toks->next->content);
+			printf("42_shell: cd: %s: No such file or directory\n", toks->next->content);
 	}
 }
