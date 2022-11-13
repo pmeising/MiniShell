@@ -1,23 +1,14 @@
-i == 0. before close fds.
-hi there. :) 
-Closing fd: 8
-After opened files.
-Closing fd: 3
-Closing fd: 4
-Closing fd: 5
-Closing fd: 6
-After pipe fds closed.
-leaving ft_close_fds.
-before execve is built in.
-before execve
 Makefile
+filename
 learning_notes.txt
 libft
 minishell
+minishell.dSYM
 minishell.h
 mull
 obj
 src
+test.txt
 text.txt
 trace.txt
 wobfix

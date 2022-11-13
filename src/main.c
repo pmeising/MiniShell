@@ -124,9 +124,9 @@ int ft_get_input(void)
 	temp = readline(prompt);
 	if (temp)
 		g_mini.raw_input = ft_strdup(temp);
-	free (temp);
 	if (!g_mini.raw_input)
 		exit_shell_quit(0);
+	free (temp);
 	if (ft_str_only_space(g_mini.raw_input) != 1 && g_mini.raw_input)
 		add_history(g_mini.raw_input);
 	if (ft_check_quotes(g_mini.raw_input) == 1)

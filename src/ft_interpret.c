@@ -83,6 +83,7 @@ int ft_is_program(t_cmd *cmd, char *prog_name)
 		name = ft_strdup(prog_name); // .. /../ bin/ls
 		while (name[0] == '.')
 		{
+			cwd = malloc(sizeof(char) * 1024);
 			getcwd(cwd, 1024);
 			len = ft_strlen(cwd);
 			while (cwd[len] != '/')
@@ -94,7 +95,9 @@ int ft_is_program(t_cmd *cmd, char *prog_name)
 			name = ft_strdup(&prog_name[i]);
 			i = i + 3;
 		}
+		cwd = malloc(sizeof(char) * 1024);
 		cmd->command_path = ft_strjoin(getcwd(cwd, 1024), name);
+		free (cwd);
 		if (access(cmd->command_path, F_OK | X_OK) == 0)
 			return (1);
 		else
