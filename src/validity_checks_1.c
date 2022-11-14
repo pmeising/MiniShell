@@ -6,13 +6,13 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:38:09 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 17:21:06 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:29:15 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../minishell.h"
+#include "../minishell.h"
 
-int ft_is_only_redir(char *raw_input, char c)
+int	ft_is_only_redir(char *raw_input, char c)
 {
 	int		check;
 	char	*trim_input;
@@ -39,7 +39,7 @@ int ft_is_only_redir(char *raw_input, char c)
 * before checking it makes a copy in which it trims whitespaces
 * from beginning and end;
 */
-int ft_is_char_front(char *raw_input, char c)
+int	ft_is_char_front(char *raw_input, char c)
 {
 	int		check;
 	char	*trim_input;
@@ -60,7 +60,7 @@ int ft_is_char_front(char *raw_input, char c)
 	free(trim_input);
 	return (check);
 }
-				   		 
+
 /*
 * checks if the raw user-input has a certain character at the last position;
 * before checking it makes a copy in which it trims whitespaces
@@ -68,8 +68,8 @@ int ft_is_char_front(char *raw_input, char c)
 */
 int	ft_is_char_end(char *raw_input, char c)
 {
-	int 	check;
-	int		len;
+	int	check;
+	int	len;
 
 	len = ft_strlen(raw_input);
 	while (raw_input[len - 1] && ft_is_space(raw_input[len - 1]) == 1)
@@ -81,16 +81,16 @@ int	ft_is_char_end(char *raw_input, char c)
 	}
 	else
 		check = 0;
-	return(check);
+	return (check);
 }
 
 /*
 * detects illegal sequences in user-input;
 */
-int ft_illegal_sequence(char *raw_input, char *sequence)
+int	ft_illegal_sequence(char *raw_input, char *sequence)
 {
-	int check;
-	char *trim_input;
+	int		check;
+	char	*trim_input;
 
 	trim_input = ft_strtrim_all(raw_input, BLANK_SPACE);
 	if (!trim_input)
@@ -104,7 +104,7 @@ int ft_illegal_sequence(char *raw_input, char *sequence)
 		printf("syntax error near unexpected token `%s'\n", sequence);
 	}
 	else
-		check = 0;	
+		check = 0;
 	free(trim_input);
 	return (check);
 }
@@ -115,51 +115,39 @@ int ft_illegal_sequence(char *raw_input, char *sequence)
 * quotes are already checked in ft_get_input
 * returns 1 if invalid tokens detected or 0 if not;
 */
-	/* if (ft_is_char_front(raw_input, '|') || ft_is_char_end(raw_input, '|') || \
-	// 	ft_is_char_front(raw_input, ';') || ft_is_char_end(raw_input, '<') || \
-	// 	ft_is_char_end(raw_input, '>') || ft_is_char_end(raw_input, '&') || \
-	// 	ft_space_between_char(raw_input, '|') || \
-	// 	ft_space_between_char(raw_input, '>') || \
-	// 	ft_illegal_sequence(raw_input, ";;") || \
-	// 	ft_illegal_sequence(raw_input, "|;") || \
-	// 	ft_illegal_sequence(raw_input, "&;") || \
-	// 	ft_illegal_sequence(raw_input, ";|") || \
-	// 	ft_illegal_sequence(raw_input, ";&") || \
-	// 	ft_illegal_sequence(raw_input, ">>>") || \
-	// 	ft_illegal_sequence(raw_input, ";;"))
-	// {
-	// 	check = 1;
-	// }
-	// else
-	// 	check = 0;
-	 return (check); */
 int	ft_wrong_tokens(char *raw_input)
 {
-	int check;
+	int	check;
 
-	if (ft_is_char_front(raw_input, '|') || ft_is_char_end(raw_input, '|') || ft_is_char_front(raw_input, ';') || ft_is_char_front(raw_input, ':'))
+	if (ft_is_char_front(raw_input, '|') || ft_is_char_end(raw_input, '|') || \
+		ft_is_char_front(raw_input, ';') || ft_is_char_front(raw_input, ':'))
 			check = 1;
-	else if (ft_is_char_end(raw_input, '<') || ft_is_char_end(raw_input, '>') || ft_is_char_end(raw_input, '&'))
+	else if (ft_is_char_end(raw_input, '<') || \
+			ft_is_char_end(raw_input, '>') || ft_is_char_end(raw_input, '&'))
 		check = 1;
-	else if (ft_space_between_char(raw_input, '|') || ft_space_between_char(raw_input, '>'))
+	else if (ft_space_between_char(raw_input, '|') || \
+			ft_space_between_char(raw_input, '>'))
 		check = 1;
-	else if (ft_illegal_sequence(raw_input, ";;") || ft_illegal_sequence(raw_input, "|;") || \
-			ft_illegal_sequence(raw_input, "&;") || ft_illegal_sequence(raw_input, ";|") || \
-			ft_illegal_sequence(raw_input, ";&") || ft_illegal_sequence(raw_input, ">>>") || \
+	else if (ft_illegal_sequence(raw_input, ";;") || \
+			ft_illegal_sequence(raw_input, "|;") || \
+			ft_illegal_sequence(raw_input, "&;") || \
+			ft_illegal_sequence(raw_input, ";|") || \
+			ft_illegal_sequence(raw_input, ";&") || \
+			ft_illegal_sequence(raw_input, ">>>") || \
 			ft_illegal_sequence(raw_input, ";;"))
 				check = 1;
-			else
-				check = 0;
+	else
+		check = 0;
 	return (check);
 }
 
 /*
 * checks if the illegal_str/sequence is in the user-input;
 */
-int ft_contains_not_supported(char *raw_input, char *illegal_str)
+int	ft_contains_not_supported(char *raw_input, char *illegal_str)
 {
-	int check;
-	
+	int	check;
+
 	if (ft_strstr_quotes(raw_input, illegal_str) != 0)
 	{
 		check = 1;

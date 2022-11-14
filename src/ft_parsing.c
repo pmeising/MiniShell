@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 18:03:31 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:28:59 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,10 +184,11 @@ void	ft_find_exit(void)
 /*
 *	splits the user-input into commands by separating them by pipe;
 *	then splits the commands into smaller units of execution called tokens;
-*	a list for commands containing a lists of their corresponding tokens is created;
+*	a list for commands containing a lists of their
+*	corresponding tokens is created;
 *	last if is to verify that we are not at '\0' yet;
 */
-void ft_parsing(char *raw_input)
+void	ft_parsing(char *raw_input)
 {
 	int		pos;
 	t_list	*new_tok;

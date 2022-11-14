@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:42:08 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 17:47:45 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:28:59 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,6 @@ void	ft_insert(char *raw_input, char *dup_var_cont, int pos, int start)
 	g_mini.raw_input = new_str;
 }
 
-
-
 /*
 *	Identifies the Variable name and calls functions, 
 *	which verify it as well as replace the variable with its content.
@@ -141,10 +139,10 @@ void	ft_replace_dollar_question_mark(char *raw_input, int pos)
 	char	*before;
 	char	*after;
 	char	*half_str;
-	int 	i;
-	
+	int		i;
+
 	i = 0;
-	before = malloc(sizeof(char) * ft_strlen(raw_input)); 
+	before = malloc(sizeof(char) * ft_strlen(raw_input));
 	while (raw_input[i] && i < pos)
 	{
 		before[i] = raw_input[i];
@@ -167,20 +165,23 @@ void	ft_replace_dollar_question_mark(char *raw_input, int pos)
 *	Once found, it checks, whether it is followed by...
 *	... a questionmark (?), in which case we show the most recently 
 *		executed foreground pipeline.
-*	... a quotationmark (" or '), in which case we replace the $ with a blankspace.
+*	... a quotationmark (" or '), in which case we replace 
+*		the $ with a blankspace.
 *	... a valid environment variable, in which case we insert the content
 *		of the env into the string using ft_str_join.
 *
 *	1 would be outer quote, -1 inner quote and 0 no quote(closed quote);
 *	34 = double quotes; 39 = single quotes;
-*	all $ that are not interpreted will be deleted by shifting the string one position to the left
+*	all $ that are not interpreted will be deleted by shifting 
+*	the string one position to the left
 *	(last else-if statement);
 *	edge case: $(PATH) should throw an error. Unable to handle it at this point
-*	not required by subject pdf. --> see comment in ft_dollar_sign MIGHT FIX THIS PROBLEM (seems to be working regardless)
+*	not required by subject pdf. --> see comment in 
+*	ft_dollar_sign MIGHT FIX THIS PROBLEM (seems to be working regardless)
 */
-void ft_env_vars(char *raw_input)
+void	ft_env_vars(char *raw_input)
 {
-	int pos;
+	int	pos;
 	int	j;
 	int	single_quotes;
 	int	double_quotes;
@@ -220,7 +221,8 @@ void ft_env_vars(char *raw_input)
 			ft_replace_dollar_question_mark(raw_input, pos);
 			break ;
 		}
-		else if (raw_input[pos] == '$' && (raw_input[pos + 1] == '{' || ft_isalnum(raw_input[pos + 1]) == 1))
+		else if (raw_input[pos] == '$' && (raw_input[pos + 1] == '{' \
+				|| ft_isalnum(raw_input[pos + 1]) == 1))
 		{
 			ft_put_env_in_input(raw_input, pos);
 			break ;
@@ -260,12 +262,12 @@ void ft_env_vars(char *raw_input)
 *	-1			1		0
 *	0			1		0
 */
-int ft_dollar_sign(void)
+int	ft_dollar_sign(void)
 {
-	int i;
-	int	single_quotes;
-	int	double_quotes;
-	int check;
+	int		i;
+	int		single_quotes;
+	int		double_quotes;
+	int		check;
 	char	*raw_input;
 
 	i = 0;

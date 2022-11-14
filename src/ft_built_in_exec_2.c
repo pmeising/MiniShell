@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 16:03:38 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/14 18:44:40 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:34:17 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 */
 void	ft_print_sorted_env(t_list *dup_env)
 {
-
 	t_list	*iterator;
 	char	*temp_cont;
 
@@ -55,18 +54,19 @@ void	ft_export_exec(t_list *toks)
 		while (iterator)
 		{
 			if (ft_isalpha(iterator->content[0]) == 0)
-				printf("bash: export: `%s´: not a valid identifier\n", iterator->content);
+				printf("bash: export: `%s´: not a valid identifier\n", \
+					iterator->content);
 			else
 				ft_lstadd_back(&g_mini.dup_env, ft_lstnew(iterator->content));
 			if (iterator != NULL && iterator->next != NULL)
 				iterator = iterator->next;
 			else
-				break;
+				break ;
 		}
 	}
 }
 
-void ft_cd_empty(void)
+void	ft_cd_empty(void)
 {
 	int	check;
 
@@ -101,44 +101,32 @@ void	ft_cd_two_dots(void)
 		j++;
 	}
 	new_cwd[j] = '\0';
-	free (cur_cwd);
 	chdir(new_cwd);
-	free (new_cwd);
+	ft_free_chars(cur_cwd, new_cwd);
 }
 
-void ft_cd_exec(t_list *toks)
+void	ft_cd_exec(t_list *toks)
 {
-	int 	p;
+	int		p;
 	int		check;
 	char	*cwd;
 
-	p = 3;
+	p = 0;
 	cwd = malloc(sizeof(char) * 1024);
-	if(!cwd)
-	{
-		perror("malloc :");
-		free (cwd);
-		exit_program(1);
-	}
+	ft_check(cwd);
 	cwd = getcwd(cwd, 1024);
-	if (!cwd)
-	{
-		perror("getcwd :");
-		free (cwd);
-		exit_program(1);
-	}
+	ft_check(cwd);
 	ft_update_env_list("OLDPWD", cwd, g_mini.dup_env);
 	free (cwd);
 	if (!toks->next)
 		ft_cd_empty();
-	else if (toks->next->content[0] == '.' && (ft_is_space(toks->next->content[1]) == 1 || toks->next->content[1] == '\0'))
-		(void)p;
 	else if (toks->next->content[0] == '.' && toks->next->content[1] == '.')
 		ft_cd_two_dots();
 	else if (toks->next)
 	{
 		check = chdir(toks->next->content);
 		if (check == -1)
-			printf("42_shell: cd: %s: No such file or directory\n", toks->next->content);
+			printf("42_shell: cd: %s: No such file or directory\n", \
+			toks->next->content);
 	}
 }

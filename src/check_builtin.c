@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 16:27:58 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 17:21:03 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:28:54 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ int	ft_is_pwd(char *str)
 	Checks whether the command is "UNSET" or not.
 	Returns 1 if it is, 0 if it is not.
 */
-int ft_is_unset(char *str)
+int	ft_is_unset(char *str)
 {
 	char	unset[6];
 	char	unset_1[8];
+
 	if (!str)
 		return (0);
 	unset_1[0] = '"';
@@ -76,13 +77,18 @@ int ft_is_unset(char *str)
 	Checks whether the command is "EXIT" or not.
 	Returns 1 if it is, 0 if it is not.
 */
-int ft_is_exit(char *cmd_name)
+int	ft_is_exit(char *cmd_name)
 {
 	char	exit[5];
 	char	exit_1[7];
-	
+
 	if (!cmd_name)
 		return (0);
+	exit[0] = 'e';
+	exit[1] = 'x';
+	exit[2] = 'i';
+	exit[3] = 't';
+	exit[4] = '\0';
 	exit_1[0] = '"';
 	exit_1[1] = 'e';
 	exit_1[2] = 'x';
@@ -90,37 +96,23 @@ int ft_is_exit(char *cmd_name)
 	exit_1[4] = 't';
 	exit_1[5] = '"';
 	exit_1[6] = '\0';
-	exit[0] = 'e';
-	exit[1] = 'x';
-	exit[2] = 'i';
-	exit[3] = 't';
-	exit[4] = '\0';
 	if (ft_strncmp(cmd_name, exit, 4) == 0)
-	{
-		g_mini.exit = 1;
 		return (1);
-	}
 	else if (ft_strncmp(cmd_name, exit_1, 6) == 0)
-	{
-		g_mini.exit = 1;
 		return (1);
-	}
 	else
-	{
-		g_mini.exit = 0;
 		return (0);
-	}
 }
 
 /*
 	Checks whether the command is "CD" or not.
 	Returns 1 if it is, 0 if it is not.
 */
-int ft_is_cd(char *str)
+int	ft_is_cd(char *str)
 {
 	char	cd[3];
 	char	cd_1[5];
-	
+
 	if (!str)
 		return (0);
 	cd_1[0] = '"';
@@ -143,17 +135,16 @@ int ft_is_cd(char *str)
 	Checks whether the command is a built in function or not.
 	Returns 1 if it is, 0 if it is not.
 */
-int ft_is_built_in(char *cmd_name)
+int	ft_is_built_in(char *cmd_name)
 {
-	int check;
-	
+	int	check;
+
 	check = 0;
-	
 	if (!cmd_name)
 		return (check);
-	if (ft_is_echo(cmd_name) || ft_is_env(cmd_name) || ft_is_export(cmd_name) || \
-		ft_is_exit(cmd_name) || ft_is_pwd(cmd_name) || ft_is_unset(cmd_name) || \
-		ft_is_cd(cmd_name))
+	if (ft_is_echo(cmd_name) || ft_is_env(cmd_name) || ft_is_export(cmd_name) \
+		|| ft_is_exit(cmd_name) || ft_is_pwd(cmd_name) || ft_is_unset(cmd_name) \
+		|| ft_is_cd(cmd_name))
 		check = 1;
 	return (check);
 }

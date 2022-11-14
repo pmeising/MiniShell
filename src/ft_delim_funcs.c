@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:39:49 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 17:42:49 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:28:58 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 /*
 *	checks if char c (position on raw_input string) is a delimitor for tokens;
 */
-int ft_is_tok_delim(char c)
+int	ft_is_tok_delim(char c)
 {
-	int check;
+	int	check;
 
 	if (ft_strchr(BLANK_SPACE, c))
 		check = 1;

@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 17:51:01 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 18:33:51 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:35:51 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 * prints out the current working directory;
 * pwd is obtained by calling getcwd();
 */
-void ft_pwd_exec(void)
+void	ft_pwd_exec(void)
 {
-	char *cur_path;
+	char	*cur_path;
 
 	cur_path = malloc(sizeof(char) * 1024);
 	if (!cur_path)
@@ -37,7 +37,7 @@ void ft_pwd_exec(void)
 * execute function for builtin command env;
 * prints out the list of environment variables;
 */
-void ft_env_exec(void)
+void	ft_env_exec(void)
 {
 	t_list	*iterator;
 
@@ -49,7 +49,7 @@ void ft_env_exec(void)
 	}
 }
 
-void ft_delete_env(t_list *dup_env, int i)
+void	ft_delete_env(t_list *dup_env, int i)
 {
 	t_list	*iterator;
 	t_list	*next;
@@ -67,7 +67,7 @@ void ft_delete_env(t_list *dup_env, int i)
 	iterator->next = next;
 }
 
-void ft_unset_exec(t_list *toks)
+void	ft_unset_exec(t_list *toks)
 {
 	int		len;
 	int		i;
@@ -97,7 +97,7 @@ void ft_unset_exec(t_list *toks)
 	}
 }
 
-void ft_exit_exec(t_list *toks)
+void	ft_exit_exec(t_list *toks)
 {
 	if (toks->next)
 		printf("error: no additional parameters for exit allowed\n");

@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 18:44:47 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:28:57 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@ void	ft_free_input(void)
 		ft_free_lst_cont(cmd_iterator->toks);
 		if (cmd_iterator->heredoc_temp && cmd_iterator->input_file)
 		{
-			if (ft_strncmp(cmd_iterator->heredoc_temp, cmd_iterator->input_file, ft_strlen(cmd_iterator->heredoc_temp)) == 0)
+			if (ft_strncmp(cmd_iterator->heredoc_temp, \
+				cmd_iterator->input_file, \
+				ft_strlen(cmd_iterator->heredoc_temp)) == 0)
 				unlink(cmd_iterator->heredoc_temp);
 		}
-		if (cmd_iterator->command_path) 
+		if (cmd_iterator->command_path)
 			free(cmd_iterator->command_path);
 		if (cmd_iterator->input_file)
 			free(cmd_iterator->input_file);
@@ -72,14 +74,14 @@ void	ft_free_input(void)
 	if (g_mini.exit_status == 2 || g_mini.exit == 1)
 	{
 		ft_free_lst_cont(g_mini.dup_env);
-		exit(g_mini.exit_status);	
+		exit(g_mini.exit_status);
 	}
 }
 
 /*
 	Walks through a list and frees its content.
 */
-void ft_free_lst_cont(t_list *iterator)
+void	ft_free_lst_cont(t_list *iterator)
 {
 	t_list	*temp;
 
@@ -96,7 +98,7 @@ void ft_free_lst_cont(t_list *iterator)
 	If 1, keep minishell running,
 	if 2 terminate minishell.
 */
-void exit_program(int status)
+void	exit_program(int status)
 {
 	g_mini.exit = 1;
 	g_mini.exit_status = status;

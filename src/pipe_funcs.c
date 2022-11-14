@@ -6,12 +6,15 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:39:14 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/12 16:38:114 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:29:00 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/*
+* updates the env list after using unset or export;
+*/
 void	ft_overwrite_env(void)
 {
 	t_list	*iterator;
@@ -60,8 +63,8 @@ void	ft_close_fds(int in, int out, int nbr)
 }
 
 /*
-	i = cmd counter;
-	unink: deletes a file if no process has it open
+* i = cmd counter;
+* unink: deletes a file if no process has it open
 */
 void	ft_execute_process(t_cmd *cmd_iterator, int i)
 {
@@ -101,7 +104,6 @@ void	ft_execute_process(t_cmd *cmd_iterator, int i)
 * initializes the **pipefd in the g_mini struct;
 * each *int in **pipefd is initialized with two ints
 * that have the default values of 0 at [0] and 1 at [1];
-* 
 */
 void	ft_init_pipefd(int nbr_of_pipes)
 {
@@ -132,8 +134,10 @@ void	ft_init_pipefd(int nbr_of_pipes)
 }
 
 /*
-* We need to execute the commands simultaneously, so create pipes before forking.
-* pipe command stores an int[2] in the given parameter. We store it in "int *pipefd[i]";
+* We need to execute the commands simultaneously, 
+* so create pipes before forking.
+* pipe command stores an int[2] in the given parameter.
+* We store it in "int *pipefd[i]";
 * counts number of pipes;
 * initializes **pipefd in the g_mini struct;
 * pipe(): creates the pipe and puts the corresponding

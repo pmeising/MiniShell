@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 15:34:58 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 18:47:31 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:28:56 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	ft_execute(void)
 * checks for open quotes, backslash and semicolon which 
 * are all not allowed in this project
 */
-int ft_get_input(void)
+int	ft_get_input(void)
 {
 	char	*prompt;
 	char	*temp;
@@ -141,12 +141,12 @@ int ft_get_input(void)
 * When launching the shell, we don't launch it with any input()
 * so argv should be empty. If it isn't we need to return an error.
 */
-int main	(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
 	int	input_check;
+
 	(void)argv;
 	(void)argc;
-
 	if (argc != 1)
 	{
 		printf("too many commands only ./minishell\n");

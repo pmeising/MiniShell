@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 19:38:47 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 17:21:04 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:28:54 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	ft_del_env_cont(char *name, t_list **dup_env)
 /*
 * creates a new environment variable and adds it into our env list;
 */
-void ft_create_env(char *str, t_list **dup_env)
+void	ft_create_env(char *str, t_list **dup_env)
 {
 	t_list	*new_env;
 
@@ -80,7 +80,7 @@ void ft_create_env(char *str, t_list **dup_env)
 /*
 * extracts the content of a node/env.var in our dup_env list; 
 */
-char *ft_get_env_cont(char *env_name)
+char	*ft_get_env_cont(char *env_name)
 {
 	t_list	*env_list;
 	char	*curr_value;

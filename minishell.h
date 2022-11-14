@@ -259,4 +259,7 @@ void	ft_close_fds(int in, int out, int nbr);
 void	ft_free_input(void);
 void	ft_overwrite_env(void);
 
+// utils to comply with 25 lines
+void	ft_free_chars(char *cur_cwd, char *new_cwd);
+void	ft_check(char *);
 #endif

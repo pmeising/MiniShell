@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:33:38 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 18:08:15 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:28:57 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,10 +114,11 @@ int	ft_is_program(t_cmd *cmd, char *prog_name)
 * path = the content of env variable PATH;
 * paths = the single paths contained in PATH splitted into individual
 * strings pointed to by a double pointer;
-* access permission modes: F_OK = the existence test; X_OK = execute/search permission;
+* access permission modes: F_OK = the existence test;
+* X_OK = execute/search permission;
 * *cmd is the command list, *iterator is the toks list;
 */
-int ft_find_command(t_cmd *cmd, t_list *iterator)
+int	ft_find_command(t_cmd *cmd, t_list *iterator)
 {
 	char	*path;
 	char	**paths;
@@ -231,10 +232,9 @@ void	ft_echo_exec(t_cmd *iterator)
 		printf("\n");
 }
 
-void ft_execute_built_in(t_cmd *cmd, t_list *toks)
+void	ft_execute_built_in(t_cmd *cmd, t_list *toks)
 {
 	(void)cmd;
-
 	if (ft_is_pwd(toks->content))
 		ft_pwd_exec();
 	if (ft_is_env(toks->content))
