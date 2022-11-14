@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_built_in_exec_2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 16:03:38 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/14 19:34:17 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:42:31 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void	ft_cd_empty(void)
 	int	check;
 
 	check = chdir(getenv("HOME"));
+	if (check != 0)
+		perror("chdir: ");
 }
 
 /*
@@ -107,11 +109,9 @@ void	ft_cd_two_dots(void)
 
 void	ft_cd_exec(t_list *toks)
 {
-	int		p;
 	int		check;
 	char	*cwd;
 
-	p = 0;
 	cwd = malloc(sizeof(char) * 1024);
 	ft_check(cwd);
 	cwd = getcwd(cwd, 1024);

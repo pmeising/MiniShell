@@ -28,13 +28,13 @@
 # include <sys/ioctl.h> /*    */
 # include <termios.h> /*    */
 # include <fcntl.h>
-// # include <readline/readline.h>
-// # include <readline/history.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEED TO REMOVE/ADJUST THE PATH HERE.
 
-# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
-# include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
+// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/readline.h>
+// # include </Users/bde-carv/goinfre/.brew/opt/readline/include/readline/history.h>
 
 // macros
 
