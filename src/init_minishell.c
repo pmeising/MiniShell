@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:30:36 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/11 18:42:16 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 17:49:45 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,9 @@
 void	ft_oldpwd(void)
 {
 	if (ft_env_exist("OLDPWD", &g_mini.dup_env) == 0)
-	{
 		ft_lstadd_back(&g_mini.dup_env, ft_lstnew("OLDPWD"));
-	}
 	else
-	{
 		ft_del_env_cont("OLDPWD", &g_mini.dup_env);
-	}
 }
 
 /*
@@ -52,10 +48,7 @@ char	*ft_replace_env_cont(char *env_name, char *new_value)
 		exit_program(1);
 	}
 	free(tmp);
-	// tmp = 0; // is needed for some reason or there will be no value in SHLVL
-	// free(*curr_content);// should be freed but gives compiling error ?
-	// curr_content = 0; // is needed for some reason or there will be no value in SHLVL
-	return(res);
+	return (res);
 }
 
 /*
@@ -121,7 +114,6 @@ void	ft_init_minishell(t_mini *g_mini, char **env)
 	g_mini->fdin = 0;
 	g_mini->fdout = 1;
 	g_mini->exit_status = 0;
-	// ft_bzero(g_mini, sizeof(t_mini));
 	ft_copy_env(g_mini, env);
 	ft_oldpwd();
 	ft_raise_shlvl();

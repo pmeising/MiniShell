@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 16:03:38 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/11 17:03:43 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 18:44:40 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ft_print_sorted_env(t_list *dup_env)
 	iterator = dup_env;
 	while (iterator && iterator->next)
 	{
-		if (strcmp(iterator->content, iterator->next->content) > 0 /*&& iterator == *dup_env*/)
+		if (strcmp(iterator->content, iterator->next->content) > 0)
 		{
 			temp_cont = iterator->content;
 			iterator->content = iterator->next->content;
@@ -45,16 +45,23 @@ void	ft_print_sorted_env(t_list *dup_env)
 
 void	ft_export_exec(t_list *toks)
 {
+	t_list	*iterator;
+
 	if (!toks->next)
 		ft_print_sorted_env(g_mini.dup_env);
-	else
+	iterator = toks->next;
+	if (iterator)
 	{
-		if (ft_isalpha(toks->next->content[0]) == 0)
-			printf("bash: export: `%s´: not a valid identifier\n", toks->next->content);
-		else
+		while (iterator)
 		{
-			printf("Adding variable.\n");
-			ft_lstadd_back(&g_mini.dup_env, ft_lstnew(toks->next->content));
+			if (ft_isalpha(iterator->content[0]) == 0)
+				printf("bash: export: `%s´: not a valid identifier\n", iterator->content);
+			else
+				ft_lstadd_back(&g_mini.dup_env, ft_lstnew(iterator->content));
+			if (iterator != NULL && iterator->next != NULL)
+				iterator = iterator->next;
+			else
+				break;
 		}
 	}
 }
@@ -62,14 +69,12 @@ void	ft_export_exec(t_list *toks)
 void ft_cd_empty(void)
 {
 	int	check;
-	
-	printf("hello\n");
+
 	check = chdir(getenv("HOME"));
-	printf("check; %d\n", check);
 }
 
 /*
-* built in execution function for "cd ..";
+	built in execution function for "cd ..";
 */
 void	ft_cd_two_dots(void)
 {
@@ -81,7 +86,7 @@ void	ft_cd_two_dots(void)
 	j = 0;
 	cur_cwd = malloc(sizeof(char) * 2048);
 	if (!cur_cwd)
-		printf("cd 2 dots: malloc error\n");
+		perror("malloc :");
 	cur_cwd = getcwd(cur_cwd, 1024);
 	len = ft_strlen(cur_cwd);
 	while (cur_cwd[len] != '/')
@@ -89,7 +94,7 @@ void	ft_cd_two_dots(void)
 	cur_cwd[len] = '\0';
 	new_cwd = malloc(sizeof(char) * len + 1);
 	if (!new_cwd)
-		printf("cd 2 dots: malloc error\n");
+		perror("malloc :");
 	while (cur_cwd[j])
 	{
 		new_cwd[j] = cur_cwd[j];
@@ -111,14 +116,14 @@ void ft_cd_exec(t_list *toks)
 	cwd = malloc(sizeof(char) * 1024);
 	if(!cwd)
 	{
-		printf("malloc error ft_cd_exec\n");
+		perror("malloc :");
 		free (cwd);
 		exit_program(1);
 	}
 	cwd = getcwd(cwd, 1024);
 	if (!cwd)
 	{
-		printf("getcwd error ft_cd_exec\n");
+		perror("getcwd :");
 		free (cwd);
 		exit_program(1);
 	}

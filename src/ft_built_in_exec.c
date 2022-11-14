@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_built_in_exec.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 17:51:01 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/09 17:21:32 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/14 18:33:51 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void ft_pwd_exec(void)
 	cur_path = malloc(sizeof(char) * 1024);
 	if (!cur_path)
 	{
-		printf("pwd: malloc error");
+		perror("malloc :");
 		free(cur_path);
 		exit(EXIT_FAILURE);
 	}
@@ -62,7 +62,6 @@ void ft_delete_env(t_list *dup_env, int i)
 		iterator = iterator->next;
 		i--;
 	}
-	printf("deleting node.\n");
 	next = iterator->next->next;
 	free (iterator->next);
 	iterator->next = next;
@@ -70,35 +69,36 @@ void ft_delete_env(t_list *dup_env, int i)
 
 void ft_unset_exec(t_list *toks)
 {
-	int	len;
+	int		len;
 	int		i;
 	t_list	*env_iterator;
+	t_list	*tok_it;
 
-	i = 0;
-	env_iterator = g_mini.dup_env;
 	if (!toks->next)
 		return ;
-	else if (toks->next->next)
+	tok_it = toks->next;
+	while (tok_it)
 	{
-		printf("too many arguments for unset\n");
-	}
-	len = (int)ft_strlen(toks->next->content);
-	while (env_iterator)
-	{
-		if (ft_strncmp(env_iterator->content, toks->next->content, len) == 0)
+		env_iterator = g_mini.dup_env;
+		len = (int)ft_strlen(tok_it->content);
+		i = 0;
+		while (env_iterator)
 		{
-			ft_delete_env(g_mini.dup_env, i);
-			break ;
+			if (ft_strncmp(env_iterator->content, tok_it->content, len) == 0)
+			{
+				ft_delete_env(g_mini.dup_env, i);
+				break ;
+			}
+			i++;
+			if (env_iterator->next)
+				env_iterator = env_iterator->next;
 		}
-		i++;
-		if (env_iterator->next)
-			env_iterator = env_iterator->next;
+		tok_it = tok_it->next;
 	}
 }
 
 void ft_exit_exec(t_list *toks)
 {
 	if (toks->next)
-		printf("error: no additional parameters for exit allowed");
-	printf("exit from ft_exit_exec\n");
+		printf("error: no additional parameters for exit allowed\n");
 }

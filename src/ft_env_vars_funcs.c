@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:42:08 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/11 18:38:58 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 17:47:45 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ char	*ft_extract_content(char *var_name)
 	t_list	*iterator;
 
 	iterator = g_mini.dup_env;
-	// printf("var_name: %s\n", var_name);
 	var_name_len = ft_strlen(var_name);
-	// printf("len: %d\n", len);
 	while (iterator != NULL)
 	{
 		var_name_and_content = iterator->content;
@@ -40,17 +38,11 @@ char	*ft_extract_content(char *var_name)
 		iterator = iterator->next;
 	}
 	if (iterator == NULL)
-	{
-		printf("Couldn't find ENV VAR.\n");
 		return (NULL);
-	}
 	if (ft_strlen(var_name_and_content) == (size_t)(var_name_len + 1))
 		return (NULL);
 	content_len = ft_strlen(&var_name_and_content[var_name_len + 1]);
-	// printf("len2: %d\n", len2);
-	// printf("%s\n", test);
 	content = ft_substr(var_name_and_content, var_name_len + 1, content_len);
-	// printf("%s\n", content);
 	return (content);
 }
 
@@ -71,13 +63,12 @@ void	ft_insert(char *raw_input, char *dup_var_cont, int pos, int start)
 			ft_strlen(raw_input))), sizeof(char));
 	if (!new_str)
 	{
-		printf("malloc error ft_insert\n");
+		perror("malloc :");
 		exit_program(EXIT_FAILURE);
 	}
 	if (raw_input[start - 1] == '{')
 		start--;
 	start--;
-	// printf("i: %d, start: %d, pos: %d\n", i, start, pos);
 	while (raw_input[i] && i < start)
 	{
 		new_str[i] = raw_input[i];
@@ -140,7 +131,11 @@ void	ft_put_env_in_input(char *raw_input, int pos)
 	ft_insert(raw_input, dup_var_content, pos, start);
 }
 
-void	ft_replace_exit_status(char *raw_input, int pos)
+/*
+	Finds and replaces the "$?" with the exit status value.
+	replaces the string content with the exit status.
+*/
+void	ft_replace_dollar_question_mark(char *raw_input, int pos)
 {
 	char	*exit_status_str;
 	char	*before;
@@ -156,18 +151,13 @@ void	ft_replace_exit_status(char *raw_input, int pos)
 		i++;
 	}
 	before[i] = '\0';
-	printf("before: %s\n", before);
 	after = strdup(&raw_input[pos + 2]);
-	printf("after: %s\n", after);
-	printf("exit_staus BEFORE itoa: %d\n", g_mini.exit_status);
-	exit_status_str = ft_itoa(g_mini.exit_status); // needs malloc
-	printf("exit_staus_str: %s\n", exit_status_str);
+	exit_status_str = ft_itoa(g_mini.exit_status);
 	half_str = ft_strjoin(before, exit_status_str);
 	free (before);
 	free (exit_status_str);
 	free (g_mini.raw_input);
 	g_mini.raw_input = ft_strjoin(half_str, after);
-	printf("last g_mini.rawinput: %s\n", g_mini.raw_input);
 	free (half_str);
 	free (after);
 }
@@ -199,7 +189,6 @@ void ft_env_vars(char *raw_input)
 	j = 0;
 	single_quotes = 0;
 	double_quotes = 0;
-	printf("in env-vars-funcs.c\n");
 	while (raw_input[pos])
 	{
 		if (raw_input[pos] == 34)
@@ -228,10 +217,7 @@ void ft_env_vars(char *raw_input)
 		}
 		if (raw_input[pos] == '$' && raw_input[pos + 1] == '?')
 		{
-			printf("Entered this function.\n");
-			ft_replace_exit_status(raw_input, pos);
-			// requires the replacement of $? with the content of the variable g_mini->exit_status.
-			printf("inENVVARS:%s\n", g_mini.raw_input);
+			ft_replace_dollar_question_mark(raw_input, pos);
 			break ;
 		}
 		else if (raw_input[pos] == '$' && (raw_input[pos + 1] == '{' || ft_isalnum(raw_input[pos + 1]) == 1))
@@ -281,7 +267,7 @@ int ft_dollar_sign(void)
 	int	double_quotes;
 	int check;
 	char	*raw_input;
-// '$PATH' "$PATH"  "'$PATH'"
+
 	i = 0;
 	single_quotes = 0;
 	double_quotes = 0;
@@ -315,10 +301,9 @@ int ft_dollar_sign(void)
 				i++;
 			single_quotes = 0;
 		}
-		else if (raw_input[i] == '$') // && ft(is_alnum(raw_input[i + 1]) == 1 because it could be $-PATH which would indicate intepretable $ but shouldnt
+		else if (raw_input[i] == '$')
 			ft_env_vars(g_mini.raw_input);
 		i++;
 	}
-	// printf("check: %d\n", check);
 	return (check);
 }

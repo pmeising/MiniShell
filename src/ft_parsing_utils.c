@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:26:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 17:41:21 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 18:03:37 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_remove_quotes(char *content)
 	int		i;
 	int		j;
 	char	tmp;
-	// "'fgg'"
+
 	i = 0;
 	j = 1;
 	if (content[0] == 34)
@@ -62,7 +62,6 @@ void	ft_remove_quotes(char *content)
 		content[j] = '\0';
 	}
 }
-
 
 /*
 * skips non existent variables

@@ -6,12 +6,15 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:49:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/04 19:44:22 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 17:58:49 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/*
+* prints the tokens/arguments of a command;
+*/
 void	ft_print_list(t_cmd *cmds)
 {
 	t_list	*iterator;
@@ -27,6 +30,9 @@ void	ft_print_list(t_cmd *cmds)
 	}
 }
 
+/*
+* prints the tokens/arguments of a command;
+*/
 void	ft_print_args(t_cmd *iterator)
 {
 	int	i;
@@ -40,21 +46,11 @@ void	ft_print_args(t_cmd *iterator)
 			i++;
 		}
 	}
-	// i = 0;
-	// while (iterator->output_file[i] && (iterator->open_flag == -1 || iterator->open_flag[i] == 0 || iterator->open_flag[i] == 1))
-	// {
-	// 	printf("outputfile: %s\n", iterator->output_file[i]);
-	// 	printf("open_flag: %d\n", iterator->open_flag[i]);
-	// 	i++;
-	// }
-	// i = 0;
-	// while (iterator->open_flag[i] == -1 || iterator->open_flag[i] == 0 || iterator->open_flag[i] == 1)
-	// {
-	// 	printf("open_flag: %d\n", iterator->open_flag[i]);
-	// 	i++;
-	// }
 }
 
+/*
+* prints out all variable of a command;
+*/
 void	ft_print_cmds(t_cmd *cmd)
 {
 	t_cmd	*iterator;
@@ -75,7 +71,6 @@ void	ft_print_cmds(t_cmd *cmd)
 		printf("fd_in: %d\n", iterator->fd_in);
 		printf("fd_out: %d\n", iterator->fd_out);
 		printf("is_built_in: %d\n", iterator->is_built_in);
-		// printf("open_flag: %d\n", iterator->open_flag);
 		iterator = iterator->next;
 	}
 }

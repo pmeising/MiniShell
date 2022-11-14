@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:42:27 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/10 18:54:54 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 18:04:41 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,7 @@ t_cmd	*ft_lstnew_cmds(void)
 
 	new = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!new)
-	{
 		return (NULL);
-	}
 	new->toks = NULL;
 	new->command_path = NULL;
 	new->arguments = NULL;

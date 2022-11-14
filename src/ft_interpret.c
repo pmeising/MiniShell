@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:33:38 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/31 17:23:381 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 18:08:15 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*ft_find_path(void)
 {
 	char	*str;
 	t_list	*env_iterator;
-	
+
 	env_iterator = g_mini.dup_env;
 	while (env_iterator->content)
 	{
@@ -58,7 +58,7 @@ char	**ft_find_paths(char *path)
 * X_OK = is executable rights granted;
 * F_OK = zugriffsrights granted;
 */
-int ft_is_program(t_cmd *cmd, char *prog_name)
+int	ft_is_program(t_cmd *cmd, char *prog_name)
 {
 	char	*cwd;
 	char	*name;
@@ -69,7 +69,7 @@ int ft_is_program(t_cmd *cmd, char *prog_name)
 	i = 2;
 	if (prog_name[0] == '.' && prog_name[1] == '/')
 	{
-		name = ft_strdup(&prog_name[1]); // free in the end.
+		name = ft_strdup(&prog_name[1]);
 		cmd->command_path = ft_strjoin(getcwd(cwd, 1024), name);
 		free (name);
 		free (cwd);
@@ -79,8 +79,8 @@ int ft_is_program(t_cmd *cmd, char *prog_name)
 			cmd->command_path = NULL;
 	}
 	else if (prog_name[0] == '.' && prog_name[1] == '.' && prog_name[2] == '/')
-	{ // /Users/bde-carv/Core/ shelltest/src
-		name = ft_strdup(prog_name); // .. /../ bin/ls
+	{
+		name = ft_strdup(prog_name);
 		while (name[0] == '.')
 		{
 			cwd = malloc(sizeof(char) * 1024);
@@ -105,29 +105,6 @@ int ft_is_program(t_cmd *cmd, char *prog_name)
 	}
 	return (0);
 }
-
-/*
-* cuts out . and / from program name
-*/
-// char	*ft_cut_prgrm(char *content)
-// {
-// 	int		len;
-// 	char	*new;
-// 	int		i;
-// 	int		j;
-
-// 	i = 1;
-// 	j = 0;
-// 	len = ft_strlen(content);
-// 	new = malloc(sizeof(char) * len);
-// 	while (content[i])
-// 	{
-// 		new[j] = content[i];
-// 		i++;
-// 		j++;
-// 	}
-// 	return (new);
-// }
 
 /*
 * compares each token of a cmd with the paths for linux commands or 
@@ -162,7 +139,7 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 		{
 			cmd->arguments = ft_calloc(1000, sizeof(char));
 			if (!cmd->arguments)
-				printf("calloc error  ft_find_command\n");
+				perror("calloc: ");
 			cmd->arguments[0] = "test";
 			cmd->arguments[1] = NULL;
 			cmd->command_path = ft_strjoin(paths[i], "test");
@@ -175,7 +152,7 @@ int ft_find_command(t_cmd *cmd, t_list *iterator)
 		{
 			free (temp_2);
 			break ;
-		} 
+		}
 		else if (access(temp_str, F_OK | X_OK) == 0 && cmd->is_built_in == 0)
 		{
 			cmd->command_path = temp_str;
@@ -214,7 +191,7 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks)
 	cmd->arguments = ft_calloc(10000, sizeof(char));
 	if (!cmd->arguments)
 	{
-		printf("calloc error ft_store_args\n");
+		perror("calloc: ");
 		exit_program(1);
 	}
 	while (toks)
@@ -226,8 +203,6 @@ void	ft_store_arguments(t_cmd *cmd, t_list *toks)
 	}
 	cmd->arguments[i] = NULL;
 }
-/* *********************************/
-
 
 void	ft_echo_exec(t_cmd *iterator)
 {
@@ -238,7 +213,7 @@ void	ft_echo_exec(t_cmd *iterator)
 	if (!iterator->toks->next)
 	{
 		printf("\n");
-		exit_program(1); // back to 42shell;
+		exit_program(1);
 	}
 	toks_iterator = iterator->toks->next;
 	if (ft_strncmp(toks_iterator->content, "-n", 2) == 0)
@@ -246,7 +221,7 @@ void	ft_echo_exec(t_cmd *iterator)
 		n_flag = 1;
 		toks_iterator = toks_iterator->next;
 	}
-	while(toks_iterator)
+	while (toks_iterator)
 	{
 		ft_putstr_fd(toks_iterator->content, 1);
 		ft_putstr_fd(" ", 1);
@@ -254,14 +229,12 @@ void	ft_echo_exec(t_cmd *iterator)
 	}
 	if (n_flag != 1)
 		printf("\n");
-	
 }
 
 void ft_execute_built_in(t_cmd *cmd, t_list *toks)
 {
 	(void)cmd;
 
-	// printf("Entered the built_in execution.\n");
 	if (ft_is_pwd(toks->content))
 		ft_pwd_exec();
 	if (ft_is_env(toks->content))
@@ -278,7 +251,6 @@ void ft_execute_built_in(t_cmd *cmd, t_list *toks)
 		ft_echo_exec(cmd);
 }
 
-/* ***************************** */
 /*
 * gos through the individual tokens of each cmd and searches 
 * for a command (e.g echo, export..);
@@ -293,7 +265,8 @@ void	ft_interpret(t_cmd *cmd_iterator)
 	tok_iterator = cmd_iterator->toks;
 	while (tok_iterator)
 	{
-		if (ft_find_command(cmd_iterator, tok_iterator) == 0 && cmd_iterator->is_built_in == 0)
+		if (ft_find_command(cmd_iterator, tok_iterator) == 0 && \
+			cmd_iterator->is_built_in == 0)
 		{
 			ft_store_arguments(cmd_iterator, tok_iterator);
 			break ;
@@ -302,18 +275,9 @@ void	ft_interpret(t_cmd *cmd_iterator)
 		{
 			g_mini.exit_status = 127;
 			g_mini.exit = 1;
-			printf("42_minishell: %s: command not found\n", cmd_iterator->toks->content);
-			//printf("42_minishell: %s: command not found\n", g_mini.raw_input);
-			// printf("42_minishell: %d: command not found\n", g_mini.exit_status);
-
-
-			// if (g_mini.exit_status == 127 && ft_strlen(g_mini.raw_input) < 2)
-			// 	dprintf(2, "42_minishell: %d: command not found\n", g_mini.exit_status);
-			// else
-			// 	printf("42_minishell: %s: command not found\n", cmd_iterator->toks->content);
+			printf("42_minishell: %s: command not found\n", \
+			cmd_iterator->toks->content);
 		}
 		tok_iterator = tok_iterator->next;
 	}
-	// if (g_mini.exit == 1)
-	// 	exit_program(1);
 }

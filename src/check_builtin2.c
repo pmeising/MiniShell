@@ -6,12 +6,16 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:26:26 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/10 18:15:51 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 17:10:46 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/*
+	Checks whether the command is "EXPORT" or not.
+	Returns 1 if it is, 0 if it is not.
+*/
 int ft_is_export(char *str)
 {
 	char	export[7];
@@ -37,19 +41,17 @@ int ft_is_export(char *str)
 	export[5] = 't';
 	export[6] = '\0';
 	if (ft_strncmp(str, export, 6) == 0)
-	{
-		printf("found export.\n");
 		return (1);
-	}
 	else if (ft_strncmp(str, export_1, 8) == 0)
-	{
-		printf("found export.\n");
 		return (1);
-	}
 	else
 		return (0);
 }
 
+/*
+	Checks whether the command is "ECHO" or not.
+	Returns 1 if it is, 0 if it is not.
+*/
 int ft_is_echo(char *str)
 {
 	char	echo[5];
@@ -77,6 +79,10 @@ int ft_is_echo(char *str)
 		return (0);
 }
 
+/*
+	Checks whether the command is "ENV" or not.
+	Returns 1 if it is, 0 if it is not.
+*/
 int ft_is_env(char *cmd_name)
 {
 	char	env[4];
@@ -100,5 +106,4 @@ int ft_is_env(char *cmd_name)
 		return (1);
 	else
 		return (0);
-
 }

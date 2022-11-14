@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/10 19:53:12 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 18:03:31 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 */
 int	ft_get_token_pos(char *raw_input, int pos)
 {
-	while(raw_input[pos] && ft_is_tok_delim(raw_input[pos]) == 0)
+	while (raw_input[pos] && ft_is_tok_delim(raw_input[pos]) == 0)
 	{
 		if (raw_input[pos] == 34 || raw_input[pos] == 39)
 			pos = ft_skip_quotes(raw_input, pos);
@@ -40,16 +40,15 @@ int	ft_get_token_pos(char *raw_input, int pos)
 *	token6: up
 *	These tokens are then interpreted depending ontheir redirects 
 *	and whether or not they are commands or arguments etc.
-
 *	pos = first char in user_input thats not a space;
 */
-char *ft_get_token(char *raw_input, int pos)
+char	*ft_get_token(char *raw_input, int pos)
 {
 	int		begin_pos;
 	char	*token;
 
 	begin_pos = pos;
-	while(raw_input[pos] && ft_is_tok_delim(raw_input[pos]) == 0)
+	while (raw_input[pos] && ft_is_tok_delim(raw_input[pos]) == 0)
 	{
 		if (raw_input[pos] == 34 || raw_input[pos] == 39)
 			pos = ft_skip_quotes(raw_input, pos);
@@ -65,6 +64,11 @@ char *ft_get_token(char *raw_input, int pos)
 	return (token);
 }
 
+/*
+* heredoc function that takes in input from user;
+* then writes user input into input file,
+* until delim is put in by user;
+*/
 void	ft_read_heredoc(t_cmd *cmd)
 {
 	char	*content;
@@ -76,7 +80,7 @@ void	ft_read_heredoc(t_cmd *cmd)
 	temp_name = ft_strjoin(nbr, "temp.txt");
 	if (!temp_name)
 	{
-		printf("strjoin failed\n");
+		printf("ft_read_heredoc:strjoin failed\n");
 		exit_program(1);
 	}
 	free (nbr);
@@ -88,7 +92,8 @@ void	ft_read_heredoc(t_cmd *cmd)
 	while (1)
 	{
 		content = readline("heredoc: ");
-		if (ft_strncmp(content, cmd->HEREDOC_DELIM, ft_strlen(cmd->HEREDOC_DELIM)) == 0)
+		if (ft_strncmp(content, cmd->HEREDOC_DELIM, \
+			ft_strlen(cmd->HEREDOC_DELIM)) == 0)
 		{
 			free (content);
 			close(fd_input_file);
@@ -156,6 +161,10 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos)
 	return (pos);
 }
 
+/*
+* checks if there is an exit command in
+* the userinput;
+*/
 void	ft_find_exit(void)
 {
 	t_cmd	*cmd_iterator;
@@ -166,7 +175,7 @@ void	ft_find_exit(void)
 		if (ft_is_exit(cmd_iterator->toks->content))
 		{
 			g_mini.exit = 1;
-			break;
+			break ;
 		}
 		cmd_iterator = cmd_iterator->next;
 	}
@@ -188,7 +197,7 @@ void ft_parsing(char *raw_input)
 	while (raw_input[pos])
 	{
 		cmd_iterator = ft_lstnew_cmds();
-		while(raw_input[pos] && ft_is_cmd_delim(raw_input[pos]) == 0)
+		while (raw_input[pos] && ft_is_cmd_delim(raw_input[pos]) == 0)
 		{
 			pos = ft_skip_spaces(raw_input, pos);
 			if (raw_input[pos] != '>' && raw_input[pos] != '<')
@@ -202,8 +211,6 @@ void ft_parsing(char *raw_input)
 			}
 			else if (raw_input[pos] == '>' || raw_input[pos] == '<')
 			{
-				// if (raw_input[pos] == '>')
-				// 	j++;
 				pos = ft_get_redir_tok(cmd_iterator, raw_input, pos);
 				pos = ft_skip_spaces(raw_input, pos);
 			}
@@ -212,7 +219,7 @@ void ft_parsing(char *raw_input)
 		if (raw_input[pos] == '|')
 		{
 			pos ++;
-			if (cmd_iterator->open_flag == -1) // j == 0 && 
+			if (cmd_iterator->open_flag == -1)
 				cmd_iterator->open_flag = 0;
 		}
 		else if (!raw_input[pos])

@@ -1,14 +1,38 @@
-tergdrf$
-erthgdf$
-ertgrd$
-grtg$
-retgretg$
-rgetg$
-ggg$
-hhh$
-jjj$
-       0
-       4
-       4
-       4
-       4
+total 504
+drwxr-xr-x   18 bde-carv  2022_wolfsburg     612 14 Nov 16:40 .
+drwxr-xr-x   18 bde-carv  2022_wolfsburg     612 10 Nov 16:02 ..
+drwxr-xr-x   13 bde-carv  2022_wolfsburg     442 13 Nov 17:22 .git
+-rw-r--r--    1 bde-carv  2022_wolfsburg      92 10 Nov 16:02 .ignore_readline
+-rw-r--r--    1 bde-carv  2022_wolfsburg    2502 10 Nov 16:02 Makefile
+-rw-r--r--    1 bde-carv  2022_wolfsburg  126486 10 Nov 20:30 filename
+-rw-r--r--    1 bde-carv  2022_wolfsburg    2016 10 Nov 16:02 learning_notes.txt
+drwxr-xr-x  109 bde-carv  2022_wolfsburg    3706 14 Nov 16:40 libft
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg  100880 14 Nov 16:40 minishell
+drwxr-xr-x    3 bde-carv  2022_wolfsburg     102 10 Nov 18:07 minishell.dSYM
+-rw-r--r--    1 bde-carv  2022_wolfsburg    7992 14 Nov 16:09 minishell.h
+drwxr-xr-x    4 bde-carv  2022_wolfsburg     136 10 Nov 16:02 mull
+drwxr-xr-x   25 bde-carv  2022_wolfsburg     850 14 Nov 16:40 obj
+drwxr-xr-x   27 bde-carv  2022_wolfsburg     918 10 Nov 16:02 src
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg       0 14 Nov 16:40 test.txt
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg     128 13 Nov 16:53 text.txt
+-rw-r--r--    1 bde-carv  2022_wolfsburg    2387 10 Nov 16:02 trace.txt
+drwxr-xr-x    2 bde-carv  2022_wolfsburg      68 10 Nov 16:02 wobfix
+total 512
+drwxr-xr-x   18 bde-carv  2022_wolfsburg     612 14 Nov 16:40 .
+drwxr-xr-x   18 bde-carv  2022_wolfsburg     612 10 Nov 16:02 ..
+drwxr-xr-x   13 bde-carv  2022_wolfsburg     442 13 Nov 17:22 .git
+-rw-r--r--    1 bde-carv  2022_wolfsburg      92 10 Nov 16:02 .ignore_readline
+-rw-r--r--    1 bde-carv  2022_wolfsburg    2502 10 Nov 16:02 Makefile
+-rw-r--r--    1 bde-carv  2022_wolfsburg  126486 10 Nov 20:30 filename
+-rw-r--r--    1 bde-carv  2022_wolfsburg    2016 10 Nov 16:02 learning_notes.txt
+drwxr-xr-x  109 bde-carv  2022_wolfsburg    3706 14 Nov 16:40 libft
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg  100880 14 Nov 16:40 minishell
+drwxr-xr-x    3 bde-carv  2022_wolfsburg     102 10 Nov 18:07 minishell.dSYM
+-rw-r--r--    1 bde-carv  2022_wolfsburg    7992 14 Nov 16:09 minishell.h
+drwxr-xr-x    4 bde-carv  2022_wolfsburg     136 10 Nov 16:02 mull
+drwxr-xr-x   25 bde-carv  2022_wolfsburg     850 14 Nov 16:40 obj
+drwxr-xr-x   27 bde-carv  2022_wolfsburg     918 10 Nov 16:02 src
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg    1281 14 Nov 16:40 test.txt
+-rwxr-xr-x    1 bde-carv  2022_wolfsburg     128 13 Nov 16:53 text.txt
+-rw-r--r--    1 bde-carv  2022_wolfsburg    2387 10 Nov 16:02 trace.txt
+drwxr-xr-x    2 bde-carv  2022_wolfsburg      68 10 Nov 16:02 wobfix

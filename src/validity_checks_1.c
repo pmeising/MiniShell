@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validity_checks_1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:38:09 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/09 19:06:42 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/14 17:21:06 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ int ft_is_only_redir(char *raw_input, char c)
 	int		check;
 	char	*trim_input;
 
-	// if (ft_strlen(raw_input) == 1)
-	// {
 	trim_input = ft_strtrim(raw_input, BLANK_SPACE);
 	if (!trim_input)
 	{
@@ -106,9 +104,7 @@ int ft_illegal_sequence(char *raw_input, char *sequence)
 		printf("syntax error near unexpected token `%s'\n", sequence);
 	}
 	else
-	{
 		check = 0;	
-	}
 	free(trim_input);
 	return (check);
 }
@@ -141,29 +137,19 @@ int	ft_wrong_tokens(char *raw_input)
 {
 	int check;
 
-
-
-		if (ft_is_char_front(raw_input, '|') || ft_is_char_end(raw_input, '|') || ft_is_char_front(raw_input, ';') || ft_is_char_front(raw_input, ':'))
-		{
+	if (ft_is_char_front(raw_input, '|') || ft_is_char_end(raw_input, '|') || ft_is_char_front(raw_input, ';') || ft_is_char_front(raw_input, ':'))
 			check = 1;
-		}
-		else if (ft_is_char_end(raw_input, '<') || ft_is_char_end(raw_input, '>') || ft_is_char_end(raw_input, '&'))
-		{
-			check = 1;
-		}
-		else if (ft_space_between_char(raw_input, '|') || ft_space_between_char(raw_input, '>'))
-		{
-			check = 1;
-		}
-		else if (ft_illegal_sequence(raw_input, ";;") || ft_illegal_sequence(raw_input, "|;") || \
-				ft_illegal_sequence(raw_input, "&;") || ft_illegal_sequence(raw_input, ";|") || \
-				ft_illegal_sequence(raw_input, ";&") || ft_illegal_sequence(raw_input, ">>>") || \
-				ft_illegal_sequence(raw_input, ";;"))
-				{
-					check = 1;
-				}
-				else
-					check = 0;
+	else if (ft_is_char_end(raw_input, '<') || ft_is_char_end(raw_input, '>') || ft_is_char_end(raw_input, '&'))
+		check = 1;
+	else if (ft_space_between_char(raw_input, '|') || ft_space_between_char(raw_input, '>'))
+		check = 1;
+	else if (ft_illegal_sequence(raw_input, ";;") || ft_illegal_sequence(raw_input, "|;") || \
+			ft_illegal_sequence(raw_input, "&;") || ft_illegal_sequence(raw_input, ";|") || \
+			ft_illegal_sequence(raw_input, ";&") || ft_illegal_sequence(raw_input, ">>>") || \
+			ft_illegal_sequence(raw_input, ";;"))
+				check = 1;
+			else
+				check = 0;
 	return (check);
 }
 
@@ -180,8 +166,6 @@ int ft_contains_not_supported(char *raw_input, char *illegal_str)
 		printf("%s is not supported\n", illegal_str);
 	}
 	else
-	{
 		check = 0;
-	}
 	return (check);
 }

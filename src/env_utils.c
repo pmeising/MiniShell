@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 19:38:47 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/07 15:42:01 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/14 17:21:04 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,7 @@ int	ft_env_exist(char *str, t_list **dup_env)
 	tmp = *dup_env;
 	len = ft_strlen(str);
 	if (!str || !dup_env)
-	{
 		exit_program(EXIT_FAILURE);
-	}
 	while (tmp)
 	{
 		if (ft_strncmp(str, tmp->content, len) == 0)
@@ -50,9 +48,7 @@ int	ft_del_env_cont(char *name, t_list **dup_env)
 	iterator = *dup_env;
 	len = ft_strlen(name);
 	if (!name || !dup_env)
-	{
 		exit_program(EXIT_FAILURE);
-	}
 	while (iterator)
 	{
 		if (ft_strncmp(name, iterator->content, len) == 0)
@@ -75,7 +71,7 @@ void ft_create_env(char *str, t_list **dup_env)
 	new_env = ft_lstnew(str);
 	if (!new_env)
 	{
-		printf("ft_create_env:init_minishell:new_env not created\n");
+		perror("ft_lstnew: ");
 		exit_program(1);
 	}
 	ft_lstadd_front(dup_env, new_env);
@@ -101,7 +97,7 @@ char *ft_get_env_cont(char *env_name)
 			value = ft_strdup(&(curr_value[len + 1]));
 			if (!value)
 			{
-				printf("ft_get_env_cont:init_minishell:no value copied\n");
+				perror("strdup: ");
 				free(value);
 				exit_program(1);
 			}
@@ -118,7 +114,6 @@ char *ft_get_env_cont(char *env_name)
 void	ft_copy_env(t_mini *g_mini, char **env)
 {
 	int	i;
-	// t_list	*iter;
 
 	i = 0;
 	if (!env)
@@ -128,10 +123,4 @@ void	ft_copy_env(t_mini *g_mini, char **env)
 		ft_lstadd_back(&g_mini->dup_env, ft_lstnew(env[i]));
 		i++;
 	}
-	// iter = g_mini->dup_env;
-	// while (iter)
-	// {
-	// 	printf("content of t_list node: %s\n", iter->content);
-	// 	iter = iter->next;
-	// }
 }

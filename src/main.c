@@ -6,23 +6,25 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 15:34:58 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/21 17:18:579 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 18:47:31 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_mini g_mini;
+t_mini	g_mini;
 
 int	ft_is_special_built(char *arguments)
 {
-	if (ft_is_export(arguments) == 1 || ft_is_cd(arguments) == 1 || ft_is_unset(arguments) == 1)
+	if (ft_is_export(arguments) == 1 || ft_is_cd(arguments) == 1 || \
+		ft_is_unset(arguments) == 1)
 		return (1);
 	return (0);
 }
 
 /*
 *	creates individual processes for each command;
+*	1 == true;
 */
 void	ft_test(void)
 {
@@ -32,6 +34,7 @@ void	ft_test(void)
 	t_cmd	*cmd_iterator;
 
 	i = 0;
+	status = 0;
 	pid = ft_calloc(sizeof(int), g_mini.nbr_of_pipes + 1);
 	if (!pid)
 	{
@@ -41,17 +44,17 @@ void	ft_test(void)
 	cmd_iterator = g_mini.cmds;
 	while (cmd_iterator)
 	{
-		// printf("in while.\n");
-		if (cmd_iterator->toks && cmd_iterator->toks->content && (ft_is_export(cmd_iterator->toks->content) == 1 || ft_is_cd(cmd_iterator->toks->content) == 1 || \
-			ft_is_unset(cmd_iterator->toks->content) == 1) && g_mini.nbr_of_pipes == 0) // 1 == true //  || ft_is_cd(cmd_iterator->arguments[0]) == 1 || ft_is_unset(cmd_iterator->arguments[0]) == 1)
+		if (cmd_iterator->toks && cmd_iterator->toks->content && \
+			(ft_is_export(cmd_iterator->toks->content) == 1 || \
+			ft_is_cd(cmd_iterator->toks->content) == 1 || \
+			ft_is_unset(cmd_iterator->toks->content) == 1) && \
+			g_mini.nbr_of_pipes == 0)
 		{
-			// printf("\n\n\nentered ft_is_special_built\n\n\n");
 			ft_execute_built_in(cmd_iterator, cmd_iterator->toks);
+			ft_overwrite_env();
 		}
 		else
 		{
-			// printf("before fork.\n");
-			// ft_print_cmds(cmd_iterator);
 			pid[i] = fork();
 			if (pid[i] == -1)
 			{
@@ -60,21 +63,16 @@ void	ft_test(void)
 				exit_program(1);
 			}
 			if (pid[i] == 0)
-			{
-				// printf("Hello from child process.\n");
 				ft_execute_process(cmd_iterator, i);
-			}
 		}
 		i++;
 		cmd_iterator = cmd_iterator->next;
 	}
-	// printf("Main.\n");
 	i = 0;
 	ft_close_fds(-1, -1, -1);
 	while (i < g_mini.nbr_of_pipes + 1)
 	{
 		(waitpid(pid[i], &status, 0));
-		// printf("status: %d\n", status);
 		if (status == 6)
 			g_mini.exit_status = 0;
 		else
@@ -87,7 +85,6 @@ void	ft_test(void)
 		i++;
 	}
 	free (pid);
-	// printf("ft_test: exit stat: %d\n", g_mini.exit_status);
 	if (g_mini.exit_status != 0 && g_mini.exit == 1)
 		exit(g_mini.exit_status);
 }
@@ -96,17 +93,8 @@ void	ft_execute(void)
 {
 	ft_set_pipes();
 	ft_set_files();
-	// ft_print_cmds(g_mini.cmds);
-	// if (g_mini.exit != 1)
 	ft_test();
-	// else
-	// {
-	// 	ft_close_fds(-1, -1, -1);
-	// 	exit_program(g_mini.exit_status);
-	// }
 }
-
-/******************************************************************************************/
 
 /*
 * displays a prompt and reads in user input;
@@ -116,7 +104,6 @@ void	ft_execute(void)
 */
 int ft_get_input(void)
 {
-	//int input_ckeck;
 	char	*prompt;
 	char	*temp;
 
@@ -125,7 +112,7 @@ int ft_get_input(void)
 	if (temp)
 		g_mini.raw_input = ft_strdup(temp);
 	if (!g_mini.raw_input)
-		exit_shell_quit(0);
+		exit_program(2);
 	free (temp);
 	if (ft_str_only_space(g_mini.raw_input) != 1 && g_mini.raw_input)
 		add_history(g_mini.raw_input);
@@ -154,21 +141,22 @@ int ft_get_input(void)
 * When launching the shell, we don't launch it with any input()
 * so argv should be empty. If it isn't we need to return an error.
 */
-int main (int argc, char **argv, char **env)
+int main	(int argc, char **argv, char **env)
 {
-	int input_check;
+	int	input_check;
 	(void)argv;
 	(void)argc;
 
-	// if (argc != 1)
-	// {
-	// 	printf("too many commands only ./minishell\n");
-	// 	exit_program(EXIT_FAILURE);
-	// }
+	if (argc != 1)
+	{
+		printf("too many commands only ./minishell\n");
+		exit_program(EXIT_FAILURE);
+	}
 	ft_init_minishell(&g_mini, env);
 	while (1)
 	{	
 		ft_handle_sigint();
+		signal(SIGQUIT, SIG_IGN);
 		input_check = ft_get_input();
 		if (input_check == 2)
 			printf("invalid syntax\n");
@@ -179,20 +167,11 @@ int main (int argc, char **argv, char **env)
 			else
 			{
 				ft_dollar_sign();
-				// while (ft_dollar_sign(g_mini.raw_input) != 0)
-				// {
-				// 	printf("RAW INPUT.................................: %s\n", g_mini.raw_input);
-				// 	ft_env_vars(g_mini.raw_input);
-				// }
 				ft_parsing(g_mini.raw_input);
 				ft_execute();
 				ft_free_input();
 			}
 		}
 	}
-	//ft_env(&g_mini.dup_env); jus testing if env works
-
-	///free_all(g_mini);
-	//ft_free();
 	return (0);
 }

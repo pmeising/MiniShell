@@ -3,30 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   validity_checks.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:34:35 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/07 12:43:32 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/14 17:20:58 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../minishell.h"
+#include "../minishell.h"
 
 /*
 * checks if there is a backslash in the raw user-input;
 */
-int ft_check_backslash(char *raw_input)
+int	ft_check_backslash(char *raw_input)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (raw_input[i])
 	{
 		if (raw_input[i] == 34 || raw_input[i] == 39)
-		{
 			ft_skip_quotes(raw_input, i);
-			printf("backslas\n");
-		}
 		if (raw_input[i] == 92)
 			return (1);
 		i++;
@@ -37,18 +34,15 @@ int ft_check_backslash(char *raw_input)
 /*
 * checks if there is a semicolon in the raw user-input;
 */
-int ft_check_semicolon(char *raw_input)
+int	ft_check_semicolon(char *raw_input)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (raw_input[i])
 	{
 		if (raw_input[i] == 34 || raw_input[i] == 39)
-		{
 			ft_skip_quotes(raw_input, i);
-			printf("semi\n");
-		}
 		if (raw_input[i] == 59)
 			return (1);
 		i++;
@@ -61,10 +55,10 @@ int ft_check_semicolon(char *raw_input)
 *	returns 1 if only space.
 *	returns 0 if at least one not space character.
 */
-int ft_str_only_space(char *raw_input)
+int	ft_str_only_space(char *raw_input)
 {
-	int i;
-	int check;
+	int	i;
+	int	check;
 
 	i = 0;
 	check = 1;
@@ -73,10 +67,7 @@ int ft_str_only_space(char *raw_input)
 	while (raw_input[i] && ft_is_space(raw_input[i]) == 1)
 		i++;
 	if (i == (int)ft_strlen(raw_input))
-	{
-	//printf("ft_str_only_space:input is only whitespace\n");
 		check = 1;
-	}
 	else
 		check = 0;
 	return (check);
@@ -87,9 +78,9 @@ int ft_str_only_space(char *raw_input)
 * there shouldnt be any space because it would make >> || invalid commands;
 * does not apply on content in between quotes;
 */
-int ft_space_between_char(char *raw_input, char c)
+int	ft_space_between_char(char *raw_input, char c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!raw_input)
@@ -97,10 +88,7 @@ int ft_space_between_char(char *raw_input, char c)
 	while (raw_input[i] != '\0')
 	{
 		if (raw_input[i] == 34 || raw_input[i] == 39)
-		{
 			i = ft_skip_quotes(raw_input, i);
-			printf("space between\n");
-		}
 		if (raw_input[i] == c && ft_is_space(raw_input[i + 1]) == 1)
 		{
 			i++;
@@ -124,9 +112,9 @@ int ft_space_between_char(char *raw_input, char c)
 * returns 0 if nothing illegal was found or the position where
 * illegal_str starts;
 */
-char *ft_strstr_quotes(char *raw_input, char *illegal_str)
+char	*ft_strstr_quotes(char *raw_input, char *illegal_str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!illegal_str)
@@ -134,10 +122,7 @@ char *ft_strstr_quotes(char *raw_input, char *illegal_str)
 	while (raw_input[i])
 	{
 		if (raw_input[i] == 34 || raw_input[i] == 39)
-		{
 			i = ft_skip_quotes(&raw_input[i], i);
-			printf("strstrquotes\n");
-		}
 		if (!ft_strncmp(&raw_input[i], illegal_str, ft_strlen(illegal_str)))
 			return (raw_input);
 		if (raw_input[i])

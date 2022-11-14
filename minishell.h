@@ -257,5 +257,6 @@ int		ft_is_echo(char *str);
 void	ft_execute_process(t_cmd *cmd_iterator, int i);
 void	ft_close_fds(int in, int out, int nbr);
 void	ft_free_input(void);
+void	ft_overwrite_env(void);
 
 #endif

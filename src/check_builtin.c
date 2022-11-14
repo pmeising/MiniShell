@@ -6,16 +6,21 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 16:27:58 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/10 18:08:06 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/14 17:21:03 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int ft_is_pwd(char *str)
+/*
+	Checks whether the command is "PWD" or not.
+	Returns 1 if it is, 0 if it is not.
+*/
+int	ft_is_pwd(char *str)
 {
 	char	pwd[4];
 	char	pwd_1[6];
+
 	if (!str)
 		return (0);
 	pwd_1[0] = '"';
@@ -35,6 +40,10 @@ int ft_is_pwd(char *str)
 		return (0);
 }
 
+/*
+	Checks whether the command is "UNSET" or not.
+	Returns 1 if it is, 0 if it is not.
+*/
 int ft_is_unset(char *str)
 {
 	char	unset[6];
@@ -63,6 +72,10 @@ int ft_is_unset(char *str)
 		return (0);
 }
 
+/*
+	Checks whether the command is "EXIT" or not.
+	Returns 1 if it is, 0 if it is not.
+*/
 int ft_is_exit(char *cmd_name)
 {
 	char	exit[5];
@@ -99,6 +112,10 @@ int ft_is_exit(char *cmd_name)
 	}
 }
 
+/*
+	Checks whether the command is "CD" or not.
+	Returns 1 if it is, 0 if it is not.
+*/
 int ft_is_cd(char *str)
 {
 	char	cd[3];
@@ -122,6 +139,10 @@ int ft_is_cd(char *str)
 		return (0);
 }
 
+/*
+	Checks whether the command is a built in function or not.
+	Returns 1 if it is, 0 if it is not.
+*/
 int ft_is_built_in(char *cmd_name)
 {
 	int check;

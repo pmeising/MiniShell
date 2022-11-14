@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 17:45:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/09 19:16:26 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/14 17:20:58 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,13 @@
 * rl_redisplay(): displays whats stored in readline_buffer;
 * readline buffer contains our prompt;
 */
-void ft_sigint(int sig)
+void	ft_sigint(int sig)
 {
 	(void)sig;
-	//write(1, "\n", 1);
 	ft_putstr_fd("\b\b\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-
-	//exit_program (130);
 }
 
 /*
@@ -42,9 +39,9 @@ void ft_sigint(int sig)
 * sigaction(trigger signal, struct containing infos, previous signal):
 * is a ptr to a fct., if the signal comes in then sa_handler
 */
-void ft_handle_sigint(void)
+void	ft_handle_sigint(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	sa.sa_handler = &ft_sigint;
 	sa.sa_flags = SA_RESTART;
@@ -59,7 +56,7 @@ void ft_handle_sigint(void)
 * that was read in is empty. if yes exit_shell_quit
 * is being called to terminate the program;
 */
-void exit_shell_quit(int sig)
+void	exit_shell_quit(int sig)
 {
 	if (sig == 0)
 	{
