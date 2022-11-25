@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_minishell.c                                   :+:      :+:    :+:   */
+/*   ft_init_minishell.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:30:36 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/23 16:12:002 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/25 16:22:41 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	ft_raise_shlvl(void)
 		ft_create_env("SHLVL=1", &g_mini.dup_env);
 	else
 	{
-		cur_lvl = ft_get_env_cont("SHLVL"); // malloced (ft_strdup)
+		cur_lvl = ft_get_env_cont("SHLVL");
 		int_cur_lvl = ft_atoi(cur_lvl);
 		int_cur_lvl++;
 		if (cur_lvl)

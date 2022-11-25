@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   ft_signals.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 17:45:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/21 17:40:16 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/25 16:21:39 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_sigint(int sig)
 	ft_putstr_fd("\b\b\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
-	rl_redisplay(); //only when outside of childprocess
+	rl_redisplay();
 }
 
 /*
