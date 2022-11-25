@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:30:36 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:28:58 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/23 16:12:002 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 */
 void	ft_oldpwd(void)
 {
-	if (ft_env_exist("OLDPWD", &g_mini.dup_env) == 0)
-		ft_lstadd_back(&g_mini.dup_env, ft_lstnew("OLDPWD"));
+	if (ft_env_exist("OLDPWD=", &g_mini.dup_env) == 0)
+		ft_lstadd_back(&g_mini.dup_env, ft_lstnew(ft_strdup("OLDPWD=")));
 	else
-		ft_del_env_cont("OLDPWD", &g_mini.dup_env);
+		ft_del_env_cont("OLDPWD=", &g_mini.dup_env);
 }
 
 /*
@@ -47,12 +47,15 @@ char	*ft_replace_env_cont(char *env_name, char *new_value)
 		printf("ft_replace_env_cont: strings not joined\n");
 		exit_program(1);
 	}
-	free(tmp);
+	if (tmp)
+		free(tmp);
+	tmp = NULL;
 	return (res);
 }
 
 /*
 *	updates the content of a node/env_var in our dup_env list;
+*	frees the content(name+actual content) befor
 */
 void	ft_update_env_list(char *env_name, char *new_value, t_list *dup_env)
 {
@@ -64,7 +67,14 @@ void	ft_update_env_list(char *env_name, char *new_value, t_list *dup_env)
 	{
 		curr_content = (char *)dup_env->content;
 		if (ft_strncmp(env_name, curr_content, len) == 0)
+		{
+			if (dup_env->content)
+			{
+				free (dup_env->content);
+				dup_env->content = NULL;
+			}
 			dup_env->content = ft_replace_env_cont(env_name, new_value);
+		}
 		dup_env = dup_env->next;
 	}
 }
@@ -85,10 +95,12 @@ void	ft_raise_shlvl(void)
 		ft_create_env("SHLVL=1", &g_mini.dup_env);
 	else
 	{
-		cur_lvl = ft_get_env_cont("SHLVL");
+		cur_lvl = ft_get_env_cont("SHLVL"); // malloced (ft_strdup)
 		int_cur_lvl = ft_atoi(cur_lvl);
 		int_cur_lvl++;
-		free(cur_lvl);
+		if (cur_lvl)
+			free(cur_lvl);
+		cur_lvl = NULL;
 		cur_lvl = ft_itoa(int_cur_lvl);
 		if (!cur_lvl)
 		{
@@ -96,7 +108,9 @@ void	ft_raise_shlvl(void)
 			exit_program(1);
 		}
 		ft_update_env_list("SHLVL", cur_lvl, g_mini.dup_env);
-		free(cur_lvl);
+		if (cur_lvl)
+			free(cur_lvl);
+		cur_lvl = NULL;
 	}
 }
 
@@ -108,8 +122,7 @@ void	ft_raise_shlvl(void)
 */
 void	ft_init_minishell(t_mini *g_mini, char **env)
 {
-	close(19);
-	close(20);
+	g_mini->special_flag = 0;
 	g_mini->env = env;
 	g_mini->fdin = 0;
 	g_mini->fdout = 1;

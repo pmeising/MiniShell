@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:36:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:28:59 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/18 15:50:333 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,28 @@ int	ft_get_token_pos(char *raw_input, int pos)
 			pos++;
 	}
 	return (pos);
+}
+
+char	*ft_get_token_1(char *raw_input, int pos)
+{
+	int		begin_pos;
+	char	*token;
+
+	begin_pos = pos;
+	while (raw_input[pos] && raw_input[pos] != '|' && raw_input[pos] != ' ')
+	{
+		if (raw_input[pos] == 34 || raw_input[pos] == 39)
+			pos = ft_skip_quotes(raw_input, pos);
+		else
+			pos++;
+	}
+	token = ft_substr(raw_input, begin_pos, (pos - begin_pos));
+	if (!token)
+	{
+		perror("Substring: ");
+		exit_program(1);
+	}
+	return (token);
 }
 
 /*
@@ -108,6 +130,29 @@ void	ft_read_heredoc(t_cmd *cmd)
 	}
 }
 
+void	ft_1(void)
+{
+	if (g_mini.exit_status == 0)
+	{
+		printf("42shell: syntax error near unexpected token `|'\n");
+		g_mini.exit_status = 258;
+		g_mini.exit = 0;
+	}
+}
+
+void	ft_2(void)
+{
+	t_cmd	*cmd;
+
+	cmd = g_mini.cmds;
+	while (cmd)
+	{
+		if (cmd->HEREDOC_DELIM)
+			ft_read_heredoc(cmd);
+		cmd = cmd->next;
+	}
+}
+
 /*
 *	If we have only one >, we need to overwrite the output file content,
 *	else, we need to add the content to the output. APPEND additionally,
@@ -136,29 +181,66 @@ int	ft_get_redir_tok(t_cmd *cmd, char *raw_input, int pos)
 	pos = ft_skip_spaces(raw_input, pos);
 	if (raw_input[i] == '>')
 	{
-		temp = ft_get_token(raw_input, pos);
-		ft_remove_quotes(temp);
-		cmd->output_file = temp;
-		if (raw_input[i + 1] != '>')
-			cmd->open_flag = 0;
+		temp = ft_get_token_1(raw_input, pos);
+		
+		if (!temp || temp[0] == '\0')
+		{
+			ft_1();
+			return (-1);
+		}
+		else
+		{
+			ft_remove_quotes(temp);
+			cmd->output_file = temp;
+			if (raw_input[i + 1] != '>')
+				cmd->open_flag = 0;
+			ft_open_file_2(temp, &cmd->fd_out, 1, cmd->open_flag);
+		}
 	}
 	else if (raw_input[i] == '<' && raw_input[i + 1] == '<')
 	{
 		g_mini.nbr_heredocs++;
-		temp = ft_get_token(raw_input, pos);
-		ft_remove_quotes(temp);
-		cmd->HEREDOC_DELIM = temp;
-		ft_read_heredoc(cmd);
+		temp = ft_get_token_1(raw_input, pos);
+		if (!temp || temp[0] == '\0')
+			ft_1();
+		else
+		{
+			ft_remove_quotes(temp);
+			cmd->HEREDOC_DELIM = temp;
+			// ft_read_heredoc(cmd);
+		}
 	}
 	else if (raw_input[i] == '<')
 	{
-		temp = ft_get_token(raw_input, pos);
-		ft_remove_quotes(temp);
-		if (cmd->input_file == NULL)
-			cmd->input_file = temp;
+		temp = ft_get_token_1(raw_input, pos);
+		if (!temp || temp[0] == '\0')
+			ft_1();
+		else
+		{
+			ft_remove_quotes(temp);
+			if (cmd->input_file == NULL)
+				cmd->input_file = temp;
+		}
 	}
 	pos = ft_get_token_pos(raw_input, pos);
 	return (pos);
+}
+
+/*
+* returns 1 if string contains digit only;
+*/
+int ft_is_only_digit(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isdigit(str[i]) != 1)
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 /*
@@ -172,9 +254,21 @@ void	ft_find_exit(void)
 	cmd_iterator = g_mini.cmds;
 	while (cmd_iterator)
 	{
-		if (ft_is_exit(cmd_iterator->toks->content))
+		if (cmd_iterator->toks && ft_is_exit(cmd_iterator->toks->content))
 		{
 			g_mini.exit = 1;
+			if (cmd_iterator->toks->next != NULL)
+			{
+				if (cmd_iterator->toks->next && ft_is_only_digit(cmd_iterator->toks->next->content) == 1)
+					g_mini.exit_status = ft_atoi(cmd_iterator->toks->next->content);
+				else
+				{
+					g_mini.exit_status = 255;
+					printf("42shell: %s: numeric argument required\n", cmd_iterator->toks->next->content);
+				}
+			}
+			else
+				g_mini.exit_status = 0;
 			break ;
 		}
 		cmd_iterator = cmd_iterator->next;
@@ -213,6 +307,8 @@ void	ft_parsing(char *raw_input)
 			else if (raw_input[pos] == '>' || raw_input[pos] == '<')
 			{
 				pos = ft_get_redir_tok(cmd_iterator, raw_input, pos);
+				if (pos == -1)
+					return ;
 				pos = ft_skip_spaces(raw_input, pos);
 			}
 		}
@@ -226,5 +322,7 @@ void	ft_parsing(char *raw_input)
 		else if (!raw_input[pos])
 			break ;
 	}
+	if (g_mini.exit_status == 0)
+		ft_2();
 	ft_find_exit();
 }

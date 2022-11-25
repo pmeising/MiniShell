@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 19:09:48 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/10 16:14:14:09 by pmeising         ###   ########.fr      */
+
+/*   Updated: 2022/11/22 19:49:34 by bde-carv         ###   ########.fr       */
+
+/*   Updated: 2022/11/22 17:17:17 by pmeising         ###   ########.fr       */
+
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +94,7 @@ typedef struct	s_mini
 	int			**pipefd;
 	int			nbr_of_pipes;
 	int			exit_status;
+	int			special_flag;
 	//t_cmd_table	*curr_cmd_table;
 	
 }				t_mini;
@@ -213,7 +218,7 @@ char	*ft_extract_content(char *var_name);
 void	ft_insert(char *raw_input, char *dup_var_cont, int pos, int start);
 void	ft_put_env_in_input(char *raw_input, int pos);
 void	ft_env_vars(char *raw_input);
-int		ft_dollar_sign(void);
+void	ft_dollar_sign(void);
 
 //test
 // ft_parsing_utils.c
@@ -261,5 +266,18 @@ void	ft_overwrite_env(void);
 
 // utils to comply with 25 lines
 void	ft_free_chars(char *cur_cwd, char *new_cwd);
-void	ft_check(char *);
+void	ft_check_malloc(char *str);
+void	ft_quotes(char *raw_input, int *single_quotes, \
+					int *double_quotes, int *pos);
+char	*ft_check_doll(char *raw_input, int *pos);
+void	ft_bad_sub(char *raw_input, int *pos);
+void	ft_replace_dollar_question_mark(char *raw_input, int pos);
+void	ft_check_q_help(char *raw_input, int *i, int *single_q, int *double_q);
+void	ft_open_file_2(char *file_name, int *fd, int j, int open_flag);
+t_list	*ft_export_exec_helper_1(t_list *toks);
+void	ft_export_exec_helper_2(t_list *iterator, char** env_cont, int i, int j);
+int		ft_export_exec_helper_3(t_list *iterator, char** env_name);
+void	ft_cd_exec_helper_1(char *content);
+void	ft_free_fds(void);
+
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_interpret.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:33:38 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:28:57 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/18 16:29:109 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@ char	*ft_find_path(void)
 	t_list	*env_iterator;
 
 	env_iterator = g_mini.dup_env;
-	while (env_iterator->content)
+	while (env_iterator && env_iterator->content)
 	{
 		str = ft_strnstr(env_iterator->content, "PATH=", 5);
 		if (str != NULL)
 			break ;
 		env_iterator = env_iterator->next;
 	}
+	if (!env_iterator)
+		return (NULL);
 	return (env_iterator->content);
 }
 
@@ -43,11 +45,17 @@ char	**ft_find_paths(char *path)
 	int		i;
 
 	i = 0;
+	if (!path)
+		return (NULL);
 	paths = ft_split(path, ':');
 	while (paths[i] != NULL)
 	{
 		path_temp = ft_strjoin(paths[i], "/");
-		free(paths[i]);
+		if (paths[i])
+		{
+			free(paths[i]);
+			paths[i] = NULL;
+		}
 		paths[i] = path_temp;
 		i++;
 	}
@@ -73,7 +81,7 @@ int	ft_is_program(t_cmd *cmd, char *prog_name)
 		cmd->command_path = ft_strjoin(getcwd(cwd, 1024), name);
 		free (name);
 		free (cwd);
-		if (access(cmd->command_path, F_OK | X_OK) == 0)
+		if (access(name, F_OK | X_OK) == 0)
 			return (1);
 		else
 			cmd->command_path = NULL;
@@ -83,6 +91,11 @@ int	ft_is_program(t_cmd *cmd, char *prog_name)
 		name = ft_strdup(prog_name);
 		while (name[0] == '.')
 		{
+			if (cwd)
+			{
+				free (cwd);
+				cwd = NULL;
+			}
 			cwd = malloc(sizeof(char) * 1024);
 			getcwd(cwd, 1024);
 			len = ft_strlen(cwd);
@@ -90,20 +103,73 @@ int	ft_is_program(t_cmd *cmd, char *prog_name)
 				len--;
 			cwd[len] = '\0';
 			chdir(cwd);
-			free (cwd);
+			if (cwd)
+			{
+				free (cwd);
+				cwd = NULL;
+			}
 			free (name);
 			name = ft_strdup(&prog_name[i]);
 			i = i + 3;
 		}
+		if (cwd)
+		{
+			free (cwd);
+			cwd = NULL;
+		}
 		cwd = malloc(sizeof(char) * 1024);
 		cmd->command_path = ft_strjoin(getcwd(cwd, 1024), name);
-		free (cwd);
+		if (name)
+		{
+			free (name);
+			name = NULL;
+		}
+		if (cwd)
+		{
+			free (cwd);
+			cwd = NULL;
+		}
 		if (access(cmd->command_path, F_OK | X_OK) == 0)
 			return (1);
 		else
-			cmd->command_path = NULL;
+		{
+			if (cmd->command_path)
+			{
+				free(cmd->command_path);
+				cmd->command_path = NULL;		
+			}
+		}
+	}
+	if (cwd)
+	{
+		free (cwd);
+		cwd = NULL;
 	}
 	return (0);
+}
+
+/*
+* helper function for freeing paths;
+*/
+void	ft_helper_12(char **paths)
+{
+	int	i;
+
+	i = 0;
+	while (paths[i])
+	{
+		if (paths[i])
+		{
+			free(paths[i]);
+			paths[i] = NULL;
+		}
+		i++;
+	}
+	if (paths)
+	{
+		free (paths);
+		paths = NULL;
+	}
 }
 
 /*
@@ -123,61 +189,79 @@ int	ft_find_command(t_cmd *cmd, t_list *iterator)
 	char	*path;
 	char	**paths;
 	char	*temp_str;
-	char	*temp_2;
 	int		i;
+	int		j;
 
 	i = 0;
+	j = 0;
 	path = ft_find_path();
 	paths = ft_find_paths(path);
+	if (!paths && ft_is_built_in(iterator->content) == 0)
+	{
+		cmd->command_path = iterator->content;
+		return (1);
+	}
+	else if (!paths && ft_is_built_in(iterator->content) == 1)
+	{
+		ft_remove_quotes(iterator->content);
+		cmd->is_built_in = 1;
+		if (access(iterator->content, F_OK | X_OK) == 0)
+		{
+			ft_helper_12(paths);
+			cmd->command_path = iterator->content;
+		}
+		return (0);
+	}
 	ft_remove_quotes(iterator->content);
+	if (access(iterator->content, F_OK | X_OK) == 0)
+	{
+		ft_helper_12(paths);
+		cmd->command_path = iterator->content;
+		return (0);
+	}
 	while (paths[i])
 	{
 		temp_str = ft_strjoin(paths[i], iterator->content);
 		if (ft_is_built_in(iterator->content) == 1)
 			cmd->is_built_in = 1;
-		temp_2 = ft_strjoin(paths[i], "test");
-		if (cmd->is_built_in == 1 && (access(temp_2, F_OK | X_OK) == 0))
+		if (cmd->is_built_in == 1)
 		{
-			cmd->arguments = ft_calloc(1000, sizeof(char));
-			if (!cmd->arguments)
-				perror("calloc: ");
-			cmd->arguments[0] = "test";
-			cmd->arguments[1] = NULL;
-			cmd->command_path = ft_strjoin(paths[i], "test");
-			cmd->is_built_in = 1;
-			free (temp_2);
-			free (temp_str);
+			if (temp_str)
+				free (temp_str);
+			temp_str = NULL;
 			break ;
 		}
+		else if (iterator->content[0] == '/' && access(iterator->content, F_OK | X_OK) == 0)
+			cmd->command_path = iterator->content;
 		else if (ft_is_program(cmd, iterator->content) == 1)
 		{
-			free (temp_2);
+			free(temp_str);
+			temp_str = NULL;
 			break ;
 		}
 		else if (access(temp_str, F_OK | X_OK) == 0 && cmd->is_built_in == 0)
 		{
 			cmd->command_path = temp_str;
-			free (temp_2);
 			break ;
 		}
-		free (temp_2);
+		else
+			cmd->command_path = NULL;
+		if (temp_str)
+			free (temp_str);
+		temp_str = NULL;
 		i++;
 	}
-	if (paths[i] == NULL)
+	if (!paths || paths[i] == NULL)
 	{
-		free(temp_str);
-		return (1);
+		if (temp_str)
+			free(temp_str);
+		temp_str = NULL;
+		j = 1;
 	}
-	i = 0;
-	while (paths[i])
-	{
-		free(paths[i]);
-		i++;
-	}
-	free (paths);
+	ft_helper_12(paths);
 	if (!cmd->command_path)
 		g_mini.exit_status = 127;
-	return (0);
+	return (j);
 }
 
 /*
@@ -251,6 +335,21 @@ void	ft_execute_built_in(t_cmd *cmd, t_list *toks)
 		ft_echo_exec(cmd);
 }
 
+void	ft_cut_path(t_list *toks)
+{
+	int		len;
+	char	*temp;
+
+	len = ft_strlen(toks->content);
+	len--;
+	while (toks->content[len] && toks->content[len] != '/' && len > 0)
+		len--;
+	temp = ft_strdup(&toks->content[len + 1]);
+	// printf("temp is: %s\n", temp);
+	free (toks->content);
+	toks->content = temp;
+}
+
 /*
 * gos through the individual tokens of each cmd and searches 
 * for a command (e.g echo, export..);
@@ -275,8 +374,9 @@ void	ft_interpret(t_cmd *cmd_iterator)
 		{
 			g_mini.exit_status = 127;
 			g_mini.exit = 1;
-			printf("42_minishell: %s: command not found\n", \
+			printf("42shell: %s: command not found\n", \
 			cmd_iterator->toks->content);
+			break ;
 		}
 		tok_iterator = tok_iterator->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 19:38:47 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:28:54 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/24 17:11:555 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,12 @@ int	ft_del_env_cont(char *name, t_list **dup_env)
 	{
 		if (ft_strncmp(name, iterator->content, len) == 0)
 		{
-			iterator->content = name;
+			if (iterator->content)
+			{	
+				free (iterator->content);
+				iterator->content = NULL;
+			}
+			iterator->content = ft_strdup(name);
 			break ;
 		}
 		iterator = iterator->next;
@@ -68,7 +73,7 @@ void	ft_create_env(char *str, t_list **dup_env)
 {
 	t_list	*new_env;
 
-	new_env = ft_lstnew(str);
+	new_env = ft_lstnew(ft_strdup(str));
 	if (!new_env)
 	{
 		perror("ft_lstnew: ");
@@ -113,14 +118,15 @@ char	*ft_get_env_cont(char *env_name)
 */
 void	ft_copy_env(t_mini *g_mini, char **env)
 {
-	int	i;
+	int		i;
+	// char	*str;
 
 	i = 0;
 	if (!env)
 		exit_program(2);
 	while (env[i])
 	{
-		ft_lstadd_back(&g_mini->dup_env, ft_lstnew(env[i]));
+		ft_lstadd_back(&g_mini->dup_env, ft_lstnew(ft_strdup(env[i])));
 		i++;
 	}
 }

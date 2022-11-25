@@ -6,7 +6,7 @@
 /*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 16:03:38 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/14 19:42:31 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/33 16:103:13 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,42 +37,100 @@ void	ft_print_sorted_env(t_list *dup_env)
 	iterator = dup_env;
 	while (iterator)
 	{
-		printf("%s\n", iterator->content);
+		printf("declare -x %s\n", iterator->content);
 		iterator = iterator->next;
 	}
 }
 
+/*
+* export execution function;
+* prints out sorted env list when export 
+* without args is called;
+* adds new env-vars to the envlist or 
+* replaces the content if already existent;
+*/
 void	ft_export_exec(t_list *toks)
 {
 	t_list	*iterator;
+	char	*env_name;
+	char	*env_cont;
+	int		i;
+	int		j;
 
 	if (!toks->next)
 		ft_print_sorted_env(g_mini.dup_env);
-	iterator = toks->next;
-	if (iterator)
+	else
 	{
-		while (iterator)
+		iterator = toks->next;
+		env_name = malloc(sizeof(char) * ft_strlen(iterator->content) + 2);
+		env_cont = malloc(sizeof(char) * ft_strlen(iterator->content) + 2);
+		i = 0;
+		j = 0;
+		while (iterator->content[i] != '=' && iterator->content[i]) // 20.11
 		{
-			if (ft_isalpha(iterator->content[0]) == 0)
-				printf("bash: export: `%s´: not a valid identifier\n", \
-					iterator->content);
-			else
-				ft_lstadd_back(&g_mini.dup_env, ft_lstnew(iterator->content));
-			if (iterator != NULL && iterator->next != NULL)
-				iterator = iterator->next;
-			else
-				break ;
+			env_name[i] = iterator->content[i]; 
+			i++;
 		}
+		env_name[i] = '\0';
+		if (iterator->content[i] != '\0')
+			i++; // fur ohne =
+		while (iterator->content[i]) // 20.11
+		{
+			env_cont[j] = iterator->content[i];
+			i++;
+			j++;
+		}
+		env_cont[j] = '\0';
+		if (iterator)
+		{
+			while (iterator)
+			{
+				if (ft_isalpha(iterator->content[0]) == 0)
+					printf("bash: export: `%s´: not a valid identifier\n", \
+						iterator->content);
+				else if (ft_env_exist(env_name, &g_mini.dup_env) == 0)
+					ft_lstadd_back(&g_mini.dup_env, ft_lstnew(ft_strdup(env_name)));
+				else if (ft_env_exist(env_name, &g_mini.dup_env) == 1)
+					ft_update_env_list(env_name, env_cont, g_mini.dup_env);
+				if (iterator != NULL && iterator->next != NULL)
+					iterator = iterator->next;
+				else
+					break ;
+			}
+		}
+		free(env_cont);
+		free(env_name);
+		env_cont = NULL;
+		env_name = NULL;
 	}
 }
 
 void	ft_cd_empty(void)
 {
-	int	check;
+	int		check;
+	char	*cwd;
 
+	cwd = malloc(sizeof(char) * 2048);
+	if (!cwd)
+	{
+		printf("ft_cd_empty: malloc error\n");
+		exit(EXIT_FAILURE);
+	}
+	cwd = getcwd(cwd, 1024);
+	ft_update_env_list("OLDPWD", cwd, g_mini.dup_env);
+	free(cwd);
 	check = chdir(getenv("HOME"));
-	if (check != 0)
+	if (check < 0)
 		perror("chdir: ");
+	cwd = malloc(sizeof(char) * 1024);
+	if (!cwd)
+	{
+		printf("ft_cd_empty: malloc error\n");
+		exit(EXIT_FAILURE);
+	}
+	cwd = getcwd(cwd, 1024);
+	ft_update_env_list("PWD", cwd, g_mini.dup_env);
+	free(cwd);
 }
 
 /*
@@ -87,16 +145,15 @@ void	ft_cd_two_dots(void)
 
 	j = 0;
 	cur_cwd = malloc(sizeof(char) * 2048);
-	if (!cur_cwd)
-		perror("malloc :");
+	ft_check_malloc(cur_cwd);
 	cur_cwd = getcwd(cur_cwd, 1024);
+	ft_update_env_list("OLDPWD", cur_cwd, g_mini.dup_env);
 	len = ft_strlen(cur_cwd);
 	while (cur_cwd[len] != '/')
 		len--;
 	cur_cwd[len] = '\0';
 	new_cwd = malloc(sizeof(char) * len + 1);
-	if (!new_cwd)
-		perror("malloc :");
+	ft_check_malloc(new_cwd);
 	while (cur_cwd[j])
 	{
 		new_cwd[j] = cur_cwd[j];
@@ -104,29 +161,33 @@ void	ft_cd_two_dots(void)
 	}
 	new_cwd[j] = '\0';
 	chdir(new_cwd);
+	ft_update_env_list("PWD", new_cwd, g_mini.dup_env);
 	ft_free_chars(cur_cwd, new_cwd);
 }
 
 void	ft_cd_exec(t_list *toks)
 {
-	int		check;
 	char	*cwd;
+	int		i;
 
+	i = 0;
 	cwd = malloc(sizeof(char) * 1024);
-	ft_check(cwd);
+	ft_check_malloc(cwd);
 	cwd = getcwd(cwd, 1024);
-	ft_check(cwd);
+	ft_check_malloc(cwd);
 	ft_update_env_list("OLDPWD", cwd, g_mini.dup_env);
 	free (cwd);
 	if (!toks->next)
 		ft_cd_empty();
 	else if (toks->next->content[0] == '.' && toks->next->content[1] == '.')
-		ft_cd_two_dots();
-	else if (toks->next)
 	{
-		check = chdir(toks->next->content);
-		if (check == -1)
-			printf("42_shell: cd: %s: No such file or directory\n", \
-			toks->next->content);
+		while (i < (int)ft_strlen(toks->next->content) && toks->next->content[i] == '.' \
+			&& toks->next->content[i + 1] == '.')
+		{
+			ft_cd_two_dots();
+			i = i + 3;
+		}
 	}
+	else if (toks->next)
+		ft_cd_exec_helper_1(toks->next->content);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 17:45:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:29:00 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/21 17:40:16 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@
 void	ft_sigint(int sig)
 {
 	(void)sig;
+	g_mini.exit_status = 130;
 	ft_putstr_fd("\b\b\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
-	rl_redisplay();
+	rl_redisplay(); //only when outside of childprocess
 }
 
 /*

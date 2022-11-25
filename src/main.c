@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 15:34:58 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:28:56 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:03:443 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	ft_test(void)
 		{
 			ft_execute_built_in(cmd_iterator, cmd_iterator->toks);
 			ft_overwrite_env();
+			g_mini.special_flag++;
 		}
 		else
 		{
@@ -63,7 +64,9 @@ void	ft_test(void)
 				exit_program(1);
 			}
 			if (pid[i] == 0)
+			{
 				ft_execute_process(cmd_iterator, i);
+			}
 		}
 		i++;
 		cmd_iterator = cmd_iterator->next;
@@ -86,14 +89,18 @@ void	ft_test(void)
 	}
 	free (pid);
 	if (g_mini.exit_status != 0 && g_mini.exit == 1)
+	{
+		ft_free_fds();
 		exit(g_mini.exit_status);
+	}
 }
 
 void	ft_execute(void)
 {
 	ft_set_pipes();
 	ft_set_files();
-	ft_test();
+	if (g_mini.exit != 7)
+		ft_test();
 }
 
 /*
@@ -111,30 +118,80 @@ int	ft_get_input(void)
 	temp = readline(prompt);
 	if (temp)
 		g_mini.raw_input = ft_strdup(temp);
-	if (!g_mini.raw_input)
-		exit_program(2);
+	if (temp == NULL)
+	{
+		ft_free_lst_cont(g_mini.dup_env);
+		if (g_mini.raw_input)
+			free (g_mini.raw_input);
+		g_mini.raw_input = NULL;
+		exit(EXIT_SUCCESS);
+	}
 	free (temp);
+	temp = NULL; // 22.11
 	if (ft_str_only_space(g_mini.raw_input) != 1 && g_mini.raw_input)
 		add_history(g_mini.raw_input);
-	if (ft_check_quotes(g_mini.raw_input) == 1)
-	{
-		printf("quotes not closed\n");
-		free(g_mini.raw_input);
-		exit_program(1);
-	}
-	if (ft_check_backslash(g_mini.raw_input) == 1)
-	{
-		printf("backslash forbidden\n");
-		free(g_mini.raw_input);
-		exit_program(1);
-	}
-	if (ft_check_semicolon(g_mini.raw_input) == 1)
-	{
-		printf("semicolon forbidden\n");
-		free(g_mini.raw_input);
-		exit_program(1);
-	}
+	// if (ft_check_quotes(g_mini.raw_input) == 1)
+	// {
+	// 	printf("quotes not closed\n");
+	// 	free(g_mini.raw_input);
+	// 	exit_program(1);
+	// }
+	// if (ft_check_backslash(g_mini.raw_input) == 1)
+	// {
+	// 	printf("backslash forbidden\n");
+	// 	free(g_mini.raw_input);
+	// 	exit_program(1);
+	// }
+	// if (ft_check_semicolon(g_mini.raw_input) == 1)
+	// {
+	// 	printf("semicolon forbidden\n");
+	// 	free(g_mini.raw_input);
+	// 	exit_program(1);
+	// }
 	return (0);
+}
+
+/*
+* deletes empty quotes like "" or '' out of the input string;
+*/
+void	ft_del_sus_quotes(void)
+{
+	char	*raw_input;
+	int		i;
+	int		j;
+
+	i = 0;
+	raw_input = g_mini.raw_input;
+	while (raw_input[i])
+	{
+		if ((raw_input[i] == 34 && raw_input[i + 1] == 34) || \
+			(raw_input[i] == 39 && raw_input[i + 1] == 39))
+		{
+			j = i + 1;
+			raw_input[j] = 3;
+			while (raw_input[j])
+			{
+				raw_input[i] = raw_input[j];
+				i++;
+				j++;
+			}
+			raw_input[i] = '\0';
+			i = 0;
+		}
+		i++;
+	}
+}
+
+void ft_put_prompt(int sig)
+{
+	if (SIGINT == sig)
+	{
+		g_mini.exit_status = 130;
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
 
 /*
@@ -154,23 +211,24 @@ int	main(int argc, char **argv, char **env)
 	}
 	ft_init_minishell(&g_mini, env);
 	while (1)
-	{	
-		ft_handle_sigint();
+	{
+		//ft_handle_sigint();
+		signal(SIGINT, ft_put_prompt);
 		signal(SIGQUIT, SIG_IGN);
 		input_check = ft_get_input();
 		if (input_check == 2)
 			printf("invalid syntax\n");
 		else
 		{
-			if (ft_check_input_validity(g_mini.raw_input) == 0)
-				continue ;
-			else
+			if (ft_check_input_validity(g_mini.raw_input) == 1)
 			{
+				ft_del_sus_quotes();
 				ft_dollar_sign();
 				ft_parsing(g_mini.raw_input);
-				ft_execute();
-				ft_free_input();
+				if (g_mini.exit == 0)
+					ft_execute();
 			}
+			ft_free_input();
 		}
 	}
 	return (0);

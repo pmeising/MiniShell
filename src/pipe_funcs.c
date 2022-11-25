@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:39:14 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:29:00 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/23 15:48:003 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	ft_overwrite_env(void)
 
 	i = 0;
 	iterator = g_mini.dup_env;
+	if (g_mini.special_flag > 0)
+		free (g_mini.env);
 	g_mini.env = malloc(sizeof(char) * 10000 * ft_lstsize(iterator));
 	while (iterator)
 	{
@@ -29,6 +31,7 @@ void	ft_overwrite_env(void)
 		iterator = iterator->next;
 		i++;
 	}
+	g_mini.env[i] = NULL;
 }
 
 void	ft_close_fds(int in, int out, int nbr)
@@ -62,6 +65,27 @@ void	ft_close_fds(int in, int out, int nbr)
 	}
 }
 
+// void ft_sigint_child()
+// {
+// 	//(void)sig;
+// 	g_mini.exit_status = 130;
+// 	write(2, "child", 6);
+// 	//ft_putstr_fd("\b\b\n", 1);
+// 	//rl_replace_line("", 0);
+// 	// rl_on_new_line();
+// 	// rl_redisplay();
+// }
+
+// void ft_handle_sigint_child()
+// {
+// 	struct sigaction	sa;
+
+// 	sa.sa_handler = &ft_sigint_child;
+// 	sa.sa_flags = SA_RESTART;
+// 	sigemptyset(&sa.sa_mask);
+// 	sigaction(SIGINT, &sa, NULL);
+// }
+
 /*
 * i = cmd counter;
 * unink: deletes a file if no process has it open
@@ -77,6 +101,7 @@ void	ft_execute_process(t_cmd *cmd_iterator, int i)
 			unlink(cmd_iterator->heredoc_temp);
 		}
 		ft_close_fds(-1, -1, -1);
+		// ft_free_input();
 		exit(g_mini.exit_status);
 	}
 	if (cmd_iterator->heredoc_temp && \
@@ -94,10 +119,22 @@ void	ft_execute_process(t_cmd *cmd_iterator, int i)
 	if (cmd_iterator->is_built_in == 1)
 	{
 		ft_execute_built_in(cmd_iterator, cmd_iterator->toks);
+		if (cmd_iterator->arguments)
+			free (cmd_iterator->arguments);
+		cmd_iterator->arguments = NULL;
+		//ft_free_input();
+		//free(g_mini.raw_input); // 23.11
+		// printf("before exit.\n");
 		exit(0);
+		// execve(NULL, NULL, g_mini.env);
 	}
+	// if (g_mini.raw_input)
+	//free(g_mini.raw_input);
+	//ft_free_input();
 	execve(cmd_iterator->command_path, cmd_iterator->arguments, g_mini.env);
 	dup2(1, STDOUT_FILENO);
+	perror("42shell: ");
+	exit (127);
 }
 
 /*
@@ -111,6 +148,8 @@ void	ft_init_pipefd(int nbr_of_pipes)
 	int	*fds;
 
 	i = 0;
+	if (g_mini.nbr_of_pipes == 0 || g_mini.nbr_of_pipes < 0 || g_mini.nbr_of_pipes > 50)
+		return ;
 	g_mini.pipefd = malloc(sizeof(int *) * nbr_of_pipes + 1);
 	if (!g_mini.pipefd)
 	{

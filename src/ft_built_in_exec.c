@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 17:51:01 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:35:51 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/23 20:42:06 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ void	ft_pwd_exec(void)
 	}
 	if (getcwd(cur_path, 1024))
 		printf("%s\n", cur_path);
-	free(cur_path);
+	if (cur_path)
+		free(cur_path);
+	cur_path = NULL;
 }
 
 /*
@@ -44,7 +46,8 @@ void	ft_env_exec(void)
 	iterator = g_mini.dup_env;
 	while (iterator)
 	{
-		printf("%s\n", iterator->content);
+		if (iterator->content)
+			printf("%s\n", iterator->content);
 		iterator = iterator->next;
 	}
 }
@@ -63,13 +66,27 @@ void	ft_delete_env(t_list *dup_env, int i)
 		i--;
 	}
 	next = iterator->next->next;
-	free (iterator->next);
+	if (iterator->next->content)
+	{
+		free(iterator->next->content);
+		iterator->next->content = NULL;
+	}
+	if (iterator->next)
+	{
+		free (iterator->next);
+		iterator->next = NULL;
+	}
 	iterator->next = next;
 }
 
+/*
+* execution function for unset command;
+* compares the current token with every
+* env-variable until match found;
+* uses ft_delete_env() to delete/unset the var;
+*/
 void	ft_unset_exec(t_list *toks)
 {
-	int		len;
 	int		i;
 	t_list	*env_iterator;
 	t_list	*tok_it;
@@ -80,11 +97,11 @@ void	ft_unset_exec(t_list *toks)
 	while (tok_it)
 	{
 		env_iterator = g_mini.dup_env;
-		len = (int)ft_strlen(tok_it->content);
 		i = 0;
 		while (env_iterator)
 		{
-			if (ft_strncmp(env_iterator->content, tok_it->content, len) == 0)
+			if (ft_strncmp(env_iterator->content, tok_it->content, \
+				(int)ft_strlen(tok_it->content)) == 0)
 			{
 				ft_delete_env(g_mini.dup_env, i);
 				break ;
@@ -92,6 +109,8 @@ void	ft_unset_exec(t_list *toks)
 			i++;
 			if (env_iterator->next)
 				env_iterator = env_iterator->next;
+			else
+				break ;
 		}
 		tok_it = tok_it->next;
 	}

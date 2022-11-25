@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validity_checks.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:34:35 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:29:00 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/21 17:30:58 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,10 @@ char	*ft_strstr_quotes(char *raw_input, char *illegal_str)
 	while (raw_input[i])
 	{
 		if (raw_input[i] == 34 || raw_input[i] == 39)
+		{
 			i = ft_skip_quotes(&raw_input[i], i);
-		if (!ft_strncmp(&raw_input[i], illegal_str, ft_strlen(illegal_str)))
+		}
+		if (ft_strncmp(&raw_input[i], illegal_str, ft_strlen(illegal_str)) == 0)
 			return (raw_input);
 		if (raw_input[i])
 			i++;

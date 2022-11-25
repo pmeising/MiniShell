@@ -37,8 +37,10 @@ SRC =	${SRC_DIR}main.c \
 		${SRC_DIR}ft_free_funcs.c \
 		${SRC_DIR}ft_interpret.c \
 		${SRC_DIR}ft_env_vars_funcs.c \
+		${SRC_DIR}ft_env_vars_funcs_2.c \
 		${SRC_DIR}ft_built_in_exec.c \
 		${SRC_DIR}ft_built_in_exec_2.c \
+		${SRC_DIR}ft_built_in_exec_3.c \
 		${SRC_DIR}pipe_funcs.c \
 		${SRC_DIR}files_funcs.c \
 		${SRC_DIR}ft_utils.c \

@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 17:40:53 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:28:59 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/23 19:08:114 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@ void	ft_open_file_2(char *file_name, int *fd, int j, int open_flag)
 {
 	if (j == 1 && open_flag == 0)
 	{
+		if (*fd != 1)
+			close(*fd);
 		*fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
 		if (*fd == -1)
 		{
-			printf("42_shell: %s: Permission denied\n", file_name);
+			printf("42shell: %s: Permission denied\n", file_name);
 			g_mini.exit_status = 1;
 		}
 	}
@@ -28,7 +30,7 @@ void	ft_open_file_2(char *file_name, int *fd, int j, int open_flag)
 		*fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
 		if (*fd == -1)
 		{
-			printf("42_shell: %s: Permission denied\n", file_name);
+			printf("42shell: %s: Permission denied\n", file_name);
 			g_mini.exit_status = 1;
 		}
 	}
@@ -45,25 +47,24 @@ void	ft_open_file(char *file_name, int *fd, int j, int open_flag)
 {
 	int	file_check;
 
+	(void)open_flag;
 	if (j == 0)
 	{
 		file_check = access(file_name, F_OK);
 		if (file_check != 0)
 		{
-			printf("42_minishell: %s: No such file or directory\n", file_name);
+			printf("42shell: %s: No such file or directory\n", file_name);
 			g_mini.exit_status = 1;
 		}
 		*fd = open(file_name, O_RDWR, 0777);
-		if (*fd == -1)
+		if (*fd == -1 && g_mini.exit_status == 0)
 		{
-			printf("42_minishell: %s: Permission denied\n", file_name);
+			printf("42shell: %s: Permission denied\n", file_name);
 			g_mini.exit_status = 1;
 		}
 	}
-	else
-		ft_open_file_2(file_name, fd, j, open_flag);
 	if (g_mini.exit_status != 0)
-		g_mini.exit = 1;
+		g_mini.exit = 7;
 }
 
 /*
@@ -90,9 +91,9 @@ void	ft_set_files(void)
 	cmd = g_mini.cmds;
 	while (cmd)
 	{
-		if (cmd->input_file != NULL)
+		if (cmd->input_file)
 			ft_open_file(cmd->input_file, &cmd->fd_in, 0, -1);
-		if (cmd->output_file != NULL)
+		if (cmd->output_file)
 			ft_open_file(cmd->output_file, &cmd->fd_out, 1, cmd->open_flag);
 		cmd = cmd->next;
 	}

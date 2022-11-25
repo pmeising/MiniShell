@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validity_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 19:42:02 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:29:00 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/22 17:25:38 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_skip_quotes(char *raw_input, int pos)
 
 	single_q_open = 0;
 	double_q_open = 0;
-	while (raw_input[pos])
+	while (pos < (int)ft_strlen(raw_input) && raw_input[pos])
 	{
 		if (raw_input[pos] == 34 && single_q_open == 0)
 			double_q_open = !double_q_open;
@@ -48,6 +48,32 @@ int	ft_skip_spaces(char *raw_input, int pos)
 }
 
 /*
+* helper function for ft_check_quotes;
+* counts the quotes in the user input;
+*/
+void	ft_check_q_help(char *raw_input, int *i, int *single_q, int *double_q)
+{
+	if (raw_input[*i] == 34)
+	{
+		(*double_q)++;
+		while (raw_input[*i + 1] && raw_input[*i + 1] != 34)
+			(*i)++;
+		if (raw_input[*i + 1] == 34)
+			(*double_q)++;
+		(*i)++;
+	}
+	if (raw_input[*i] == 39)
+	{
+		(*single_q)++;
+		while (raw_input[*i + 1] && raw_input[*i + 1] != 39)
+			(*i)++;
+		if (raw_input[*i + 1] == 39)
+			(*single_q)++;
+		(*i)++;
+	}
+}
+
+/*
 * checks if single- and double quotes are closed;
 * is done by counting them then taking the modulo 2;
 * Returns 0 for closed quotes and 1 when open.
@@ -61,27 +87,11 @@ int	ft_check_quotes(char *raw_input)
 	i = 0;
 	single_q = 0;
 	double_q = 0;
-	while (raw_input[i])
+	while (raw_input[i] != '\0')
 	{
-		if (raw_input[i] == 34)
-		{
-			double_q++;
-			while (raw_input[i + 1] && raw_input[i + 1] != 34)
-				i++;
-			if (raw_input[i + 1] == 34)
-				double_q++;
+		ft_check_q_help(raw_input, &i, &single_q, &double_q);
+		if (raw_input[i] != '\0')
 			i++;
-		}
-		if (raw_input[i] == 39)
-		{
-			single_q++;
-			while (raw_input[i + 1] && raw_input[i + 1] != 39)
-				i++;
-			if (raw_input[i + 1] == 39)
-				single_q++;
-			i++;
-		}
-		i++;
 	}
 	if ((single_q % 2 != 0) || (double_q % 2 != 0))
 		return (1);

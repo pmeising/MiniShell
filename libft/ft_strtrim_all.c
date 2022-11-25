@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 15:45:20 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/19 17:21:19 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/18 15:29:43 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ static void	concat_all(char *dest, char **strs)
 		i++;
 	}
 }
-
 
 /*
 * trim function that deletes all chars specified in set in the string s1;
