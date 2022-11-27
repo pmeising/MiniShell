@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 14:02:44 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/01 14:38:46 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/27 15:27:47 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,22 +82,15 @@ t_list	*ft_lstlast(t_list *lst);
 int		ft_lstsize(t_list *lst);
 void	ft_lstadd_front(t_list **lst, t_list *new);
 t_list	*ft_lstnew(void *content);
-
-
 t_dlist	*ft_dlst_new(void *data);
 char	*ft_strtrim_all(const char *s1, const char *set);
-//static size_t	get_length(char **strs);
-//static void	concat_all(char *dest, char **strs);
 
-int	ft_is_space(int c);
+int		ft_is_space(int c);
 char	**ft_split_set(char *str, char *charset);
 void	ft_free_arr(void **ptr);
 
-int	find_length(char *str, char *charset);
+int		find_length(char *str, char *charset);
 void	import_str(char **dest, char *src, int start, int end);
-int ft_strcmp(char *s1, char *s2);
-
-// get_next_line
-
+int		ft_strcmp(char *s1, char *s2);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_funcs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 17:28:28 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/23 18:03:007 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/27 20:52:22 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,15 @@ void	ft_free_helper(t_cmd *cmd_iterator)
 			unlink(cmd_iterator->heredoc_temp);
 	}
 	if (cmd_iterator->command_path)
-		free(cmd_iterator->command_path);
+		ft_free_str(&cmd_iterator->command_path);
 	if (cmd_iterator->input_file)
-		free(cmd_iterator->input_file);
+		ft_free_str(&cmd_iterator->input_file);
 	if (cmd_iterator->output_file)
-		free(cmd_iterator->output_file);
-	if (cmd_iterator->HEREDOC_DELIM)
-		free(cmd_iterator->HEREDOC_DELIM);
+		ft_free_str(&cmd_iterator->output_file);
+	if (cmd_iterator->heredoc_delim)
+		ft_free_str(&cmd_iterator->heredoc_delim);
 	if (cmd_iterator->arguments)
-		free (cmd_iterator->arguments);
+		ft_free_str(cmd_iterator->arguments);
 }
 
 /*
@@ -76,17 +76,13 @@ void	ft_free_input(void)
 		free (cmd_iterator);
 		cmd_iterator = temp;
 	}
-	if (g_mini.raw_input)
-		free (g_mini.raw_input);
-	g_mini.raw_input = NULL;
-	g_mini.cmds = NULL;
-	g_mini.nbr_heredocs = 0;
-	ft_free_fds();
-	g_mini.nbr_of_pipes = 0;
+	ft_free_helper_1();
 	if (g_mini.exit_status == 2 || g_mini.exit == 1)
 	{
 		if (g_mini.dup_env)
 			ft_free_lst_cont(g_mini.dup_env);
+		if (g_mini.special_flag > 0)
+			free (g_mini.env);
 		exit(g_mini.exit_status);
 	}
 	g_mini.exit = 0;
@@ -102,7 +98,7 @@ void	ft_free_lst_cont(t_list *iterator)
 	while (iterator)
 	{
 		temp = iterator->next;
-		if (iterator->content)
+		if (iterator->content != NULL)
 		{
 			free (iterator->content);
 			iterator->content = NULL;
@@ -111,6 +107,7 @@ void	ft_free_lst_cont(t_list *iterator)
 			free (iterator);
 		iterator = temp;
 	}
+	iterator = NULL;
 }
 
 /*

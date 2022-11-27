@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_built_in_exec.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 17:51:01 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/23 20:42:06 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/27 19:53:42 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,72 +52,54 @@ void	ft_env_exec(void)
 	}
 }
 
-void	ft_delete_env(t_list *dup_env, int i)
-{
-	t_list	*iterator;
-	t_list	*next;
-
-	iterator = dup_env;
-	if (!iterator)
-		printf("nothing to delete\n");
-	while (i > 1 && iterator)
-	{
-		iterator = iterator->next;
-		i--;
-	}
-	next = iterator->next->next;
-	if (iterator->next->content)
-	{
-		free(iterator->next->content);
-		iterator->next->content = NULL;
-	}
-	if (iterator->next)
-	{
-		free (iterator->next);
-		iterator->next = NULL;
-	}
-	iterator->next = next;
-}
-
-/*
-* execution function for unset command;
-* compares the current token with every
-* env-variable until match found;
-* uses ft_delete_env() to delete/unset the var;
-*/
-void	ft_unset_exec(t_list *toks)
-{
-	int		i;
-	t_list	*env_iterator;
-	t_list	*tok_it;
-
-	if (!toks->next)
-		return ;
-	tok_it = toks->next;
-	while (tok_it)
-	{
-		env_iterator = g_mini.dup_env;
-		i = 0;
-		while (env_iterator)
-		{
-			if (ft_strncmp(env_iterator->content, tok_it->content, \
-				(int)ft_strlen(tok_it->content)) == 0)
-			{
-				ft_delete_env(g_mini.dup_env, i);
-				break ;
-			}
-			i++;
-			if (env_iterator->next)
-				env_iterator = env_iterator->next;
-			else
-				break ;
-		}
-		tok_it = tok_it->next;
-	}
-}
-
 void	ft_exit_exec(t_list *toks)
 {
 	if (toks->next)
 		printf("error: no additional parameters for exit allowed\n");
+}
+
+void	ft_echo_exec(t_cmd *iterator)
+{
+	t_list	*toks_iterator;
+	int		n_flag;
+
+	n_flag = 0;
+	if (!iterator->toks->next)
+	{
+		printf("\n");
+		return ;
+	}
+	toks_iterator = iterator->toks->next;
+	if (ft_strncmp(toks_iterator->content, "-n", 2) == 0)
+	{
+		n_flag = 1;
+		toks_iterator = toks_iterator->next;
+	}
+	while (toks_iterator)
+	{
+		ft_putstr_fd(toks_iterator->content, 1);
+		ft_putstr_fd(" ", 1);
+		toks_iterator = toks_iterator->next;
+	}
+	if (n_flag != 1)
+		printf("\n");
+}
+
+void	ft_execute_built_in(t_cmd *cmd, t_list *toks)
+{
+	(void)cmd;
+	if (ft_is_pwd(toks->content))
+		ft_pwd_exec();
+	if (ft_is_env(toks->content))
+		ft_env_exec();
+	if (ft_is_unset(toks->content))
+		ft_unset_exec(toks);
+	if (ft_is_exit(toks->content))
+		ft_exit_exec(toks);
+	if (ft_is_export(toks->content))
+		ft_export_exec(toks);
+	if (ft_is_cd(toks->content))
+		ft_cd_exec(toks);
+	if (ft_is_echo(toks->content))
+		ft_echo_exec(cmd);
 }

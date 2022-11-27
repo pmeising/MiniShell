@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 13:06:54 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/27 17:30:44 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/27 15:28:38 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ char	*ft_strjoin_gnl(char *line_a, char *line_b)
 	}
 	if (!line_a || !line_b)
 		return (NULL);
-	joins = malloc(sizeof(char) * (ft_strlen_gnl(line_a) + ft_strlen_gnl(line_b) + 1));
+	joins = malloc(sizeof(char) * (ft_strlen_gnl(line_a) + \
+			ft_strlen_gnl(line_b) + 1));
 	if (!joins)
 		return (NULL);
 	if (line_a)

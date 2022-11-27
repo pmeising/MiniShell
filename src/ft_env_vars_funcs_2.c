@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_vars_funcs_2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:09:49 by pmeising          #+#    #+#             */
-/*   Updated: 2022/11/21 18:32:58 by pmeising         ###   ########.fr       */
+/*   Updated: 2022/11/26 19:10:06 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-/*
-* checks for invalid input by user: ${};
-*/
-void	ft_bad_sub(char *raw_input, int *pos)
-{
-	*pos = *pos + 1;
-	if (raw_input[*pos] == '}')
-	{
-		printf("42shell: ${}: bad substitution\n");
-		exit_program(1);
-	}
-}
 
 /*
 * helper function for ft_env_vars;
@@ -68,7 +55,8 @@ char	*ft_check_doll(char *raw_input, int *pos)
 	else if (raw_input[*pos] == '$' && (raw_input[*pos + 1] == '{' \
 			|| ft_isalnum(raw_input[*pos + 1]) == 1))
 	{
-		ft_put_env_in_input(raw_input, *pos);
+		if (raw_input[*pos - 1] != 39)
+			ft_put_env_in_input(raw_input, *pos);
 		return (NULL);
 	}
 	else if (raw_input[*pos] == '$')

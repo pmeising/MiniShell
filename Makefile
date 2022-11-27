@@ -20,30 +20,40 @@ endif
 
 SRC =	${SRC_DIR}main.c \
 		${SRC_DIR}ft_env.c \
-		${SRC_DIR}init_minishell.c \
-		${SRC_DIR}env_utils.c \
-		${SRC_DIR}signals.c \
-		${SRC_DIR}validity_checks.c \
-		${SRC_DIR}validity_checks_1.c \
-		${SRC_DIR}validity_checks_2.c \
-		${SRC_DIR}validity_utils.c \
+		${SRC_DIR}ft_init_minishell.c \
+		${SRC_DIR}ft_env_utils.c \
+		${SRC_DIR}ft_signals.c \
+		${SRC_DIR}ft_validity_checks.c \
+		${SRC_DIR}ft_validity_checks_1.c \
+		${SRC_DIR}ft_validity_checks_2.c \
+		${SRC_DIR}ft_validity_utils.c \
 		${SRC_DIR}ft_delim_funcs.c \
 		${SRC_DIR}ft_lst_funcs.c \
-		${SRC_DIR}ft_parsing.c \
-		${SRC_DIR}ft_parsing_utils.c \
+		${SRC_DIR}ft_parsing_1.c \
+		${SRC_DIR}ft_parsing_2.c \
+		${SRC_DIR}ft_parsing_3.c \
+		${SRC_DIR}ft_parsing_4.c \
 		${SRC_DIR}ft_print_funcs.c \
-		${SRC_DIR}check_builtin.c \
-		${SRC_DIR}check_builtin2.c \
+		${SRC_DIR}ft_check_builtin.c \
+		${SRC_DIR}ft_check_builtin2.c \
 		${SRC_DIR}ft_free_funcs.c \
+		${SRC_DIR}ft_free_funcs_2.c \
 		${SRC_DIR}ft_interpret.c \
+		${SRC_DIR}ft_interpret_1.c \
+		${SRC_DIR}ft_interpret_2.c \
 		${SRC_DIR}ft_env_vars_funcs.c \
 		${SRC_DIR}ft_env_vars_funcs_2.c \
 		${SRC_DIR}ft_built_in_exec.c \
-		${SRC_DIR}ft_built_in_exec_2.c \
-		${SRC_DIR}ft_built_in_exec_3.c \
-		${SRC_DIR}pipe_funcs.c \
-		${SRC_DIR}files_funcs.c \
+		${SRC_DIR}ft_export_exec.c \
+		${SRC_DIR}ft_unset_exec.c \
+		${SRC_DIR}ft_cd_exec.c \
+		${SRC_DIR}ft_pipe_funcs.c \
+		${SRC_DIR}ft_files_funcs.c \
 		${SRC_DIR}ft_utils.c \
+		${SRC_DIR}ft_utils_2.c \
+		${SRC_DIR}ft_env_input.c \
+		${SRC_DIR}ft_is_prog.c \
+		${SRC_DIR}ft_execute_process.c \
 
 # takes the src files and converts them into .o files and puts them into /obj
 # % means "take all" (=wildcard)

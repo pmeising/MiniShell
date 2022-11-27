@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 18:42:27 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/14 19:28:58 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/27 15:41:10 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ t_cmd	*ft_lstnew_cmds(void)
 	new->arguments = NULL;
 	new->input_file = NULL;
 	new->output_file = NULL;
-	new->HEREDOC_DELIM = NULL;
+	new->heredoc_delim = NULL;
 	new->next = NULL;
 	new->previous = NULL;
 	new->heredoc_temp = NULL;

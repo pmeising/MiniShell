@@ -6,7 +6,7 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 18:27:00 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/31 18:14:34 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/27 15:43:09 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,11 @@
 * return > 0 means s1 is bigger;
 * return < 0 means s2 is bigger;
 */
-int ft_strcmp(char *s1, char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
-	int i;
-	
-	i = 0;
+	int	i;
 
+	i = 0;
 	while (s1[i] || s2[i])
 	{
 		if ((unsigned char)s1[i] == (unsigned char)s2[i])

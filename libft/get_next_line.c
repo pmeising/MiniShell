@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: pmeising <pmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 18:16:46 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/10/27 18:03:02 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/27 20:55:35 by pmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,35 +112,3 @@ char	*get_next_line(int fd)
 	line_a = new_line(line_a);
 	return (line_b);
 }
-
-// #include <fcntl.h>
-// #include <stdio.h>
-// int main ()
-// {
-// 	int fd;
-// 	char *line;
-	
-// 	fd = open("/Users/bde-carv/Core/safezone/gnl/text.txt", O_RDONLY);
-	
-// 	if (fd == -1)
-// 	{
-// 		printf("opening file not possible\n");
-// 	}
-// line = get_next_line(fd);
-// printf("text is:%s\n", line);
-// 	while (1) // ?
-// 	{
-// 		line = get_next_line(fd);
-// 		printf("text is:%s\n", line);
-		
-// 		if (line == NULL)
-// 		{
-// 			break;
-// 		}
-// 		free(line);
-// 	}
-// 	close(fd);
-// 	return(0);
-// 	//printf("text is:%s\n", line_a);
-// 	// cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c
-// }

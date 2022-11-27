@@ -6,84 +6,11 @@
 /*   By: bde-carv <bde-carv@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 18:42:08 by bde-carv          #+#    #+#             */
-/*   Updated: 2022/11/23 20:42:07 by bde-carv         ###   ########.fr       */
+/*   Updated: 2022/11/25 17:29:09 by bde-carv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-/*
-* inserts the content of the env-variable into the user-input string;
-* start = Beginn of variable name; pos = is the first char after the
-* environmentvariable name;
-*/
-void	ft_insert(char *raw_input, char *dup_var_cont, int pos, int start)
-{
-	char	*new_str;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	new_str = ft_calloc(((ft_strlen(dup_var_cont) + \
-			ft_strlen(raw_input))), sizeof(char));
-	ft_check_malloc(new_str);
-	if (raw_input[start - 1] == '{')
-		start--;
-	start--;
-	while (raw_input[i] && i < start)
-	{
-		new_str[i] = raw_input[i];
-		i++;
-	}
-	while (dup_var_cont[j])
-		new_str[i++] = dup_var_cont[j++];
-	free(dup_var_cont);
-	while (raw_input[pos])
-		new_str[i++] = raw_input[pos++];
-	free (g_mini.raw_input);
-	g_mini.raw_input = new_str;
-}
-
-/*
-*	Identifies the Variable name and calls functions, 
-*	which verify it as well as replace the variable with its content.
-*	ft_compare_env verifies, ft_insert replaces it.
-*	pos = position of the $
-*/
-void	ft_put_env_in_input(char *raw_input, int pos)
-{
-	int		start;
-	char	*var_name;
-	char	*dup_var_content;
-
-	pos++;
-	if (raw_input[pos] == '{')
-		ft_bad_sub(raw_input, &pos);
-	start = pos;
-	while (raw_input[pos] && ft_isalnum(raw_input[pos]) == 1)
-		pos++;
-	var_name = ft_substr(raw_input, start, pos - start);
-	dup_var_content = ft_extract_content(var_name);
-	if (dup_var_content == NULL)
-	{
-		ft_skip_var(raw_input, var_name, start, pos);
-		if (var_name)
-		{
-			free(var_name);
-			var_name = NULL;
-		}
-		return ;
-	}
-	if (raw_input[pos] == '}')
-		pos++;
-	if (var_name)
-	{
-		free(var_name);
-		var_name = NULL;
-	}
-	ft_insert(raw_input, dup_var_content, pos, start);
-}
 
 /*
 	Finds and replaces the "$?" with the exit status value.
@@ -160,26 +87,6 @@ void	ft_env_vars(char *raw_input)
 		pos++;
 	}
 }
-		// if (raw_input[pos] == '$' && raw_input[pos + 1] == '?')
-		// {
-		// 	ft_replace_dollar_question_mark(raw_input, pos);
-		// 	break ;
-		// }
-		// else if (raw_input[pos] == '$' && (raw_input[pos + 1] == '{'
-		// 		|| ft_isalnum(raw_input[pos + 1]) == 1))
-		// {
-		// 	ft_put_env_in_input(raw_input, pos);
-		// 	break ;
-		// }
-		// else if (raw_input[pos] == '$')
-		// {
-		// 	j = pos;
-		// 	pos++;
-		// 	while (raw_input[pos])
-		// 		g_mini.raw_input[j++] = raw_input[pos++];
-		// 	g_mini.raw_input[j] = '\0';
-		// 	break ;
-		// }
 
 /*
 *	checks if there are still interpretable dollar signs left in the string
